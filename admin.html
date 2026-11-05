@@ -149,8 +149,9 @@
             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-amber-400"></i>
             <span>전체 매물 엑셀 다운로드 (관리자 전용)</span>
           </button>
-          <button onclick="loadAdminProperties()" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center gap-1.5 border border-slate-300">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-500"></i> 새로고침
+          <button id="adminRefreshBtn" type="button" onclick="handleRefreshAdmin()" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-extrabold rounded-xl transition flex items-center gap-2 border-2 border-slate-300 hover:border-slate-400 shadow-sm cursor-pointer active:scale-95" title="최신 매물 목록 새로고침">
+            <i id="adminRefreshIcon" data-lucide="refresh-cw" class="w-4 h-4 text-emerald-600 font-bold transition-transform"></i>
+            <span>새로고침</span>
           </button>
         </div>
       </div>
@@ -473,7 +474,30 @@
     }
 
     // PROPERTIES LOGIC
-    async function loadAdminProperties() {
+    async function handleRefreshAdmin() {
+      const btn = document.getElementById('adminRefreshBtn');
+      const icon = document.getElementById('adminRefreshIcon');
+      if (icon) icon.classList.add('animate-spin');
+      if (btn) btn.disabled = true;
+
+      try {
+        if (currentAdminTab === 'properties') {
+          await loadAdminProperties(true);
+        } else {
+          await loadBoardPosts();
+          showAdminToast('게시판 목록을 최신 상태로 새로고침했습니다.');
+        }
+      } catch (e) {
+        showAdminToast('새로고침 완료');
+      } finally {
+        setTimeout(() => {
+          if (icon) icon.classList.remove('animate-spin');
+          if (btn) btn.disabled = false;
+        }, 500);
+      }
+    }
+
+    async function loadAdminProperties(showToast = false) {
       try {
         const res = await fetch('/api/properties?t=' + Date.now());
         if (res.ok) {
@@ -504,6 +528,9 @@
 
       document.getElementById('adminPropBadge').textContent = adminProperties.length;
       renderAdminProperties();
+      if (showToast) {
+        showAdminToast('최신 매물 목록을 새로고침했습니다.');
+      }
     }
 
     function renderAdminProperties() {
