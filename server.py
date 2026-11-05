@@ -142,6 +142,35 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
             return
 
+        if parsed.path == '/api/upload_image':
+            data_urls = payload.get('images', [])
+            saved_paths = []
+            import base64, time
+            upload_dir = os.path.join(BASE_DIR, 'images', 'uploads')
+            os.makedirs(upload_dir, exist_ok=True)
+            for idx, item in enumerate(data_urls):
+                if isinstance(item, str) and item.startswith('data:image'):
+                    try:
+                        header, encoded = item.split(',', 1)
+                        img_bytes = base64.b64decode(encoded)
+                        fname = f"upload_{int(time.time())}_{idx+1}.jpg"
+                        fpath = os.path.join(upload_dir, fname)
+                        with open(fpath, 'wb') as img_f:
+                            img_f.write(img_bytes)
+                        saved_paths.append(f"images/uploads/{fname}")
+                    except Exception as err:
+                        print("Error saving image:", err)
+                        saved_paths.append(item)
+                else:
+                    saved_paths.append(item)
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": True, "paths": saved_paths}, ensure_ascii=False).encode('utf-8'))
+            return
+
         if parsed.path == '/api/auth':
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')

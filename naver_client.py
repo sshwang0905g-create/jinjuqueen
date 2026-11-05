@@ -360,6 +360,14 @@ class NaverRealEstateClient:
                     complex_cover = "images/complex_cards/라온프라이빗_204동_클린카드.jpg"
                 elif "LH8" in title or "8단지" in title:
                     complex_cover = "images/complex_cards/LH8단지_803동_클린카드.jpg"
+                elif "대방" in title:
+                    complex_cover = "images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg"
+                elif "더퍼스트" in title:
+                    complex_cover = "images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg"
+                elif "중흥" in title:
+                    complex_cover = "images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg"
+                elif "한림" in title:
+                    complex_cover = "images/complex_cards/한림풀에버_클린카드.jpg"
                 photos = [complex_cover]
                 logger.info(f"[아파트 클린 타이틀 카드 매핑] {complex_cover}")
 

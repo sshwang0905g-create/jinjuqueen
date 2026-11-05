@@ -285,6 +285,10 @@ module.exports = async (req, res) => {
       if (title.includes('더힐')) complexCover = 'images/complex_cards/더힐_505동_클린카드.jpg';
       else if (title.includes('라온')) complexCover = 'images/complex_cards/라온프라이빗_204동_클린카드.jpg';
       else if (title.includes('LH8') || title.includes('8단지')) complexCover = 'images/complex_cards/LH8단지_803동_클린카드.jpg';
+      else if (title.includes('대방')) complexCover = 'images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg';
+      else if (title.includes('더퍼스트')) complexCover = 'images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg';
+      else if (title.includes('중흥')) complexCover = 'images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg';
+      else if (title.includes('한림')) complexCover = 'images/complex_cards/한림풀에버_클린카드.jpg';
       allPhotos = [complexCover];
     }
 

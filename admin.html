@@ -325,16 +325,38 @@
           </p>
         </div>
 
-        <!-- 네이버 실사진 연동 미리보기 박스 -->
-        <div id="naverPhotoPreviewBox" class="hidden p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200">
-          <p class="text-xs font-bold text-emerald-900 mb-2 flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <i data-lucide="image" class="w-4 h-4 text-emerald-600"></i>
-              <span>네이버부동산 실사진 자동 연동 (<span id="naverPhotoCount" class="text-emerald-700">0</span>장)</span>
-            </span>
-            <span class="text-[11px] font-medium text-emerald-600">홈페이지 매물사진으로 자동 저장</span>
-          </p>
-          <div id="naverPhotoList" class="flex gap-2.5 overflow-x-auto pb-1 pt-1"></div>
+        <!-- 매물 사진 첨부 및 관리 섹션 (최대 6장) -->
+        <div class="p-4 bg-slate-50/95 rounded-2xl border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <label class="block text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-4 h-4 text-brand-gold"></i>
+                <span>매물 사진 등록 & 첨부 (<span id="propPhotoCountBadge" class="text-blue-600 font-black">0</span> / 6장)</span>
+              </label>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                네이버에서 불러온 사진 외에도 내 PC나 휴대폰의 현장 사진을 최대 6장까지 추가할 수 있습니다.
+              </p>
+            </div>
+            <div>
+              <input type="file" id="propPhotoFileInput" accept="image/*" multiple class="hidden" onchange="handlePhotoFilesSelected(this.files)">
+              <button type="button" onclick="triggerPhotoUpload()" id="addPhotoBtn" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 shadow-xs flex items-center gap-1.5 cursor-pointer transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>+ 사진 추가</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 사진 미리보기 갤러리 그리드 -->
+          <div id="propPhotoGalleryList" class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 pt-1 min-h-[96px]">
+            <!-- JS 렌더링 -->
+          </div>
+
+          <div class="text-[11px] text-slate-400 mt-2 flex items-center justify-between">
+            <span>* 첫 번째 사진이 매물 대표 썸네일로 노출됩니다. 사진 우측 상단 ✕ 버튼으로 삭제 가능합니다.</span>
+            <button type="button" onclick="clearAllPhotos()" class="text-rose-500 hover:text-rose-700 font-medium hover:underline text-[11px]">
+              전체 사진 지우기
+            </button>
+          </div>
         </div>
 
         <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
@@ -659,6 +681,158 @@
     }
 
     let fetchedNaverPhotos = [];
+    let currentPropertyPhotos = [];
+
+    function matchApartmentCard(title) {
+      if (!title) return 'images/complex_cards/기본_아파트_클린카드.jpg';
+      if (title.includes('더힐')) return 'images/complex_cards/더힐_505동_클린카드.jpg';
+      if (title.includes('라온')) return 'images/complex_cards/라온프라이빗_204동_클린카드.jpg';
+      if (title.includes('LH8') || title.includes('8단지')) return 'images/complex_cards/LH8단지_803동_클린카드.jpg';
+      if (title.includes('대방')) return 'images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg';
+      if (title.includes('더퍼스트')) return 'images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg';
+      if (title.includes('중흥')) return 'images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg';
+      if (title.includes('한림')) return 'images/complex_cards/한림풀에버_클린카드.jpg';
+      return 'images/complex_cards/기본_아파트_클린카드.jpg';
+    }
+
+    function triggerPhotoUpload() {
+      if (currentPropertyPhotos.length >= 6) {
+        alert('사진은 최대 6장까지만 등록 가능합니다. 기존 사진을 삭제 후 다시 추가해 주세요.');
+        return;
+      }
+      const fileInput = document.getElementById('propPhotoFileInput');
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+      }
+    }
+
+    async function handlePhotoFilesSelected(files) {
+      if (!files || files.length === 0) return;
+      const remainingSlots = 6 - currentPropertyPhotos.length;
+      if (remainingSlots <= 0) {
+        alert('이미 최대 6장의 사진이 등록되어 있습니다.');
+        return;
+      }
+
+      const filesToProcess = Array.from(files).slice(0, remainingSlots);
+      const newBase64Images = [];
+
+      for (const file of filesToProcess) {
+        try {
+          const compressed = await compressImageFile(file, 1200, 800, 0.85);
+          newBase64Images.push(compressed);
+        } catch (e) {
+          console.error('이미지 압축 실패:', e);
+        }
+      }
+
+      if (newBase64Images.length === 0) return;
+
+      // Try server upload to save as images/uploads/ files
+      try {
+        const uploadRes = await fetch('/api/upload_image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ images: newBase64Images })
+        });
+        if (uploadRes.ok) {
+          const data = await uploadRes.json();
+          if (data.success && Array.isArray(data.paths)) {
+            currentPropertyPhotos.push(...data.paths);
+          } else {
+            currentPropertyPhotos.push(...newBase64Images);
+          }
+        } else {
+          currentPropertyPhotos.push(...newBase64Images);
+        }
+      } catch (err) {
+        currentPropertyPhotos.push(...newBase64Images);
+      }
+
+      renderPropPhotoGallery();
+      showAdminToast(`현장 사진 ${newBase64Images.length}장이 추가되었습니다. (총 ${currentPropertyPhotos.length}/6장)`);
+    }
+
+    function compressImageFile(file, maxWidth, maxHeight, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function removePhoto(idx) {
+      if (idx >= 0 && idx < currentPropertyPhotos.length) {
+        currentPropertyPhotos.splice(idx, 1);
+        renderPropPhotoGallery();
+      }
+    }
+
+    function clearAllPhotos() {
+      if (currentPropertyPhotos.length === 0) return;
+      if (confirm('등록된 모든 사진을 삭제하시겠습니까?')) {
+        currentPropertyPhotos = [];
+        renderPropPhotoGallery();
+      }
+    }
+
+    function renderPropPhotoGallery() {
+      const container = document.getElementById('propPhotoGalleryList');
+      const badge = document.getElementById('propPhotoCountBadge');
+      if (badge) badge.textContent = currentPropertyPhotos.length;
+      if (!container) return;
+
+      if (currentPropertyPhotos.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-3 sm:col-span-6 py-6 px-4 border-2 border-dashed border-slate-200 rounded-xl text-center flex flex-col items-center justify-center bg-white/70">
+            <i data-lucide="image-plus" class="w-6 h-6 text-slate-300 mb-1"></i>
+            <p class="text-xs font-bold text-slate-500">등록된 사진이 없습니다.</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">상단 [정보 불러오기]를 실행하거나 [+ 사진 추가] 버튼으로 직접 사진을 첨부해 주세요.</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = currentPropertyPhotos.map((url, idx) => `
+          <div class="relative group aspect-4/3 rounded-xl overflow-hidden border-2 ${idx === 0 ? 'border-amber-400 shadow-sm ring-1 ring-amber-400/30' : 'border-slate-200'} bg-slate-900 shrink-0">
+            <img src="${url}" class="w-full h-full object-cover">
+            ${idx === 0 ? '<span class="absolute top-1 left-1 bg-amber-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow">대표</span>' : ''}
+            <span class="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] px-1 py-0.2 rounded font-bold">${idx + 1}</span>
+            <button type="button" onclick="removePhoto(${idx})" class="absolute top-1 right-1 w-5 h-5 bg-black/70 hover:bg-rose-600 text-white rounded-full flex items-center justify-center transition shadow cursor-pointer" title="사진 삭제">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
 
     function openAddPropModal() {
       const editInput = document.getElementById('editPropId');
@@ -686,8 +860,8 @@
       if (document.getElementById('naverQuickInput')) document.getElementById('naverQuickInput').value = '';
       if (document.getElementById('newPropAdminMemo')) document.getElementById('newPropAdminMemo').value = '';
       fetchedNaverPhotos = [];
-      const previewBox = document.getElementById('naverPhotoPreviewBox');
-      if (previewBox) previewBox.classList.add('hidden');
+      currentPropertyPhotos = [];
+      renderPropPhotoGallery();
       document.getElementById('propRegisterModal').classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
     }
@@ -730,8 +904,8 @@
         document.getElementById('newPropAdminMemo').value = prop.adminMemo || '';
       }
 
-      const previewBox = document.getElementById('naverPhotoPreviewBox');
-      if (previewBox) previewBox.classList.add('hidden');
+      currentPropertyPhotos = (prop.images && Array.isArray(prop.images)) ? [...prop.images] : [];
+      renderPropPhotoGallery();
 
       document.getElementById('propRegisterModal').classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
@@ -824,23 +998,21 @@
           fetchedNaverPhotos = data.photos || [];
           window.lastFetchedNaverData = data;
 
-          // Render photo preview if photos found
-          const previewBox = document.getElementById('naverPhotoPreviewBox');
-          const photoList = document.getElementById('naverPhotoList');
-          const countSpan = document.getElementById('naverPhotoCount');
-
-          if (previewBox && photoList && fetchedNaverPhotos.length > 0) {
-            countSpan.textContent = fetchedNaverPhotos.length;
-            photoList.innerHTML = fetchedNaverPhotos.map(url => `
-              <div class="relative w-24 h-18 rounded-xl overflow-hidden border-2 border-emerald-500 shrink-0 shadow-sm">
-                <img src="${url}" class="w-full h-full object-cover">
-                <span class="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">실사진</span>
-              </div>
-            `).join('');
-            previewBox.classList.remove('hidden');
+          if (fetchedNaverPhotos && fetchedNaverPhotos.length > 0) {
+            currentPropertyPhotos = fetchedNaverPhotos.slice(0, 6);
+            showAdminToast(`네이버 실매물 사진 ${currentPropertyPhotos.length}장을 불러왔습니다. [+ 사진 추가]로 현장 사진을 더 추가하실 수 있습니다.`);
+          } else {
+            const cat = data.category || document.getElementById('newPropCategory').value;
+            if (cat === '아파트') {
+              const card = matchApartmentCard(data.title || '');
+              currentPropertyPhotos = [card];
+              showAdminToast('네이버 사진이 없어 아파트 전용 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
+            } else {
+              currentPropertyPhotos = [];
+              showAdminToast('네이버 매물 정보를 불러왔습니다. [+ 사진 추가]를 눌러 현장 사진을 등록해 주세요.');
+            }
           }
-
-          showAdminToast(`네이버 실매물 [${data.title}] 및 사진 ${fetchedNaverPhotos.length}장이 자동 연동되었습니다!`);
+          renderPropPhotoGallery();
         } else {
           showAdminToast(data.message || '매물 정보를 불러오지 못했습니다.');
           alert(data.message || '네이버에서 정보를 불러오지 못했습니다. 매물번호를 확인하시거나 아래 입력란에 직접 입력해 주세요.');
@@ -877,6 +1049,10 @@
 
       // [수정 모드] 기존 매물 정보 및 적요란 업데이트
       if (editId) {
+        const finalImages = (currentPropertyPhotos && currentPropertyPhotos.length > 0)
+          ? currentPropertyPhotos
+          : (category === '아파트' ? [matchApartmentCard(title)] : []);
+
         const updatedFields = {
           id: editId,
           category,
@@ -886,7 +1062,8 @@
           floor: area,
           location,
           description: desc,
-          adminMemo: adminMemo
+          adminMemo: adminMemo,
+          images: finalImages
         };
 
         // 1. 브라우저 localStorage에 즉시 보존 (새로고침해도 메모 유지)
@@ -993,12 +1170,9 @@
         badge: '네이버확인',
         isRecommended: true,
         tags: ['네이버등록', '실매물인증', trans],
-        images: (fetchedNaverPhotos && fetchedNaverPhotos.length > 0)
-          ? fetchedNaverPhotos
-          : [
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-              'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80'
-            ],
+        images: (currentPropertyPhotos && currentPropertyPhotos.length > 0)
+          ? currentPropertyPhotos
+          : (category === '아파트' ? [matchApartmentCard(title)] : []),
         agent: {
           name: '황선숙 대표공인중개사',
           phone: '010-4670-7248',

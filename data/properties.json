@@ -36,6 +36,7 @@
       "매매"
     ],
     "images": [
+      "images/complex_cards/LH8단지_803동_클린카드.jpg",
       "https://landthumb-phinf.pstatic.net/20201205_28/land_naver_1607123175511sWpBF_JPEG/1077052202010141955104712671205080615368000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20201205_144/land_naver_1607123175203B06zp_JPEG/107705220201014195510281015120508061558000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20140115_9/hscp_img_13897540187210baXM_JPEG/photoinfra_1389754018353.jpg?type=m1024",
@@ -138,6 +139,7 @@
       "매매"
     ],
     "images": [
+      "images/complex_cards/라온프라이빗_204동_클린카드.jpg",
       "https://landthumb-phinf.pstatic.net/20201204_51/land_naver_160709089786981yMF_JPEG/1128174202010142121243790901204230817711000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20201204_48/land_naver_1607090897239JmGXP_JPEG/112817420201014212123961538120423081785000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20160715_258/hscp_img_1468551195864w91qU_JPEG/photoinfra_1468551195536.jpg?type=m1024"
@@ -307,10 +309,7 @@
       "풀확장"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+      "images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -358,9 +357,7 @@
       "영천강뷰"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80"
+      "images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -407,8 +404,7 @@
       "단지상권인접"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80"
+      "images/complex_cards/한림풀에버_클린카드.jpg"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -505,8 +501,7 @@
       "학군우수"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+      "images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
