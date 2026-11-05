@@ -87,7 +87,7 @@ function initMap() {
 
   // Center on Jinju Chungmu-gong-dong (혁신도시)
   map = L.map('propertyMap', {
-    center: [35.1764, 128.1485],
+    center: [35.176734, 128.144606],
     zoom: 15,
     zoomControl: true,
     scrollWheelZoom: true
@@ -133,9 +133,13 @@ function initOfficeMap() {
   const officeMapContainer = document.getElementById('officeMap');
   if (!officeMapContainer) return;
 
+  // Exact coordinates for 경남 진주시 에나로 146 라온프라이빗시티 105호
+  const OFFICE_LAT = 35.176734;
+  const OFFICE_LNG = 128.144606;
+
   officeMap = L.map('officeMap', {
-    center: [35.1764, 128.1485],
-    zoom: 16,
+    center: [OFFICE_LAT, OFFICE_LNG],
+    zoom: 17, // Closer, crisp view of Raon Private City building
     zoomControl: true,
     scrollWheelZoom: true,
     dragging: true
@@ -150,33 +154,36 @@ function initOfficeMap() {
   const officeIcon = L.divIcon({
     className: 'office-pin',
     html: `
-      <div style="background:#0F172A; color:#FFFFFF; padding:6px 14px; border-radius:24px; font-weight:800; font-size:12px; box-shadow:0 6px 18px rgba(15,23,42,0.45); border:2px solid #C29B38; display:flex; align-items:center; gap:6px; transform:translate(-50%, -100%); cursor:pointer;">
+      <div style="background:#0F172A; color:#FFFFFF; padding:7px 15px; border-radius:24px; font-weight:800; font-size:12px; box-shadow:0 6px 20px rgba(15,23,42,0.5); border:2px solid #C29B38; display:flex; align-items:center; gap:6px; transform:translate(-50%, -100%); cursor:pointer;">
         <img src="images/logo.png" style="width:20px; height:20px; object-fit:contain;">
-        <span>진주퀸공인중개사 (105호)</span>
+        <span>진주퀸공인중개사 (라온프라이빗시티 105호)</span>
       </div>
     `,
-    iconSize: [180, 36],
-    iconAnchor: [90, 36]
+    iconSize: [230, 38],
+    iconAnchor: [115, 38]
   });
 
-  officeMarker = L.marker([35.1764, 128.1485], { icon: officeIcon }).addTo(officeMap);
+  officeMarker = L.marker([OFFICE_LAT, OFFICE_LNG], { icon: officeIcon }).addTo(officeMap);
 
   // Informative Interactive Popup
   officeMarker.bindPopup(`
-    <div style="font-family:'Pretendard',sans-serif; padding:4px; max-width:260px;">
-      <div style="font-size:13px; font-weight:800; color:#0F172A; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
-        <span style="color:#C29B38;">👑</span> 진주퀸공인중개사사무소
+    <div style="font-family:'Pretendard',sans-serif; padding:5px; max-width:280px;">
+      <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:4px; display:flex; align-items:center; gap:5px;">
+        <span style="color:#C29B38; font-size:16px;">👑</span> 진주퀸공인중개사사무소
       </div>
-      <div style="font-size:11px; color:#475569; line-height:1.4; margin-bottom:6px;">
+      <div style="font-size:12px; color:#334155; line-height:1.45; margin-bottom:6px;">
         경상남도 진주시 에나로 146, 105호 (라온프라이빗시티)<br>
-        <span style="color:#0D9488; font-weight:700;">LH 한국토지주택공사 본사 공원 맞은편 탑마트 주변</span>
+        <span style="color:#0D9488; font-weight:700;">LH 본사 공원 맞은편 · 탑마트 주변 중심상가 1층</span>
       </div>
-      <div style="font-size:11px; font-weight:700; color:#C29B38; margin-bottom:8px;">
+      <div style="font-size:12px; font-weight:800; color:#C29B38; margin-bottom:8px;">
         직통 010-4670-7248 / 유선 055-761-7248
       </div>
-      <div style="border-top:1px solid #E2E8F0; padding-top:6px; font-size:11px; font-weight:700;">
-        <a href="https://maps.google.com/?q=35.1764,128.1485" target="_blank" style="color:#2563EB; text-decoration:none;">
-          Google 지도로 길찾기 &rarr;
+      <div style="border-top:1px solid #E2E8F0; padding-top:8px; display:flex; items-center; justify-content:space-between; font-size:11px; font-weight:700;">
+        <a href="https://map.naver.com/v5/search/%EC%A7%84%EC%A3%BC%EC%8B%9C%20%EC%97%90%EB%82%98%EB%A1%9C%20146%20%EB%9D%BC%EC%98%A8%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%EC%8B%9C%ED%8B%B0" target="_blank" style="color:#03C75A; text-decoration:none;">
+          네이버 지도 &rarr;
+        </a>
+        <a href="https://map.kakao.com/link/to/진주퀸공인중개사사무소,35.176734,128.144606" target="_blank" style="color:#3C1E1E; background:#FEE500; padding:2px 7px; border-radius:5px; text-decoration:none;">
+          카카오 길찾기
         </a>
       </div>
     </div>
@@ -217,7 +224,7 @@ function updateMapMarkers() {
 
     // 동일 좌표 분산 (라온프라이빗시티 등 동일 단지/지번 매물들이 서로 가려지지 않고 선명하게 각각 노출되도록 미세 분산)
     let lat = Number(prop.lat) || 35.1764;
-    let lng = Number(prop.lng) || 128.1485;
+    let lng = Number(prop.lng) || 128.144606;
     const coordKey = `${lat.toFixed(4)},${lng.toFixed(4)}`;
 
     if (coordCounts[coordKey] === undefined) {
@@ -257,7 +264,7 @@ function updateMapMarkers() {
 
 function centerMapOnOffice() {
   if (!map) return;
-  map.flyTo([35.1764, 128.1485], 16, { duration: 1.2 });
+  map.flyTo([35.176734, 128.144606], 16, { duration: 1.2 });
   showToast('진주퀸공인중개사사무소 (에나로 146) 위치로 이동했습니다.');
 }
 
