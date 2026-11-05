@@ -62,3 +62,4 @@ draw.text((W // 2, bar_y + fh // 2), footer_text, fill=(71, 85, 105), font=font_
 out_path = "images/complex_cards/토지_클린카드.jpg"
 img.save(out_path, quality=95)
 print(f"Generated Land Card: {out_path}")
+

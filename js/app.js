@@ -1151,3 +1151,121 @@ function closeSoldNoticeModal() {
     document.body.style.overflow = '';
   }
 }
+
+// ----------------------------------------------------
+// PC CONTACT HANDLER (PC에서 전화/문자 클릭 시 연결 앱 선택창 방지 및 스마트 연동)
+// ----------------------------------------------------
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+         || (window.innerWidth <= 768 && 'ontouchstart' in window);
+}
+
+function openPcContactModal(type, phone, bodyText) {
+  const modal = document.getElementById('pcContactModal');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('pcContactModalTitle');
+  const subEl = document.getElementById('pcContactModalSubtitle');
+  const phoneEl = document.getElementById('pcContactPhone');
+  const smsBox = document.getElementById('pcContactSmsBox');
+  const smsTextEl = document.getElementById('pcContactSmsText');
+  const qrImg = document.getElementById('pcContactQrImg');
+  const directBtn = document.getElementById('pcContactDirectAppBtn');
+
+  const cleanPhone = phone || '010-4670-7248';
+  if (phoneEl) phoneEl.textContent = cleanPhone;
+
+  if (type === 'sms') {
+    if (titleEl) titleEl.textContent = '황선숙 대표 직통 문자 문의';
+    if (subEl) subEl.innerHTML = 'PC 환경에서는 문의 내용이 <span class="text-emerald-600 font-bold">클립보드에 자동 복사</span>되었습니다.';
+    if (smsBox) smsBox.classList.remove('hidden');
+    const msg = bodyText || '안녕하세요 대표님, 홈페이지 보고 문의드립니다. 통화 가능하신가요?';
+    if (smsTextEl) smsTextEl.textContent = msg;
+    if (qrImg) {
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`sms:${cleanPhone}?body=${msg}`)}`;
+    }
+    if (directBtn) {
+      directBtn.href = `sms:${cleanPhone}?body=${encodeURIComponent(msg)}`;
+      directBtn.textContent = 'PC 연동 프로그램(휴대폰과 연결/메시지 앱)으로 직접 열기';
+    }
+    copyContactToClipboard(msg);
+  } else {
+    if (titleEl) titleEl.textContent = '황선숙 대표 직통 전화 안내';
+    if (subEl) subEl.innerHTML = 'PC 환경에서는 대표님 연락처가 <span class="text-emerald-600 font-bold">클립보드에 자동 복사</span>되었습니다.';
+    if (smsBox) smsBox.classList.add('hidden');
+    if (qrImg) {
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`tel:${cleanPhone}`)}`;
+    }
+    if (directBtn) {
+      directBtn.href = `tel:${cleanPhone}`;
+      directBtn.textContent = 'PC 연동 프로그램(휴대폰과 연결/Skype)으로 직접 열기';
+    }
+    copyContactToClipboard(cleanPhone);
+  }
+
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  if (window.lucide) lucide.createIcons();
+}
+
+function closePcContactModal() {
+  const modal = document.getElementById('pcContactModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+function copyContactToClipboard(text, btnElement) {
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('클립보드에 복사되었습니다.');
+    if (btnElement) {
+      const orig = btnElement.innerHTML;
+      btnElement.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i> <span>복사완료!</span>';
+      if (window.lucide) lucide.createIcons();
+      setTimeout(() => {
+        btnElement.innerHTML = orig;
+        if (window.lucide) lucide.createIcons();
+      }, 2000);
+    }
+  }).catch(() => {
+    showToast('복사되었습니다: ' + text);
+  });
+}
+
+// Global click event listener for PC devices
+document.addEventListener('click', (e) => {
+  // If the click is inside the modal direct app launch link, allow it to execute
+  if (e.target && e.target.id === 'pcContactDirectAppBtn') {
+    return;
+  }
+
+  const link = e.target.closest('a[href^="tel:"], a[href^="sms:"]');
+  if (!link) return;
+
+  // Mobile device: execute default native dialer/sms without interruption
+  if (isMobileDevice()) {
+    return;
+  }
+
+  // PC (Desktop): Intercept Windows "Choose application" dialog
+  e.preventDefault();
+  const rawHref = link.getAttribute('href') || '';
+  if (rawHref.startsWith('sms:')) {
+    const afterSms = rawHref.substring(4);
+    const [phonePart, queryPart] = afterSms.split('?');
+    const phone = phonePart || '010-4670-7248';
+    let bodyText = '';
+    if (queryPart) {
+      const match = queryPart.match(/body=([^&]+)/);
+      if (match) {
+        bodyText = decodeURIComponent(match[1]);
+      }
+    }
+    openPcContactModal('sms', phone, bodyText);
+  } else if (rawHref.startsWith('tel:')) {
+    const phone = rawHref.substring(4);
+    openPcContactModal('tel', phone);
+  }
+});
