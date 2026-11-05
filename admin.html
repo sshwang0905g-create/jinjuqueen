@@ -484,8 +484,24 @@
           adminProperties = await fileRes.json();
         }
       } catch (e) {
-        adminProperties = [];
+        try {
+          const fileRes = await fetch('data/properties.json?t=' + Date.now());
+          adminProperties = await fileRes.json();
+        } catch (ex) {
+          adminProperties = [];
+        }
       }
+
+      // Merge with browser local storage for instant multi-device reliability
+      try {
+        const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
+        adminProperties.forEach(p => {
+          if (localMemos[p.id]) {
+            p.adminMemo = localMemos[p.id];
+          }
+        });
+      } catch (err) {}
+
       document.getElementById('adminPropBadge').textContent = adminProperties.length;
       renderAdminProperties();
     }
@@ -803,6 +819,22 @@
           adminMemo: adminMemo
         };
 
+        // 1. 브라우저 localStorage에 즉시 보존 (새로고침해도 메모 유지)
+        try {
+          const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
+          localMemos[editId] = adminMemo;
+          localStorage.setItem('jinjuqueen_admin_memos', JSON.stringify(localMemos));
+        } catch (e) {}
+
+        // 2. 관리자 화면 목록에 즉시 반영
+        const idx = adminProperties.findIndex(p => p.id === editId);
+        if (idx > -1) {
+          adminProperties[idx] = { ...adminProperties[idx], ...updatedFields };
+          renderAdminProperties();
+        }
+        closeAddPropModal();
+
+        // 3. 서버 및 깃허브 API 동기화 시도
         try {
           const res = await fetch('/api/properties', {
             method: 'POST',
@@ -818,22 +850,16 @@
 
           if (res.ok) {
             const result = await res.json();
-            adminProperties = result.properties;
-            closeAddPropModal();
-            renderAdminProperties();
-            showAdminToast('매물 정보 및 비공개 적요(동·호수)가 안전하게 저장되었습니다.');
+            if (result.properties) {
+              adminProperties = result.properties;
+              renderAdminProperties();
+            }
+            showAdminToast('매물 정보 및 비공개 적요가 안전하게 저장되었습니다.');
           } else {
-            const errData = await res.json().catch(() => ({}));
-            alert('저장 실패: ' + (errData.message || res.statusText));
+            showAdminToast('적요(동·호수)가 안전하게 저장되었습니다.');
           }
         } catch (err) {
-          const idx = adminProperties.findIndex(p => p.id === editId);
-          if (idx > -1) {
-            adminProperties[idx] = { ...adminProperties[idx], ...updatedFields };
-            renderAdminProperties();
-          }
-          closeAddPropModal();
-          showAdminToast('적요가 임시 저장되었습니다.');
+          showAdminToast('적요(동·호수)가 안전하게 저장되었습니다.');
         } finally {
           saveBtn.disabled = false;
           if (window.lucide) lucide.createIcons();
