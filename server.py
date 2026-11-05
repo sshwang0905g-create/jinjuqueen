@@ -1,4 +1,4 @@
-ㅇfrom naver_client import client
+from naver_client import client
 # Local Development Server supporting /api/board and /api/auth
 # Run with: python server.py
 
@@ -115,28 +115,6 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 return
 
-        if parsed.path == '/api/download_properties_excel':
-            excel_path = os.path.join(BASE_DIR, '진주퀸공인중개사_매물관리대장.xlsx')
-            try:
-                import subprocess
-                subprocess.run(['python', os.path.join(BASE_DIR, 'generate_excel.py')], check=True)
-            except Exception as e:
-                print('Error generating excel:', e)
-
-            if os.path.exists(excel_path):
-                self.send_response(200)
-                self.send_header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                quoted_name = urllib.parse.quote('진주퀸공인중개사_매물관리대장.xlsx')
-                self.send_header('Content-Disposition', f"attachment; filename*=UTF-8''{quoted_name}")
-                self.send_header('Access-Control-Allow-Origin', '*')
-                self.end_headers()
-                with open(excel_path, 'rb') as f:
-                    self.wfile.write(f.read())
-                return
-            else:
-                self.send_response(404)
-                self.end_headers()
-                return
 
         super().do_GET()
 

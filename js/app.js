@@ -39,8 +39,20 @@ async function loadLiveProperties() {
     const res = await fetch('/api/properties?t=' + Date.now());
     if (res.ok) {
       const data = await res.json();
-      if (data.properties && Array.isArray(data.properties) && data.properties.length > 0) {
-        PROPERTIES_DATA = data.properties;
+      const props = data.properties || (Array.isArray(data) ? data : null);
+      if (props && Array.isArray(props) && props.length > 0) {
+        PROPERTIES_DATA = props;
+        renderProperties();
+        updateMapMarkers();
+        return;
+      }
+    }
+    // Fallback to static data/properties.json file
+    const fileRes = await fetch('data/properties.json?t=' + Date.now());
+    if (fileRes.ok) {
+      const fileProps = await fileRes.json();
+      if (Array.isArray(fileProps) && fileProps.length > 0) {
+        PROPERTIES_DATA = fileProps;
         renderProperties();
         updateMapMarkers();
         return;
