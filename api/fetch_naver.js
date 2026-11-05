@@ -37,10 +37,13 @@ module.exports = async (req, res) => {
   };
 
   try {
-    // 1. Fetch seed cookies
+    // 1. Fetch seed cookies with strict 3.5s timeout
     let cookieStr = '';
     try {
-      const seedRes = await fetch('https://new.land.naver.com/', { headers: browserHeaders });
+      const seedRes = await fetch('https://new.land.naver.com/', { 
+        headers: browserHeaders,
+        signal: AbortSignal.timeout(3500)
+      });
       const rawCookies = seedRes.headers.get('set-cookie') || '';
       const propKey = rawCookies.match(/PROP_TEST_KEY=([^;,\s]+)/);
       const propId = rawCookies.match(/PROP_TEST_ID=([^;,\s]+)/);
@@ -56,39 +59,36 @@ module.exports = async (req, res) => {
     const reqHeaders = { ...browserHeaders };
     if (cookieStr) reqHeaders['Cookie'] = cookieStr;
 
-    // 2. Fetch target article page
+    // 2. Fetch target article page with strict 4.5s timeout
     const targetUrl = `https://fin.land.naver.com/articles/${atclNo}`;
     let html = '';
-    const resp = await fetch(targetUrl, { headers: reqHeaders });
-    if (resp.ok) {
-      html = await resp.text();
-    }
-
-    // Fallback: If desktop is blocked, fetch mobile info
-    if (!html || html.length < 1000) {
-      const mResp = await fetch(`https://m.land.naver.com/article/info/${atclNo}`, { headers: mobileHeaders });
-      if (mResp.ok) {
-        html = await mResp.text();
+    try {
+      const resp = await fetch(targetUrl, { 
+        headers: reqHeaders,
+        signal: AbortSignal.timeout(4500)
+      });
+      if (resp.ok) {
+        html = await resp.text();
       }
-    }
+    } catch (fetchErr) {}
 
     if (!html || html.length < 500) {
       return res.status(502).json({
         success: false,
-        message: `네이버에서 매물정보를 가져올 수 없습니다 (상태코드: ${resp.status}). 매물이 종료되었거나 비공개일 수 있습니다.`
+        message: '네이버에서 매물정보를 가져오지 못했습니다. 매물이 거래완료되어 비공개되었거나 매물번호를 확인해 주세요.'
       });
     }
 
     // 3. Parse photos
-    const photos = [];
     const roomPhotos = [];
     const complexPhotos = [];
     const seenUrls = new Set();
 
-    // (1) Mobile gallery fetch
+    // (1) Mobile gallery fetch with strict 3.5s timeout
     try {
       const gResp = await fetch(`https://m.land.naver.com/article/image/${atclNo}`, {
-        headers: { ...mobileHeaders, ...(cookieStr ? { 'Cookie': cookieStr } : {}) }
+        headers: { ...mobileHeaders, ...(cookieStr ? { 'Cookie': cookieStr } : {}) },
+        signal: AbortSignal.timeout(3500)
       });
       if (gResp.ok) {
         const gText = await gResp.text();

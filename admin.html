@@ -733,20 +733,51 @@
       const originalHtml = quickBtn ? quickBtn.innerHTML : '';
       if (quickBtn) {
         quickBtn.disabled = true;
-        quickBtn.innerHTML = '<span class="inline-block animate-spin mr-1">↻</span> 수집 중...';
+        quickBtn.innerHTML = '<span class="inline-block animate-spin mr-1">↻</span> 수집 중... (최대 6초)';
       }
 
+      let timeoutTimer = null;
+
       try {
-        const res = await fetch('/api/fetch_naver', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ articleInput: input })
-        });
-        let data = {};
+        let res = null;
+
+        // Try primary API with 6-second timeout
         try {
-          data = await res.json();
-        } catch (e) {
-          data = { success: false, message: '네이버 매물 정보를 가져오지 못했습니다. 매물번호를 확인해 주세요.' };
+          const controller = new AbortController();
+          timeoutTimer = setTimeout(() => controller.abort(), 6500);
+
+          res = await fetch('/api/fetch_naver', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ articleInput: input }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutTimer);
+        } catch (fetchErr) {
+          clearTimeout(timeoutTimer);
+          // If on Vercel and local python server is running on office PC, try local fallback
+          if (location.hostname !== 'localhost') {
+            try {
+              res = await fetch('http://localhost:8080/api/fetch_naver', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ articleInput: input })
+              });
+            } catch (localErr) {}
+          }
+        }
+
+        let data = {};
+        if (res && res.ok) {
+          try {
+            data = await res.json();
+          } catch (e) {
+            data = { success: false, message: '네이버 응답 형식이 올바르지 않습니다.' };
+          }
+        } else if (res) {
+          data = await res.json().catch(() => ({ success: false, message: '네이버 서버에서 매물을 찾지 못했습니다.' }));
+        } else {
+          data = { success: false, message: '네이버 응답 시간이 초과되었습니다.' };
         }
 
         if (data.success) {
@@ -780,11 +811,13 @@
           showAdminToast(`네이버 실매물 [${data.title}] 및 사진 ${fetchedNaverPhotos.length}장이 자동 연동되었습니다!`);
         } else {
           showAdminToast(data.message || '매물 정보를 불러오지 못했습니다.');
+          alert(data.message || '네이버에서 정보를 불러오지 못했습니다. 매물번호를 확인하시거나 아래 입력란에 직접 입력해 주세요.');
         }
       } catch (err) {
-        console.error(err);
-        showAdminToast('네이버 서버 연결 오류가 발생했습니다.');
+        showAdminToast('네이버 요청 시간이 초과되었습니다.');
+        alert('네이버 요청 시간이 초과되었습니다. 매물번호를 확인해 주시거나 아래 입력창에 직접 매물명과 가격을 입력하여 등록해 주세요.');
       } finally {
+        if (timeoutTimer) clearTimeout(timeoutTimer);
         if (quickBtn) {
           quickBtn.disabled = false;
           quickBtn.innerHTML = originalHtml;
