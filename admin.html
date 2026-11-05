@@ -742,7 +742,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ articleInput: input })
         });
-        const data = await res.json();
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (e) {
+          data = { success: false, message: '네이버 매물 정보를 가져오지 못했습니다. 매물번호를 확인해 주세요.' };
+        }
 
         if (data.success) {
           if (data.title) document.getElementById('newPropTitle').value = data.title;

@@ -2,6 +2,10 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/api/fetch_naver",
+      "destination": "/api/fetch_naver.js"
+    },
+    {
       "source": "/api/board",
       "destination": "/api/board.js"
     },
