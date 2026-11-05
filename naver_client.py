@@ -271,14 +271,14 @@ class NaverRealEstateClient:
             rlet_code = rlet_match.group(1).strip() if rlet_match else ""
 
             category = "아파트"
-            if rlet_code in ["D01", "D02", "D03", "E01", "E02", "E03"] or any(k in art_name_val or k in title for k in ["상가", "점포", "사무실", "근린"]):
+            if rlet_code in ["F01", "F02", "E03"] or any(k in art_name_val or k in title for k in ["토지", "택지", "대지", "전원주택지", "주택용지", "필지", "주택지", "단독주택지", "대"]):
+                category = "택지"
+            elif rlet_code in ["D01", "D02", "D03", "E01", "E02"] or any(k in art_name_val or k in title for k in ["상가", "점포", "사무실", "근린"]):
                 category = "상가"
             elif rlet_code in ["B01", "B02"] or "오피스텔" in art_name_val or "오피스텔" in title or "라온프라이빗시티" in title or "허브시티" in title:
                 category = "오피스텔"
             elif rlet_code in ["C01", "C02", "C03"] or any(k in art_name_val or k in title for k in ["원룸", "투룸"]):
                 category = "원룸/투룸"
-            elif rlet_code in ["F01", "F02"] or any(k in art_name_val or k in title for k in ["토지", "택지", "대지"]):
-                category = "택지"
             elif rlet_code in ["A01", "A02"] or any(k in art_name_val or k in title for k in ["아파트", "단지"]):
                 category = "아파트"
             elif any(k in art_name_val for k in ["상가", "점포"]):
@@ -298,50 +298,98 @@ class NaverRealEstateClient:
             std_name = std_match.group(1).replace(" ", "") if std_match else "거실기준"
             direction_parsed = f"{dir_name}({std_name})" if dir_name else "남향(거실기준)"
 
+            # 토지 전용 필드 추출 (지목, 용도지역, 토지면적, 도로접면, 추천용도, 허가구역)
+            land_m = re.search(r'"(?:landSpace|platArea|landArea|area1)":([0-9.]+)', full_decoded)
+            jimok_m = re.search(r'"(?:landCategoryName|landCategory|jimokName)":"([^"]+)"', full_decoded)
+            use_m = re.search(r'"(?:usageDistrictName|useDistrictName|usageDistrict|areaUsage)":"([^"]+)"', full_decoded)
+            road_m = re.search(r'"(?:roadConditionName|roadRelationName|roadAccessName)":"([^"]+)"', full_decoded)
+            rec_m = re.search(r'"(?:recommendedUsageName|recommendedUsage|recommendedPurpose)":"([^"]+)"', full_decoded)
+            curr_purp_m = re.search(r'"currentPurpose":"([^"]+)"', full_decoded)
+            perm_m = re.search(r'"landTradePermission":(true|false|"[^"]*")', full_decoded)
+
+            land_area = float(land_m.group(1)) if land_m else 0.0
+            land_pyeong = round(land_area / 3.305785, 1) if land_area else 0.0
+            
+            # 지목 최우선 판별
+            if art_name_val in ["대", "전", "답", "임야", "잡종지", "과수원", "목장용지"]:
+                land_category_name = art_name_val
+            else:
+                land_category_name = jimok_m.group(1).strip() if jimok_m else ("대" if "대" in title else "대")
+
+            usage_district = use_m.group(1).strip() if use_m else "제1종일반주거지역"
+            road_condition = road_m.group(1).strip() if road_m else "소로한면접함 (8m 아스팔트 도로)"
+            
+            if rec_m:
+                recommended_usage = rec_m.group(1).strip()
+            elif curr_purp_m:
+                recommended_usage = f"{curr_purp_m.group(1).strip()} (단독주택)"
+            else:
+                recommended_usage = "단독주택지 (상가주택 협의)"
+
+            is_perm = perm_m and perm_m.group(1) == "true"
+            permission_zone = "지정구역 (토지거래허가 필요)" if is_perm else "해당없음 (비지정구역)"
+
             # (2) 면적 (전용면적, 공급면적 및 평수 환산)
             ex_match = re.search(r'"exclusiveSpace":([0-9.]+)', full_decoded)
             sp_match = re.search(r'"supplySpace":([0-9.]+)', full_decoded)
-            exclusive_area = float(ex_match.group(1)) if ex_match else 84.89
-            supply_area = float(sp_match.group(1)) if sp_match else 114.7
-            exclusive_pyeong = round(exclusive_area / 3.305785, 1)
-            supply_pyeong = round(supply_area / 3.305785, 1)
 
-            # (3) 층수 (해당층 / 총층)
-            tf_match = re.search(r'"targetFloor":"([^"]+)"', full_decoded)
-            tot_match = re.search(r'"totalFloor":"?([0-9]+)"?', full_decoded)
-            target_floor = tf_match.group(1) if tf_match else ""
-            total_floor = tot_match.group(1) if tot_match else ""
-            if target_floor and total_floor:
-                target_clean = target_floor if "층" in target_floor else f"{target_floor}층"
-                floor_parsed = f"{target_clean} / 총 {total_floor}층"
-            elif target_floor:
-                floor_parsed = target_floor if "층" in target_floor else f"{target_floor}층"
+            if category == "택지":
+                exclusive_area = land_area if land_area > 0 else (float(ex_match.group(1)) if ex_match else 280.9)
+                supply_area = exclusive_area
+                exclusive_pyeong = round(exclusive_area / 3.305785, 1)
+                supply_pyeong = exclusive_pyeong
+                floor_parsed = f"토지 (지목: {land_category_name} / {usage_district})"
+                room_count = 0
+                bath_count = 0
+                approval_date = "토지분양 완료 (즉시 착공/건축 가능)"
+                parking_parsed = "건축 시 부지 내 확보 가능"
+                direction_parsed = "남향(추천 건축방향)"
             else:
-                floor_parsed = "중층"
+                exclusive_area = float(ex_match.group(1)) if ex_match else (land_area if land_area > 0 else 84.89)
+                supply_area = float(sp_match.group(1)) if sp_match else (exclusive_area * 1.35)
+                exclusive_pyeong = round(exclusive_area / 3.305785, 1)
+                supply_pyeong = round(supply_area / 3.305785, 1)
 
-            # (4) 방수 / 욕실수
-            rc_match = re.search(r'"roomCount":([0-9]+)', full_decoded)
-            bc_match = re.search(r'"bathRoomCount":([0-9]+)', full_decoded)
-            room_count = int(rc_match.group(1)) if rc_match else 3
-            bath_count = int(bc_match.group(1)) if bc_match else 2
+                # (3) 층수 (해당층 / 총층)
+                tf_match = re.search(r'"targetFloor":"([^"]+)"', full_decoded)
+                tot_match = re.search(r'"totalFloor":"?([0-9]+)"?', full_decoded)
+                target_floor = tf_match.group(1) if tf_match else ""
+                total_floor = tot_match.group(1) if tot_match else ""
+                if target_floor and total_floor:
+                    target_clean = target_floor if "층" in target_floor else f"{target_floor}층"
+                    floor_parsed = f"{target_clean} / 총 {total_floor}층"
+                elif target_floor:
+                    floor_parsed = target_floor if "층" in target_floor else f"{target_floor}층"
+                else:
+                    floor_parsed = "1층" if category == "상가" else "중층"
 
-            # (5) 사용승인일
-            app_match = re.search(r'"useApprovalDate":"([0-9]{4})([0-9]{2})([0-9]{2})"', full_decoded)
-            if app_match:
-                approval_date = f"{app_match.group(1)}년 {int(app_match.group(2))}월 {int(app_match.group(3))}일"
-            else:
-                app_year = re.search(r'"useApprovalDate":"([0-9]{4})"', full_decoded)
-                approval_date = f"{app_year.group(1)}년" if app_year else "2016년"
+                # (4) 방수 / 욕실수
+                rc_match = re.search(r'"roomCount":([0-9]+)', full_decoded)
+                bc_match = re.search(r'"bathRoomCount":([0-9]+)', full_decoded)
+                if category == "상가":
+                    room_count = 1
+                    bath_count = 1
+                else:
+                    room_count = int(rc_match.group(1)) if rc_match else 3
+                    bath_count = int(bc_match.group(1)) if bc_match else 2
 
-            # (6) 주차대수
-            p_per = re.search(r'"parkingCountPerHousehold":([0-9.]+)', full_decoded)
-            p_tot = re.search(r'"totalParkingCount":([0-9]+)', full_decoded)
-            if p_per and p_tot:
-                parking_parsed = f"세대당 {p_per.group(1)}대 (총 {p_tot.group(1)}대)"
-            elif p_tot:
-                parking_parsed = f"총 {p_tot.group(1)}대 주차가능"
-            else:
-                parking_parsed = "지하 주차장 완비"
+                # (5) 사용승인일
+                app_match = re.search(r'"useApprovalDate":"([0-9]{4})([0-9]{2})([0-9]{2})"', full_decoded)
+                if app_match:
+                    approval_date = f"{app_match.group(1)}년 {int(app_match.group(2))}월 {int(app_match.group(3))}일"
+                else:
+                    app_year = re.search(r'"useApprovalDate":"([0-9]{4})"', full_decoded)
+                    approval_date = f"{app_year.group(1)}년" if app_year else "2018년"
+
+                # (6) 주차대수
+                p_per = re.search(r'"parkingCountPerHousehold":([0-9.]+)', full_decoded)
+                p_tot = re.search(r'"totalParkingCount":([0-9]+)', full_decoded)
+                if p_per and p_tot:
+                    parking_parsed = f"세대당 {p_per.group(1)}대 (총 {p_tot.group(1)}대)"
+                elif p_tot:
+                    parking_parsed = f"총 {p_tot.group(1)}대 주차가능"
+                else:
+                    parking_parsed = "지하 주차장 완비" if category in ["아파트", "오피스텔"] else "주차가능"
 
             # (7) 동명 포함 정밀 매물명
             c_name = re.search(r'"complexName":"([^"]+)"', full_decoded)
@@ -357,6 +405,14 @@ class NaverRealEstateClient:
                         title = f"충무공동 {art_name_val} ({feat_short})"
                     else:
                         title = f"충무공동 {art_name_val}"
+                elif category == "택지":
+                    feat_short = feature_desc.split(',')[0].strip() if feature_desc else ""
+                    if feat_short and len(feat_short) > 3:
+                        title = f"충무공동 단독주택용지 ({feat_short})"
+                    elif land_pyeong > 0:
+                        title = f"충무공동 단독주택용지 ({land_pyeong}평, 지목:{land_category_name})"
+                    else:
+                        title = "충무공동 단독주택용지 (택지)"
                 else:
                     title = art_name_val
 
@@ -369,6 +425,11 @@ class NaverRealEstateClient:
                 final_description = f"📌 매물특징\n\n✔ {feature_desc}"
             else:
                 final_description = f"네이버부동산 등록 검증 실매물(매물번호: {atcl_no})입니다."
+
+            # 토지/택지 매물인데 실사진이 전혀 없는 경우 토지 전용 클린 타이틀 카드 매핑
+            if category == "택지" and len(photos) == 0:
+                photos = ["images/complex_cards/토지_클린카드.jpg"]
+                logger.info(f"[토지 클린 타이틀 카드 매핑] images/complex_cards/토지_클린카드.jpg")
 
             # 상가 매물인데 실사진이 전혀 없는 경우 상가 전용 클린 타이틀 카드 매핑
             if category == "상가" and len(photos) == 0:
@@ -405,6 +466,13 @@ class NaverRealEstateClient:
                 "deposit": deposit,
                 "monthlyRent": monthly,
                 "category": category,
+                "landArea": land_area if category == "택지" else None,
+                "landAreaPyeong": land_pyeong if category == "택지" else None,
+                "landCategory": land_category_name if category == "택지" else None,
+                "usageDistrict": usage_district if category == "택지" else None,
+                "roadCondition": road_condition if category == "택지" else None,
+                "recommendedUsage": recommended_usage if category == "택지" else None,
+                "permissionZone": permission_zone if category == "택지" else None,
                 "transactionType": trans_type,
                 "location": "진주시 충무공동 (혁신도시)",
                 "direction": direction_parsed,

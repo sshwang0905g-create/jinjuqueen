@@ -143,14 +143,25 @@ for row_idx, prop in enumerate(props, 5):
     c11 = ws.cell(row=row_idx, column=11, value=prop.get("location", "-"))
     c11.alignment = Alignment(horizontal="left", vertical="center")
 
-    # 12. 전용면적
-    ex_m2 = prop.get("exclusiveArea", "-")
-    ex_py = prop.get("exclusiveAreaPyeong", "-")
-    c12 = ws.cell(row=row_idx, column=12, value=f"{ex_m2}㎡ ({ex_py}평)")
+    # 12. 면적 (토지는 대지면적, 주거/상가는 전용면적)
+    if prop.get("category") == "택지":
+        l_m2 = prop.get("landArea") or prop.get("exclusiveArea", "-")
+        l_py = prop.get("landAreaPyeong") or prop.get("exclusiveAreaPyeong", "-")
+        area_str = f"대지 {l_m2}㎡ ({l_py}평)"
+    else:
+        ex_m2 = prop.get("exclusiveArea", "-")
+        ex_py = prop.get("exclusiveAreaPyeong", "-")
+        area_str = f"전용 {ex_m2}㎡ ({ex_py}평)"
+    c12 = ws.cell(row=row_idx, column=12, value=area_str)
     c12.alignment = Alignment(horizontal="center", vertical="center")
 
-    # 13. 층수 / 방향
-    floor_dir = f"{prop.get('floor', '-')} / {prop.get('direction', '-')}"
+    # 13. 층수 / 방향 (토지는 지목 / 용도지역)
+    if prop.get("category") == "택지":
+        jimok = prop.get("landCategory", "대")
+        use_dist = prop.get("usageDistrict", "제1종일반주거")
+        floor_dir = f"지목:{jimok} / {use_dist}"
+    else:
+        floor_dir = f"{prop.get('floor', '-')} / {prop.get('direction', '-')}"
     c13 = ws.cell(row=row_idx, column=13, value=floor_dir)
     c13.alignment = Alignment(horizontal="center", vertical="center")
 

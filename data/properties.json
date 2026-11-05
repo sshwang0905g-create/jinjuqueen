@@ -1,5 +1,62 @@
 [
   {
+    "id": "prop-1793890528090",
+    "category": "택지",
+    "transactionType": "매매",
+    "status": "ACTIVE",
+    "sourceType": "NAVER",
+    "naverArticleNo": "2656957164",
+    "title": "충무공동 단독주택용지 (10단지 앞 주택지)",
+    "price": 35000,
+    "priceFormatted": "매매 3억 5,000만원",
+    "deposit": 35000,
+    "monthlyRent": 0,
+    "location": "진주시 충무공동 (혁신도시)",
+    "addressMasked": "진주시 충무공동 (혁신도시) 일원",
+    "adminMemo": "",
+    "lat": 35.1775,
+    "lng": 128.1453,
+    "exclusiveArea": 257.8,
+    "exclusiveAreaPyeong": 78.0,
+    "supplyArea": 257.8,
+    "supplyAreaPyeong": 78.0,
+    "floor": "토지 (지목: 대 / 제1종일반주거지역)",
+    "direction": "남향(추천 건축방향)",
+    "rooms": 0,
+    "bathrooms": 0,
+    "approvalDate": "토지분양 완료 (즉시 착공/건축 가능)",
+    "moveInDate": "즉시 명도/착공 가능",
+    "parking": "건축 시 부지 내 확보 가능",
+    "maintenanceFee": "해당사항 없음 (순수 토지)",
+    "maintenanceDetails": "순수 토지로 매월 고정 관리비가 발생하지 않습니다.",
+    "badge": "네이버확인",
+    "isRecommended": true,
+    "tags": [
+      "네이버등록",
+      "실매물인증",
+      "매매"
+    ],
+    "images": [
+      "images/complex_cards/토지_클린카드.jpg?v=pastel"
+    ],
+    "agent": {
+      "name": "황선숙 대표공인중개사",
+      "phone": "010-4670-7248",
+      "role": "개업공인중개사"
+    },
+    "description": "✔️선호도 좋은 조용한 주택지\n✔️건축연수제한 없음 여유되실때 건축가능\n✔️지상3층/2가구전입가능 건폐율60/용적률120%이하\n✔️강변 산책로가 옆이라 운동하기 좋은 위치\n✔️금액절충가능",
+    "landCategory": "대",
+    "usageDistrict": "제1종일반주거지역",
+    "roadCondition": "소로한면접함 (8m 아스팔트 도로)",
+    "recommendedUsage": "단독주택",
+    "permissionZone": "해당없음 (비지정구역)",
+    "immediateBuild": "즉시 착공/건축 가능 (기반시설 완비)",
+    "buildingCoverageRatio": "60%",
+    "floorAreaRatio": "100%",
+    "landArea": 257.8,
+    "landAreaPyeong": 78.0
+  },
+  {
     "id": "prop-1793889733246",
     "category": "오피스텔",
     "transactionType": "매매",
@@ -140,7 +197,7 @@
       "사무실"
     ],
     "images": [
-      "images/complex_cards/일반상가_클린카드.jpg"
+      "images/complex_cards/일반상가_클린카드.jpg?v=pastel"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -188,7 +245,7 @@
       "매매"
     ],
     "images": [
-      "images/complex_cards/LH8단지_803동_클린카드.jpg",
+      "images/complex_cards/LH8단지_803동_클린카드.jpg?v=pastel",
       "https://landthumb-phinf.pstatic.net/20201205_28/land_naver_1607123175511sWpBF_JPEG/1077052202010141955104712671205080615368000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20201205_144/land_naver_1607123175203B06zp_JPEG/107705220201014195510281015120508061558000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20140115_9/hscp_img_13897540187210baXM_JPEG/photoinfra_1389754018353.jpg?type=m1024",
@@ -242,7 +299,7 @@
       "매매"
     ],
     "images": [
-      "images/complex_cards/더힐_505동_클린카드.jpg",
+      "images/complex_cards/더힐_505동_클린카드.jpg?v=pastel",
       "https://landthumb-phinf.pstatic.net/20210115_242/land_naver_1610671716109jIFtV_JPEG/137446120210115094835999212011509483665000000.jpg?type=m1024"
     ],
     "agent": {
@@ -291,7 +348,7 @@
       "매매"
     ],
     "images": [
-      "images/complex_cards/라온프라이빗_204동_클린카드.jpg",
+      "images/complex_cards/라온프라이빗_204동_클린카드.jpg?v=pastel",
       "https://landthumb-phinf.pstatic.net/20201204_51/land_naver_160709089786981yMF_JPEG/1128174202010142121243790901204230817711000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20201204_48/land_naver_1607090897239JmGXP_JPEG/112817420201014212123961538120423081785000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20160715_258/hscp_img_1468551195864w91qU_JPEG/photoinfra_1468551195536.jpg?type=m1024"
@@ -461,7 +518,7 @@
       "풀확장"
     ],
     "images": [
-      "images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg"
+      "images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg?v=pastel"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -509,7 +566,7 @@
       "영천강뷰"
     ],
     "images": [
-      "images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg"
+      "images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg?v=pastel"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -556,7 +613,7 @@
       "단지상권인접"
     ],
     "images": [
-      "images/complex_cards/한림풀에버_클린카드.jpg"
+      "images/complex_cards/한림풀에버_클린카드.jpg?v=pastel"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -653,7 +710,7 @@
       "학군우수"
     ],
     "images": [
-      "images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg"
+      "images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg?v=pastel"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -732,15 +789,15 @@
     "exclusiveAreaPyeong": 85.0,
     "supplyArea": 280.9,
     "supplyAreaPyeong": 85.0,
-    "floor": "토지 (건폐율 60% / 용적률 100%)",
-    "direction": "남향 (건축 기준)",
+    "floor": "토지 (지목: 대 / 제1종일반주거지역)",
+    "direction": "남향(추천 건축방향)",
     "rooms": 0,
     "bathrooms": 0,
-    "approvalDate": "토지분양 완료 (즉시 건축 가능)",
-    "moveInDate": "즉시 착공 가능",
-    "parking": "건축 시 2대 이상 가능",
-    "maintenanceFee": "해당없음 (순수 토지)",
-    "maintenanceDetails": "해당사항 없음",
+    "approvalDate": "토지분양 완료 (즉시 착공/건축 가능)",
+    "moveInDate": "즉시 명도/착공 가능",
+    "parking": "건축 시 부지 내 확보 가능",
+    "maintenanceFee": "해당사항 없음 (순수 토지)",
+    "maintenanceDetails": "순수 토지로 매월 고정 관리비가 발생하지 않습니다.",
     "badge": "추천택지",
     "isRecommended": true,
     "tags": [
@@ -750,8 +807,7 @@
       "즉시건축"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80"
+      "images/complex_cards/토지_클린카드.jpg?v=pastel"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -759,7 +815,17 @@
       "role": "개업공인중개사"
     },
     "description": "혁신도시 내에서 가장 쾌적한 주거환경을 자랑하는 단독주택 택지입니다. 남향 배치로 채광이 뛰어나며 기반시설(상하수도, 전기, 가스) 인입이 완비되어 전원주택 및 고급 단독주택 신축에 최적입니다.",
-    "adminMemo": ""
+    "adminMemo": "",
+    "landCategory": "대",
+    "usageDistrict": "제1종일반주거지역",
+    "roadCondition": "소로한면접함 (8m 아스팔트 도로)",
+    "recommendedUsage": "단독주택용지 (상가주택 협의)",
+    "permissionZone": "해당없음 (비지정구역)",
+    "immediateBuild": "즉시 착공/건축 가능 (기반시설 완비)",
+    "buildingCoverageRatio": "60%",
+    "floorAreaRatio": "100%",
+    "landArea": 280.9,
+    "landAreaPyeong": 85.0
   },
   {
     "id": "prop-08",

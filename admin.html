@@ -264,12 +264,13 @@
         <input type="hidden" id="editPropId" value="">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1" for="newPropCategory">매물 유형</label>
-            <select id="newPropCategory" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold">
-              <option value="아파트">아파트</option>
-              <option value="오피스텔">오피스텔</option>
-              <option value="상가">상가</option>
-              <option value="택지">단독주택용지/택지</option>
+            <label class="block font-bold text-slate-700 mb-1" for="newPropCategory">매물 유형 (카테고리)</label>
+            <select id="newPropCategory" onchange="handleCategoryChange()" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-bold text-slate-900">
+              <option value="아파트">아파트 (공동주택)</option>
+              <option value="오피스텔">오피스텔 (주거/업무)</option>
+              <option value="상가">상가 / 점포 / 사무실</option>
+              <option value="택지">토지 / 단독주택용지 (택지)</option>
+              <option value="원룸/투룸">원룸 / 투룸 (다가구·다세대)</option>
             </select>
           </div>
           <div>
@@ -287,14 +288,193 @@
           <input type="text" id="newPropTitle" placeholder="예: 진주혁신 대방노블랜드 34평 로열동 판상형" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1" for="newPropPrice">가격 표시</label>
-            <input type="text" id="newPropPrice" placeholder="예: 매매 5억 3,000만원 / 보증금 3,000/100" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1" for="newPropPrice">거래 가격 표시 *</label>
+          <input type="text" id="newPropPrice" placeholder="예: 매매 4억 8,000만원 / 보증금 500만원 / 월세 50만원" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-bold text-amber-900 bg-amber-50/30">
+        </div>
+
+        <!-- ========================================================
+             1. 토지/택지 전용 법정 필수 고지 입력란 (지목/용도지역/면적/도로조건 등)
+             ======================================================== -->
+        <div id="sectionLand" class="hidden p-4 bg-emerald-50/70 rounded-2xl border-2 border-emerald-300 space-y-3">
+          <div class="flex items-center justify-between border-b border-emerald-200 pb-2">
+            <span class="text-xs font-black text-emerald-950 flex items-center gap-1.5">
+              <i data-lucide="trees" class="w-4 h-4 text-emerald-700"></i>
+              <span>[토지·택지 법정 필수 고지사항] (공인중개사법 표시의무 준수)</span>
+            </span>
+            <span class="text-[10px] bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-extrabold">토지 전용</span>
           </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1" for="newPropArea">전용면적 / 층수</label>
-            <input type="text" id="newPropArea" placeholder="예: 전용 84㎡ (34평) / 15층" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">토지(대지)면적 (㎡) *</label>
+              <div class="relative">
+                <input type="number" step="0.01" id="newPropLandArea" oninput="calcLandPyeong(this.value)" placeholder="예: 280.9" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+                <span id="newPropLandPyeongBadge" class="absolute right-2.5 top-2 text-[11px] font-extrabold text-emerald-700">0.0평</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">지목 *</label>
+              <input type="text" id="newPropLandCategory" list="jimokList" placeholder="대 (대지)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+              <datalist id="jimokList">
+                <option value="대">
+                <option value="전">
+                <option value="답">
+                <option value="임야">
+                <option value="잡종지">
+                <option value="과수원">
+                <option value="공장용지">
+                <option value="도로">
+              </datalist>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">용도지역 *</label>
+              <input type="text" id="newPropUsageDistrict" list="usageDistrictList" placeholder="제1종일반주거지역" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+              <datalist id="usageDistrictList">
+                <option value="제1종전용주거지역">
+                <option value="제1종일반주거지역">
+                <option value="제2종일반주거지역">
+                <option value="제3종일반주거지역">
+                <option value="준주거지역">
+                <option value="일반상업지역">
+                <option value="근린상업지역">
+                <option value="자연녹지지역">
+                <option value="생산녹지지역">
+                <option value="계획관리지역">
+              </datalist>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">도로접면 조건</label>
+              <input type="text" id="newPropRoadCondition" placeholder="예: 소로한면접함 (8m 아스팔트)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">추천 용도</label>
+              <input type="text" id="newPropRecommendedUsage" placeholder="예: 단독주택용지, 상가주택" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">토지거래허가구역</label>
+              <select id="newPropPermissionZone" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
+                <option value="해당없음 (비지정구역)">해당없음 (자유거래 가능)</option>
+                <option value="지정구역 (허가필요)">토지거래허가구역 지정</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             2. 주거용 건축물 전용 입력란 (아파트, 오피스텔, 원룸/투룸)
+             ======================================================== -->
+        <div id="sectionResidential" class="p-4 bg-blue-50/70 rounded-2xl border-2 border-blue-300 space-y-3">
+          <div class="flex items-center justify-between border-b border-blue-200 pb-2">
+            <span class="text-xs font-black text-blue-950 flex items-center gap-1.5">
+              <i data-lucide="building" class="w-4 h-4 text-blue-700"></i>
+              <span>[주거용 건축물 법정 필수 고지사항] (면적·층수·방수·방향·관리비·주차)</span>
+            </span>
+            <span class="text-[10px] bg-blue-200 text-blue-900 px-2 py-0.5 rounded font-extrabold">주거용 전용</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">전용면적 (㎡) *</label>
+              <div class="relative">
+                <input type="number" step="0.01" id="newPropExArea" oninput="calcResPyeong()" placeholder="84.89" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                <span id="newPropExPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-blue-700">0.0평</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">공급면적 (㎡) *</label>
+              <div class="relative">
+                <input type="number" step="0.01" id="newPropSpArea" oninput="calcResPyeong()" placeholder="114.7" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                <span id="newPropSpPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-blue-700">0.0평</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">해당층 / 총층 *</label>
+              <div class="flex items-center gap-1">
+                <input type="text" id="newPropTargetFloor" placeholder="15층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <span class="text-slate-400">/</span>
+                <input type="text" id="newPropTotalFloor" placeholder="25층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">방 수 / 욕실 수</label>
+              <div class="flex items-center gap-1">
+                <input type="number" id="newPropRooms" value="3" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <span class="text-slate-400">/</span>
+                <input type="number" id="newPropBathrooms" value="2" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">방향 (거실 기준)</label>
+              <input type="text" id="newPropDirection" placeholder="남향(거실기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">월 관리비</label>
+              <input type="text" id="newPropMaintenanceFee" placeholder="약 10~13만원 (실비정산)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">사용승인일 (준공)</label>
+              <input type="text" id="newPropApprovalDate" placeholder="2018년 10월" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">주차대수 / 입주시기</label>
+              <input type="text" id="newPropParkingMove" placeholder="총 1,200대 / 즉시입주" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             3. 상가 / 사무실 전용 입력란
+             ======================================================== -->
+        <div id="sectionCommercial" class="hidden p-4 bg-amber-50/80 rounded-2xl border-2 border-amber-300 space-y-3">
+          <div class="flex items-center justify-between border-b border-amber-200 pb-2">
+            <span class="text-xs font-black text-amber-950 flex items-center gap-1.5">
+              <i data-lucide="store" class="w-4 h-4 text-amber-700"></i>
+              <span>[상업·업무용 상가 법정 필수 고지사항] (면적·층수·추천업종·관리비)</span>
+            </span>
+            <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-extrabold">상가 전용</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">전용면적 (㎡) *</label>
+              <div class="relative">
+                <input type="number" step="0.01" id="newPropCommExArea" oninput="calcCommPyeong()" placeholder="26.53" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold">
+                <span id="newPropCommExPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-amber-700">0.0평</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">계약(공급)면적 (㎡) *</label>
+              <div class="relative">
+                <input type="number" step="0.01" id="newPropCommSpArea" oninput="calcCommPyeong()" placeholder="57.0" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold">
+                <span id="newPropCommSpPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-amber-700">0.0평</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">해당층 / 총층 *</label>
+              <div class="flex items-center gap-1">
+                <input type="text" id="newPropCommTargetFloor" placeholder="5층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <span class="text-slate-400">/</span>
+                <input type="text" id="newPropCommTotalFloor" placeholder="6층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">추천 업종</label>
+              <input type="text" id="newPropCommRecommendedBiz" placeholder="예: 소형사무실, 카페, 미용실" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">방향 (주출입구)</label>
+              <input type="text" id="newPropCommDirection" placeholder="남향(주출입구기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">월 관리비</label>
+              <input type="text" id="newPropCommMaintenance" placeholder="약 8~9만원 (부가세 별도)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">주차대수</label>
+              <input type="text" id="newPropCommParking" placeholder="총 55대 주차가능" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">사용승인일 (준공)</label>
+              <input type="text" id="newPropCommApprovalDate" placeholder="2016년 8월" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+            </div>
           </div>
         </div>
 
@@ -506,7 +686,9 @@
     async function handleRefreshAdmin() {
       const btn = document.getElementById('adminRefreshBtn');
       const icon = document.getElementById('adminRefreshIcon');
+      const span = btn ? btn.querySelector('span') : null;
       if (icon) icon.classList.add('animate-spin');
+      if (span) span.textContent = '새로고침 중...';
       if (btn) btn.disabled = true;
 
       try {
@@ -521,60 +703,62 @@
       } finally {
         setTimeout(() => {
           if (icon) icon.classList.remove('animate-spin');
+          if (span) span.textContent = '새로고침';
           if (btn) btn.disabled = false;
         }, 500);
       }
     }
 
     async function loadAdminProperties(showToast = false) {
+      let loadedFromServer = false;
       try {
         const res = await fetch('/api/properties?t=' + Date.now());
         if (res.ok) {
           const data = await res.json();
-          adminProperties = data.properties || [];
-        } else {
+          if (data && data.properties && Array.isArray(data.properties)) {
+            adminProperties = data.properties;
+            loadedFromServer = true;
+          }
+        }
+        if (!loadedFromServer) {
           const fileRes = await fetch('data/properties.json?t=' + Date.now());
-          adminProperties = await fileRes.json();
+          if (fileRes.ok) {
+            adminProperties = await fileRes.json();
+            loadedFromServer = true;
+          }
         }
       } catch (e) {
-        try {
-          const fileRes = await fetch('data/properties.json?t=' + Date.now());
-          adminProperties = await fileRes.json();
-        } catch (ex) {
-          if (window.PROPERTIES && Array.isArray(window.PROPERTIES)) {
-            adminProperties = JSON.parse(JSON.stringify(window.PROPERTIES));
-          } else {
-            adminProperties = [];
-          }
-        }
+        console.warn('Server fetch error:', e);
       }
 
-      // Merge with browser local storage for instant multi-device reliability
-      try {
-        // 1. 등록/수정된 매물이 새로고침 시 초기화되지 않도록 로컬 저장소 우선 병합
-        const localSaved = JSON.parse(localStorage.getItem('jinjuqueen_saved_properties') || '[]');
-        localSaved.forEach(localP => {
-          const idx = adminProperties.findIndex(p => p.id === localP.id || (p.naverArticleNo && localP.naverArticleNo && p.naverArticleNo === localP.naverArticleNo));
-          if (idx > -1) {
-            adminProperties[idx] = { ...adminProperties[idx], ...localP };
-          } else {
-            adminProperties.unshift(localP);
+      if (loadedFromServer) {
+        // 서버 데이터를 최우선 기준으로 로컬 스토리지 동기화 (삭제된 매물이 되살아나지 않도록 방지)
+        try {
+          localStorage.setItem('jinjuqueen_saved_properties', JSON.stringify(adminProperties));
+          const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
+          adminProperties.forEach(p => {
+            if (localMemos[p.id]) {
+              p.adminMemo = localMemos[p.id];
+            }
+          });
+        } catch (err) {}
+      } else {
+        // 서버 연결 불가 시 로컬 저장소 백업 로드
+        try {
+          const localSaved = JSON.parse(localStorage.getItem('jinjuqueen_saved_properties') || '[]');
+          if (localSaved.length > 0) {
+            adminProperties = localSaved;
+          } else if (window.PROPERTIES && Array.isArray(window.PROPERTIES)) {
+            adminProperties = JSON.parse(JSON.stringify(window.PROPERTIES));
           }
-        });
+        } catch (ex) {}
+      }
 
-        // 2. 비공개 적요 병합
-        const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
-        adminProperties.forEach(p => {
-          if (localMemos[p.id]) {
-            p.adminMemo = localMemos[p.id];
-          }
-        });
-      } catch (err) {}
-
-      document.getElementById('adminPropBadge').textContent = adminProperties.length;
+      const badge = document.getElementById('adminPropBadge');
+      if (badge) badge.textContent = adminProperties.length;
       renderAdminProperties();
       if (showToast) {
-        showAdminToast('최신 매물 목록을 새로고침했습니다.');
+        showAdminToast(`최신 매물 ${adminProperties.length}건을 성공적으로 새로고침했습니다.`);
       }
     }
 
@@ -885,6 +1069,58 @@
       return 'images/complex_cards/기본_아파트_클린카드.jpg';
     }
 
+
+    function handleCategoryChange() {
+      const cat = document.getElementById('newPropCategory').value;
+      const secLand = document.getElementById('sectionLand');
+      const secRes = document.getElementById('sectionResidential');
+      const secComm = document.getElementById('sectionCommercial');
+
+      if (secLand) secLand.classList.add('hidden');
+      if (secRes) secRes.classList.add('hidden');
+      if (secComm) secComm.classList.add('hidden');
+
+      if (cat === '택지') {
+        if (secLand) secLand.classList.remove('hidden');
+      } else if (cat === '상가') {
+        if (secComm) secComm.classList.remove('hidden');
+      } else {
+        if (secRes) secRes.classList.remove('hidden');
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function calcLandPyeong(val) {
+      const num = parseFloat(val);
+      const badge = document.getElementById('newPropLandPyeongBadge');
+      if (badge) {
+        if (!isNaN(num) && num > 0) {
+          badge.textContent = (num / 3.305785).toFixed(1) + '평';
+        } else {
+          badge.textContent = '0.0평';
+        }
+      }
+    }
+
+    function calcResPyeong() {
+      const ex = parseFloat(document.getElementById('newPropExArea')?.value);
+      const sp = parseFloat(document.getElementById('newPropSpArea')?.value);
+      const exBadge = document.getElementById('newPropExPyeongBadge');
+      const spBadge = document.getElementById('newPropSpPyeongBadge');
+      if (exBadge) exBadge.textContent = (!isNaN(ex) && ex > 0) ? (ex / 3.305785).toFixed(1) + '평' : '0평';
+      if (spBadge) spBadge.textContent = (!isNaN(sp) && sp > 0) ? (sp / 3.305785).toFixed(1) + '평' : '0평';
+    }
+
+    function calcCommPyeong() {
+      const ex = parseFloat(document.getElementById('newPropCommExArea')?.value);
+      const sp = parseFloat(document.getElementById('newPropCommSpArea')?.value);
+      const exBadge = document.getElementById('newPropCommExPyeongBadge');
+      const spBadge = document.getElementById('newPropCommSpPyeongBadge');
+      if (exBadge) exBadge.textContent = (!isNaN(ex) && ex > 0) ? (ex / 3.305785).toFixed(1) + '평' : '0평';
+      if (spBadge) spBadge.textContent = (!isNaN(sp) && sp > 0) ? (sp / 3.305785).toFixed(1) + '평' : '0평';
+    }
+
     function triggerPhotoUpload() {
       if (currentPropertyPhotos.length >= 6) {
         alert('사진은 최대 6장까지만 등록 가능합니다. 기존 사진을 삭제 후 다시 추가해 주세요.');
@@ -1048,6 +1284,8 @@
       }
 
       document.getElementById('propRegisterForm').reset();
+      document.getElementById('newPropCategory').value = '아파트';
+      handleCategoryChange();
       document.getElementById('newPropLocation').value = '경남 진주시 충무공동';
       if (document.getElementById('naverQuickInput')) document.getElementById('naverQuickInput').value = '';
       if (document.getElementById('newPropAdminMemo')) document.getElementById('newPropAdminMemo').value = '';
@@ -1087,15 +1325,57 @@
         submitBtn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>수정 내용 안전하게 저장</span>';
       }
 
-      document.getElementById('newPropCategory').value = prop.category || '오피스텔';
-      document.getElementById('newPropTrans').value = prop.transactionType || '월세';
+      const cat = prop.category || '아파트';
+      document.getElementById('newPropCategory').value = cat;
+      handleCategoryChange();
+      document.getElementById('newPropTrans').value = prop.transactionType || '매매';
       document.getElementById('newPropTitle').value = prop.title || '';
       document.getElementById('newPropPrice').value = prop.priceFormatted || '';
-      document.getElementById('newPropArea').value = prop.floor || '';
       document.getElementById('newPropLocation').value = prop.location || '';
       document.getElementById('newPropDesc').value = prop.description || '';
       if (document.getElementById('newPropAdminMemo')) {
         document.getElementById('newPropAdminMemo').value = prop.adminMemo || '';
+      }
+
+      // Populate category-specific fields
+      if (cat === '택지') {
+        const lArea = prop.landArea || prop.exclusiveArea || '';
+        if (document.getElementById('newPropLandArea')) {
+          document.getElementById('newPropLandArea').value = lArea;
+          calcLandPyeong(lArea);
+        }
+        if (document.getElementById('newPropLandCategory')) document.getElementById('newPropLandCategory').value = prop.landCategory || '대';
+        if (document.getElementById('newPropUsageDistrict')) document.getElementById('newPropUsageDistrict').value = prop.usageDistrict || '제1종일반주거지역';
+        if (document.getElementById('newPropRoadCondition')) document.getElementById('newPropRoadCondition').value = prop.roadCondition || '소로한면접함 (8m 아스팔트 도로)';
+        if (document.getElementById('newPropRecommendedUsage')) document.getElementById('newPropRecommendedUsage').value = prop.recommendedUsage || '단독주택용지';
+        if (document.getElementById('newPropPermissionZone')) document.getElementById('newPropPermissionZone').value = prop.permissionZone || '해당없음 (비지정구역)';
+      } else if (cat === '상가') {
+        if (document.getElementById('newPropCommExArea')) document.getElementById('newPropCommExArea').value = prop.exclusiveArea || '';
+        if (document.getElementById('newPropCommSpArea')) document.getElementById('newPropCommSpArea').value = prop.supplyArea || '';
+        calcCommPyeong();
+        const tf = (prop.floor || '').split('/')[0].replace('층', '').trim();
+        const tot = (prop.floor || '').split('/')[1] ? prop.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
+        if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = prop.targetFloor || tf || '1층';
+        if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = prop.totalFloor || tot || '5층';
+        if (document.getElementById('newPropCommRecommendedBiz')) document.getElementById('newPropCommRecommendedBiz').value = prop.recommendedUsage || prop.recommendedBiz || '일반상가/사무실';
+        if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = prop.direction || '남향(주출입구기준)';
+        if (document.getElementById('newPropCommMaintenance')) document.getElementById('newPropCommMaintenance').value = prop.maintenanceFee || '약 8~9만원 (부가세 별도)';
+        if (document.getElementById('newPropCommParking')) document.getElementById('newPropCommParking').value = prop.parking || '총 55대 주차가능';
+        if (document.getElementById('newPropCommApprovalDate')) document.getElementById('newPropCommApprovalDate').value = prop.approvalDate || '2016년';
+      } else {
+        if (document.getElementById('newPropExArea')) document.getElementById('newPropExArea').value = prop.exclusiveArea || 84.89;
+        if (document.getElementById('newPropSpArea')) document.getElementById('newPropSpArea').value = prop.supplyArea || 114.7;
+        calcResPyeong();
+        const tf = (prop.floor || '').split('/')[0].replace('층', '').trim();
+        const tot = (prop.floor || '').split('/')[1] ? prop.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
+        if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = prop.targetFloor || tf || '15층';
+        if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = prop.totalFloor || tot || '25층';
+        if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = prop.rooms !== undefined ? prop.rooms : 3;
+        if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = prop.bathrooms !== undefined ? prop.bathrooms : 2;
+        if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = prop.direction || '남향(거실기준)';
+        if (document.getElementById('newPropMaintenanceFee')) document.getElementById('newPropMaintenanceFee').value = prop.maintenanceFee || '약 10~13만원 (실비정산)';
+        if (document.getElementById('newPropApprovalDate')) document.getElementById('newPropApprovalDate').value = prop.approvalDate || '2018년';
+        if (document.getElementById('newPropParkingMove')) document.getElementById('newPropParkingMove').value = `${prop.parking || '지하주차장'} / ${prop.moveInDate || '즉시입주'}`;
       }
 
       currentPropertyPhotos = (prop.images && Array.isArray(prop.images)) ? [...prop.images] : [];
@@ -1181,13 +1461,55 @@
         }
 
         if (data.success) {
+          if (data.category) {
+            document.getElementById('newPropCategory').value = data.category;
+            handleCategoryChange();
+          }
           if (data.title) document.getElementById('newPropTitle').value = data.title;
           if (data.priceFormatted) document.getElementById('newPropPrice').value = data.priceFormatted;
-          if (data.category) document.getElementById('newPropCategory').value = data.category;
           if (data.transactionType) document.getElementById('newPropTrans').value = data.transactionType;
           if (data.location) document.getElementById('newPropLocation').value = data.location;
           if (data.description) document.getElementById('newPropDesc').value = data.description;
-          document.getElementById('newPropArea').value = data.floor || '중층(원룸/오피스텔)';
+
+          // Fill dynamic category fields
+          if (data.category === '택지') {
+            const lArea = data.landArea || data.exclusiveArea || 280.9;
+            if (document.getElementById('newPropLandArea')) {
+              document.getElementById('newPropLandArea').value = lArea;
+              calcLandPyeong(lArea);
+            }
+            if (document.getElementById('newPropLandCategory')) document.getElementById('newPropLandCategory').value = data.landCategory || '대';
+            if (document.getElementById('newPropUsageDistrict')) document.getElementById('newPropUsageDistrict').value = data.usageDistrict || '제1종일반주거지역';
+            if (document.getElementById('newPropRoadCondition')) document.getElementById('newPropRoadCondition').value = data.roadCondition || '소로한면접함 (8m 아스팔트)';
+            if (document.getElementById('newPropRecommendedUsage')) document.getElementById('newPropRecommendedUsage').value = data.recommendedUsage || '단독주택용지';
+            if (document.getElementById('newPropPermissionZone')) document.getElementById('newPropPermissionZone').value = data.permissionZone || '해당없음 (비지정구역)';
+          } else if (data.category === '상가') {
+            if (document.getElementById('newPropCommExArea')) document.getElementById('newPropCommExArea').value = data.exclusiveArea || 26.53;
+            if (document.getElementById('newPropCommSpArea')) document.getElementById('newPropCommSpArea').value = data.supplyArea || 57.0;
+            calcCommPyeong();
+            const tf = (data.floor || '').split('/')[0].replace('층', '').trim();
+            const tot = (data.floor || '').split('/')[1] ? data.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
+            if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = tf || '5층';
+            if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = tot || '6층';
+            if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = data.direction || '남향(출입구기준)';
+            if (document.getElementById('newPropCommMaintenance')) document.getElementById('newPropCommMaintenance').value = data.maintenanceFee || '약 8~9만원 (부가세 별도)';
+            if (document.getElementById('newPropCommParking')) document.getElementById('newPropCommParking').value = data.parking || '총 55대 주차가능';
+            if (document.getElementById('newPropCommApprovalDate')) document.getElementById('newPropCommApprovalDate').value = data.approvalDate || '2016년';
+          } else {
+            if (document.getElementById('newPropExArea')) document.getElementById('newPropExArea').value = data.exclusiveArea || 84.89;
+            if (document.getElementById('newPropSpArea')) document.getElementById('newPropSpArea').value = data.supplyArea || 114.7;
+            calcResPyeong();
+            const tf = (data.floor || '').split('/')[0].replace('층', '').trim();
+            const tot = (data.floor || '').split('/')[1] ? data.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
+            if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = tf || '15층';
+            if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = tot || '25층';
+            if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = data.rooms !== undefined ? data.rooms : 3;
+            if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = data.bathrooms !== undefined ? data.bathrooms : 2;
+            if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = data.direction || '남향(거실기준)';
+            if (document.getElementById('newPropMaintenanceFee')) document.getElementById('newPropMaintenanceFee').value = data.maintenanceFee || '약 10~13만원 (실비정산)';
+            if (document.getElementById('newPropApprovalDate')) document.getElementById('newPropApprovalDate').value = data.approvalDate || '2018년';
+            if (document.getElementById('newPropParkingMove')) document.getElementById('newPropParkingMove').value = `${data.parking || '지하주차장'} / 즉시입주 가능`;
+          }
 
           fetchedNaverPhotos = data.photos || [];
           window.lastFetchedNaverData = data;
@@ -1201,9 +1523,12 @@
               const card = matchApartmentCard(data.title || '');
               currentPropertyPhotos = [card];
               showAdminToast('네이버 사진이 없어 아파트 전용 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
+            } else if (cat === '택지') {
+              currentPropertyPhotos = ['images/complex_cards/토지_클린카드.jpg?v=pastel'];
+              showAdminToast('네이버 사진이 없어 토지·택지 전용 파스텔 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
             } else {
-              currentPropertyPhotos = [];
-              showAdminToast('네이버 매물 정보를 불러왔습니다. [+ 사진 추가]를 눌러 현장 사진을 등록해 주세요.');
+              currentPropertyPhotos = ['images/complex_cards/일반상가_클린카드.jpg?v=pastel'];
+              showAdminToast('네이버 사진이 없어 상가 전용 파스텔 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
             }
           }
           renderPropPhotoGallery();
@@ -1232,11 +1557,69 @@
       const trans = document.getElementById('newPropTrans').value;
       const title = document.getElementById('newPropTitle').value.trim();
       const priceFormatted = document.getElementById('newPropPrice').value.trim();
-      const area = document.getElementById('newPropArea').value.trim();
       const location = document.getElementById('newPropLocation').value.trim();
       const desc = document.getElementById('newPropDesc').value.trim();
       const naverNo = document.getElementById('naverQuickInput') ? document.getElementById('naverQuickInput').value.trim() : '';
       const adminMemo = (document.getElementById('newPropAdminMemo') ? document.getElementById('newPropAdminMemo').value.trim() : '');
+
+      // Parse Category-Specific Values
+      let exArea = 84.89, spArea = 114.7, exPyeong = 25.7, spPyeong = 34.7;
+      let floorStr = '중층', dirStr = '남향(거실기준)', roomVal = 3, bathVal = 2;
+      let appDate = '2018년', parkingVal = '지하 주차장 완비', moveVal = '즉시입주 가능 (협의)', maintVal = '약 10~13만원 (실비정산)';
+      let landCategoryVal = '대', usageDistrictVal = '제1종일반주거지역', roadCondVal = '소로한면접함', recUsageVal = '단독주택지', permZoneVal = '해당없음 (비지정구역)';
+
+      if (category === '택지') {
+        const lAreaNum = parseFloat(document.getElementById('newPropLandArea')?.value) || 280.9;
+        exArea = lAreaNum;
+        spArea = lAreaNum;
+        exPyeong = Number((lAreaNum / 3.305785).toFixed(1));
+        spPyeong = exPyeong;
+        landCategoryVal = document.getElementById('newPropLandCategory')?.value.trim() || '대';
+        usageDistrictVal = document.getElementById('newPropUsageDistrict')?.value.trim() || '제1종일반주거지역';
+        roadCondVal = document.getElementById('newPropRoadCondition')?.value.trim() || '소로한면접함 (8m 아스팔트)';
+        recUsageVal = document.getElementById('newPropRecommendedUsage')?.value.trim() || '단독주택용지';
+        permZoneVal = document.getElementById('newPropPermissionZone')?.value || '해당없음 (비지정구역)';
+        floorStr = `토지 (지목: ${landCategoryVal} / ${usageDistrictVal})`;
+        dirStr = '남향(추천 건축방향)';
+        roomVal = 0;
+        bathVal = 0;
+        appDate = '토지분양 완료 (즉시 착공/건축 가능)';
+        parkingVal = '건축 시 부지 내 확보 가능';
+        maintVal = '해당없음 (순수 토지)';
+        moveVal = '즉시 착공가능 (기반시설 완비)';
+      } else if (category === '상가') {
+        exArea = parseFloat(document.getElementById('newPropCommExArea')?.value) || 26.53;
+        spArea = parseFloat(document.getElementById('newPropCommSpArea')?.value) || 57.0;
+        exPyeong = Number((exArea / 3.305785).toFixed(1));
+        spPyeong = Number((spArea / 3.305785).toFixed(1));
+        const tf = document.getElementById('newPropCommTargetFloor')?.value.trim() || '1층';
+        const tot = document.getElementById('newPropCommTotalFloor')?.value.trim() || '5층';
+        floorStr = `${tf} / 총 ${tot}`;
+        dirStr = document.getElementById('newPropCommDirection')?.value.trim() || '남향(주출입구기준)';
+        roomVal = 1;
+        bathVal = 1;
+        recUsageVal = document.getElementById('newPropCommRecommendedBiz')?.value.trim() || '일반상가/사무소';
+        maintVal = document.getElementById('newPropCommMaintenance')?.value.trim() || '약 8~9만원 (부가세 별도)';
+        parkingVal = document.getElementById('newPropCommParking')?.value.trim() || '총 55대 주차가능';
+        appDate = document.getElementById('newPropCommApprovalDate')?.value.trim() || '2016년';
+        moveVal = '즉시입주 가능(공실)';
+      } else {
+        exArea = parseFloat(document.getElementById('newPropExArea')?.value) || 84.89;
+        spArea = parseFloat(document.getElementById('newPropSpArea')?.value) || 114.7;
+        exPyeong = Number((exArea / 3.305785).toFixed(1));
+        spPyeong = Number((spArea / 3.305785).toFixed(1));
+        const tf = document.getElementById('newPropTargetFloor')?.value.trim() || '15층';
+        const tot = document.getElementById('newPropTotalFloor')?.value.trim() || '25층';
+        floorStr = `${tf} / 총 ${tot}`;
+        roomVal = parseInt(document.getElementById('newPropRooms')?.value) || 3;
+        bathVal = parseInt(document.getElementById('newPropBathrooms')?.value) || 2;
+        dirStr = document.getElementById('newPropDirection')?.value.trim() || '남향(거실기준)';
+        maintVal = document.getElementById('newPropMaintenanceFee')?.value.trim() || '약 10~13만원 (실비정산)';
+        appDate = document.getElementById('newPropApprovalDate')?.value.trim() || '2018년';
+        const pm = document.getElementById('newPropParkingMove')?.value.trim() || '';
+        parkingVal = pm.includes('/') ? pm.split('/')[0].trim() : (pm || '지하 주차장 완비');
+        moveVal = pm.includes('/') ? pm.split('/')[1].trim() : '즉시입주 가능 (협의)';
+      }
 
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<span>저장 처리 중...</span>';
@@ -1253,11 +1636,29 @@
           transactionType: trans,
           title,
           priceFormatted,
-          floor: area,
           location,
           description: desc,
           adminMemo: adminMemo,
-          images: finalImages
+          images: finalImages,
+          exclusiveArea: exArea,
+          exclusiveAreaPyeong: exPyeong,
+          supplyArea: spArea,
+          supplyAreaPyeong: spPyeong,
+          floor: floorStr,
+          direction: dirStr,
+          rooms: roomVal,
+          bathrooms: bathVal,
+          approvalDate: appDate,
+          parking: parkingVal,
+          moveInDate: moveVal,
+          maintenanceFee: maintVal,
+          landArea: category === '택지' ? exArea : undefined,
+          landAreaPyeong: category === '택지' ? exPyeong : undefined,
+          landCategory: category === '택지' ? landCategoryVal : undefined,
+          usageDistrict: category === '택지' ? usageDistrictVal : undefined,
+          roadCondition: category === '택지' ? roadCondVal : undefined,
+          recommendedUsage: (category === '택지' || category === '상가') ? recUsageVal : undefined,
+          permissionZone: category === '택지' ? permZoneVal : undefined
         };
 
         // 1. 브라우저 localStorage에 즉시 보존 (새로고침해도 정보 및 메모 영구 유지)
@@ -1340,12 +1741,16 @@
 
       const fetched = window.lastFetchedNaverData || {};
 
+      const defaultCard = category === '택지' 
+        ? ['images/complex_cards/토지_클린카드.jpg']
+        : (category === '상가' ? ['images/complex_cards/일반상가_클린카드.jpg'] : [matchApartmentCard(title)]);
+
       const newProperty = {
         id: 'prop-' + Date.now(),
         category,
         transactionType: trans,
         status: 'ACTIVE',
-        sourceType: 'NAVER',
+        sourceType: naverNo ? 'NAVER' : 'HOMEPAGE',
         naverArticleNo: naverNo,
         title,
         price: priceVal,
@@ -1357,25 +1762,32 @@
         adminMemo: adminMemo,
         lat: Number(jitterLat.toFixed(4)),
         lng: Number(jitterLng.toFixed(4)),
-        exclusiveArea: fetched.exclusiveArea || 27.63,
-        exclusiveAreaPyeong: fetched.exclusiveAreaPyeong || 8.4,
-        supplyArea: fetched.supplyArea || 75.25,
-        supplyAreaPyeong: fetched.supplyAreaPyeong || 22.8,
-        floor: area || fetched.floor || '중층',
-        direction: fetched.direction || '북동향(거실기준)',
-        rooms: fetched.rooms !== undefined ? fetched.rooms : 1,
-        bathrooms: fetched.bathrooms !== undefined ? fetched.bathrooms : 1,
-        approvalDate: fetched.approvalDate || '2018년',
-        moveInDate: '즉시입주 가능 (협의)',
-        parking: fetched.parking || '지하 주차장 완비',
-        maintenanceFee: '약 8~9만원 (공용관리비 실비 정산)',
-        maintenanceDetails: '공용관리비 실비 정산, 유선/인터넷 별도',
-        badge: '네이버확인',
+        exclusiveArea: exArea,
+        exclusiveAreaPyeong: exPyeong,
+        supplyArea: spArea,
+        supplyAreaPyeong: spPyeong,
+        floor: floorStr,
+        direction: dirStr,
+        rooms: roomVal,
+        bathrooms: bathVal,
+        approvalDate: appDate,
+        moveInDate: moveVal,
+        parking: parkingVal,
+        maintenanceFee: maintVal,
+        maintenanceDetails: category === '택지' ? '해당사항 없음 (순수 토지)' : '공용관리비 실비 정산, 유선/인터넷 별도',
+        landArea: category === '택지' ? exArea : undefined,
+        landAreaPyeong: category === '택지' ? exPyeong : undefined,
+        landCategory: category === '택지' ? landCategoryVal : undefined,
+        usageDistrict: category === '택지' ? usageDistrictVal : undefined,
+        roadCondition: category === '택지' ? roadCondVal : undefined,
+        recommendedUsage: (category === '택지' || category === '상가') ? recUsageVal : undefined,
+        permissionZone: category === '택지' ? permZoneVal : undefined,
+        badge: naverNo ? '네이버확인' : '추천매물',
         isRecommended: true,
-        tags: ['네이버등록', '실매물인증', trans],
+        tags: [category, trans, '실매물확인'],
         images: (currentPropertyPhotos && currentPropertyPhotos.length > 0)
           ? currentPropertyPhotos
-          : (category === '아파트' ? [matchApartmentCard(title)] : []),
+          : defaultCard,
         agent: {
           name: '황선숙 대표공인중개사',
           phone: '010-4670-7248',

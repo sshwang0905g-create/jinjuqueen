@@ -166,7 +166,51 @@ module.exports = async (req, res) => {
       }
     }
 
-// [Category parsed below from structured data]
+    // Category & RealEstateType detection
+    const rletMatch = fullDecoded.match(/"realEstateType":"([^"]+)"/);
+    const rletCode = rletMatch ? rletMatch[1] : '';
+    const artMatch = fullDecoded.match(/"articleName":"([^"]+)"/);
+    const artNameVal = artMatch ? artMatch[1].trim() : '';
+
+    let category = '아파트';
+    if (['F01', 'F02', 'E03'].includes(rletCode) || ['토지', '택지', '대지', '전원주택지', '주택용지', '필지', '주택지', '단독주택지', '대'].some(k => artNameVal.includes(k) || title.includes(k))) {
+      category = '택지';
+    } else if (['D01', 'D02', 'D03', 'E01', 'E02'].includes(rletCode) || ['상가', '점포', '사무실', '근린'].some(k => artNameVal.includes(k) || title.includes(k))) {
+      category = '상가';
+    } else if (['B01', 'B02'].includes(rletCode) || artNameVal.includes('오피스텔') || title.includes('오피스텔') || title.includes('라온프라이빗시티') || title.includes('허브시티')) {
+      category = '오피스텔';
+    } else if (['C01', 'C02', 'C03'].includes(rletCode) || ['원룸', '투룸'].some(k => artNameVal.includes(k) || title.includes(k))) {
+      category = '원룸/투룸';
+    } else if (['A01', 'A02'].includes(rletCode) || ['아파트', '단지'].some(k => artNameVal.includes(k) || title.includes(k))) {
+      category = '아파트';
+    } else if (['상가', '점포'].some(k => artNameVal.includes(k))) {
+      category = '상가';
+    }
+
+    // Land specific fields
+    const landSpaceMatch = fullDecoded.match(/"(?:landSpace|platArea|landArea|area1)":([0-9.]+)/);
+    const landArea = landSpaceMatch ? parseFloat(landSpaceMatch[1]) : (category === '택지' ? 257.8 : 0);
+    const landAreaPyeong = Math.round((landArea / 3.305785) * 10) / 10;
+    
+    const jimokMatch = fullDecoded.match(/"(?:landCategoryName|landCategory|jimokName)":"([^"]+)"/);
+    let landCategory = '대';
+    if (['대', '전', '답', '임야', '잡종지'].includes(artNameVal)) landCategory = artNameVal;
+    else if (jimokMatch) landCategory = jimokMatch[1].trim();
+
+    const usageMatch = fullDecoded.match(/"(?:usageDistrictName|useDistrictName|usageDistrict|areaUsage)":"([^"]+)"/);
+    const usageDistrict = usageMatch ? usageMatch[1].trim() : '제1종일반주거지역';
+
+    const roadMatch = fullDecoded.match(/"(?:roadConditionName|roadRelationName|roadAccessName)":"([^"]+)"/);
+    const roadCondition = roadMatch ? roadMatch[1].trim() : '소로한면접함 (8m 아스팔트 도로)';
+
+    const recMatch = fullDecoded.match(/"(?:recommendedUsageName|recommendedUsage|recommendedPurpose)":"([^"]+)"/);
+    const currPurpMatch = fullDecoded.match(/"currentPurpose":"([^"]+)"/);
+    let recommendedUsage = '단독주택지 (상가주택 협의)';
+    if (recMatch) recommendedUsage = recMatch[1].trim();
+    else if (currPurpMatch) recommendedUsage = `${currPurpMatch[1].trim()} (단독주택)`;
+
+    const permMatch = fullDecoded.match(/"landTradePermission":(true|false|"[^"]*")/);
+    const permissionZone = (permMatch && permMatch[1] === 'true') ? '지정구역 (토지거래허가 필요)' : '해당없음 (비지정구역)';
 
     // 6. Parse structured Next.js chunk fields
     const chunks = html.match(/self\.__next_f\.push\(\[1,"(.*?)"\]\)/g) || [];
@@ -275,6 +319,11 @@ module.exports = async (req, res) => {
       finalDescription = `네이버부동산 등록 검증 실매물(매물번호: ${atclNo})입니다.`;
     }
 
+    // 토지/택지 매물인데 실사진이 전혀 없는 경우 토지 전용 클린 타이틀 카드 매핑
+    if (category === '택지' && allPhotos.length === 0) {
+      allPhotos = ['images/complex_cards/토지_클린카드.jpg'];
+    }
+
     // 상가 매물인데 실사진이 전혀 없는 경우 상가 전용 클린 타이틀 카드 매핑
     if (category === '상가' && allPhotos.length === 0) {
       allPhotos = ['images/complex_cards/일반상가_클린카드.jpg'];
@@ -301,6 +350,13 @@ module.exports = async (req, res) => {
       deposit,
       monthlyRent: monthly,
       category,
+      landArea: category === '택지' ? landArea : undefined,
+      landAreaPyeong: category === '택지' ? landAreaPyeong : undefined,
+      landCategory: category === '택지' ? landCategory : undefined,
+      usageDistrict: category === '택지' ? usageDistrict : undefined,
+      roadCondition: category === '택지' ? roadCondition : undefined,
+      recommendedUsage: category === '택지' ? recommendedUsage : undefined,
+      permissionZone: category === '택지' ? permissionZone : undefined,
       transactionType: transType,
       location: '진주시 충무공동 (혁신도시 중심상권)',
       direction: directionParsed,

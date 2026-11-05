@@ -18,6 +18,12 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=BASE_DIR, **kwargs)
 
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -280,10 +286,15 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                         props[idx].update(prop)
                         break
             elif action == 'create' and prop:
-                import time
-                prop['id'] = f"prop-{int(time.time()*1000)}"
+                if not prop.get('id'):
+                    import time
+                    prop['id'] = f"prop-{int(time.time()*1000)}"
                 prop['status'] = prop.get('status', 'ACTIVE')
-                props.insert(0, prop)
+                existing_idx = next((i for i, p in enumerate(props) if p.get('id') == prop.get('id') or (prop.get('naverArticleNo') and p.get('naverArticleNo') == prop.get('naverArticleNo'))), -1)
+                if existing_idx != -1:
+                    props[existing_idx].update(prop)
+                else:
+                    props.insert(0, prop)
             elif action == 'delete' and prop:
                 props = [p for p in props if p.get('id') != prop.get('id')]
 

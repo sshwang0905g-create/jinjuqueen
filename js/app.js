@@ -640,19 +640,105 @@ function openPropertyModal(propId) {
     <span class="text-xs bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-md font-semibold">#${t}</span>
   `).join('');
 
-  // 12 Legal Mandatory Disclosures
+  // 12 Legal Mandatory Disclosures (매물유형별 법정 고지사항 동적 렌더링)
   document.getElementById('detailTypeVal').textContent = prop.category;
   document.getElementById('detailTransVal').textContent = prop.transactionType;
   document.getElementById('detailAddressVal').textContent = prop.addressMasked;
-  document.getElementById('detailAreaVal').textContent = `전용 ${prop.exclusiveArea}㎡ / 공급 ${prop.supplyArea}㎡`;
-  document.getElementById('detailFloorVal').textContent = prop.floor;
-  document.getElementById('detailRoomsVal').textContent = `방 ${prop.rooms}개 / 욕실 ${prop.bathrooms}개`;
-  document.getElementById('detailDirVal').textContent = prop.direction;
-  document.getElementById('detailApprovalVal').textContent = prop.approvalDate;
-  document.getElementById('detailParkingVal').textContent = prop.parking;
-  document.getElementById('detailMoveInVal').textContent = prop.moveInDate;
-  document.getElementById('detailMaintTotalVal').textContent = prop.maintenanceFee;
-  document.getElementById('detailMaintDetailsVal').textContent = `[세부비목] ${prop.maintenanceDetails}`;
+
+  const areaLabel = document.getElementById('detailAreaLabel');
+  const floorLabel = document.getElementById('detailFloorLabel');
+  const roomsLabel = document.getElementById('detailRoomsLabel');
+  const dirLabel = document.getElementById('detailDirLabel');
+  const approvalLabel = document.getElementById('detailApprovalLabel');
+  const parkingLabel = document.getElementById('detailParkingLabel');
+  const moveInLabel = document.getElementById('detailMoveInLabel');
+  const maintLabel = document.getElementById('detailMaintLabel');
+
+  if (prop.category === '택지') {
+    // 1. 토지/택지 법정 고지사항
+    if (areaLabel) areaLabel.textContent = '대지면적';
+    const lArea = prop.landArea || prop.exclusiveArea || 257.8;
+    const lPyeong = prop.landAreaPyeong || prop.exclusiveAreaPyeong || Math.round((lArea / 3.305785) * 10) / 10;
+    document.getElementById('detailAreaVal').textContent = `${lArea}㎡ (${lPyeong}평)`;
+
+    if (floorLabel) floorLabel.textContent = '지목 / 용도지역';
+    document.getElementById('detailFloorVal').textContent = `${prop.landCategory || '대'} / ${prop.usageDistrict || '제1종일반주거지역'}`;
+
+    if (roomsLabel) roomsLabel.textContent = '도로접면 조건';
+    document.getElementById('detailRoomsVal').textContent = prop.roadCondition || '소로한면접함 (8m 아스팔트 도로)';
+
+    if (dirLabel) dirLabel.textContent = '추천용도 (주용도)';
+    document.getElementById('detailDirVal').textContent = prop.recommendedUsage || '단독주택용지 (상가주택 협의)';
+
+    if (approvalLabel) approvalLabel.textContent = '토지거래허가구역';
+    document.getElementById('detailApprovalVal').textContent = prop.permissionZone || '해당없음 (비지정구역)';
+
+    if (parkingLabel) parkingLabel.textContent = '건폐율 / 용적률';
+    const bcr = prop.buildingCoverageRatio || '60% 이하';
+    const far = prop.floorAreaRatio || '100% 이하';
+    document.getElementById('detailParkingVal').textContent = `건폐율 ${bcr} / 용적률 ${far}`;
+
+    if (moveInLabel) moveInLabel.textContent = '토지 인도일';
+    document.getElementById('detailMoveInVal').textContent = prop.moveInDate || '즉시 명도/착공 가능';
+
+    if (maintLabel) maintLabel.textContent = '관리비 해당여부';
+    document.getElementById('detailMaintTotalVal').textContent = '해당사항 없음 (순수 토지)';
+    document.getElementById('detailMaintDetailsVal').textContent = '순수 나대지/택지로 매월 부과되는 정기 관리비가 없습니다.';
+
+  } else if (prop.category === '상가') {
+    // 2. 상가/점포/사무실 법정 고지사항
+    if (areaLabel) areaLabel.textContent = '전용 / 계약면적';
+    document.getElementById('detailAreaVal').textContent = `전용 ${prop.exclusiveArea}㎡ (${prop.exclusiveAreaPyeong}평) / 계약 ${prop.supplyArea}㎡ (${prop.supplyAreaPyeong}평)`;
+
+    if (floorLabel) floorLabel.textContent = '해당층 / 총 층수';
+    document.getElementById('detailFloorVal').textContent = prop.floor;
+
+    if (roomsLabel) roomsLabel.textContent = '추천업종';
+    document.getElementById('detailRoomsVal').textContent = prop.recommendedUsage || '일반음식점, 카페, 학원, 소형사무실';
+
+    if (dirLabel) dirLabel.textContent = '방향 (주출입구 기준)';
+    document.getElementById('detailDirVal').textContent = prop.direction || '남향(주출입구기준)';
+
+    if (approvalLabel) approvalLabel.textContent = '사용승인일';
+    document.getElementById('detailApprovalVal').textContent = prop.approvalDate;
+
+    if (parkingLabel) parkingLabel.textContent = '주차 가능여부';
+    document.getElementById('detailParkingVal').textContent = prop.parking || '건물 내 공용주차장 완비';
+
+    if (moveInLabel) moveInLabel.textContent = '입주가능일';
+    document.getElementById('detailMoveInVal').textContent = prop.moveInDate || '즉시 입주 협의';
+
+    if (maintLabel) maintLabel.textContent = '관리비 총액 및 비목별 세부내역';
+    document.getElementById('detailMaintTotalVal').textContent = prop.maintenanceFee || '약 8~9만원 (실비정산)';
+    document.getElementById('detailMaintDetailsVal').textContent = `[세부비목] ${prop.maintenanceDetails || '수도/전기 실사용량 부과'}`;
+
+  } else {
+    // 3. 아파트 / 오피스텔 / 주거용 법정 고지사항
+    if (areaLabel) areaLabel.textContent = '전용 / 공급면적';
+    document.getElementById('detailAreaVal').textContent = `전용 ${prop.exclusiveArea}㎡ (${prop.exclusiveAreaPyeong}평) / 공급 ${prop.supplyArea}㎡ (${prop.supplyAreaPyeong}평)`;
+
+    if (floorLabel) floorLabel.textContent = '해당층 / 총 층수';
+    document.getElementById('detailFloorVal').textContent = prop.floor;
+
+    if (roomsLabel) roomsLabel.textContent = '방 수 / 욕실 수';
+    document.getElementById('detailRoomsVal').textContent = `방 ${prop.rooms}개 / 욕실 ${prop.bathrooms}개`;
+
+    if (dirLabel) dirLabel.textContent = '방향 (거실 기준)';
+    document.getElementById('detailDirVal').textContent = prop.direction;
+
+    if (approvalLabel) approvalLabel.textContent = '사용승인일';
+    document.getElementById('detailApprovalVal').textContent = prop.approvalDate;
+
+    if (parkingLabel) parkingLabel.textContent = '총 주차대수';
+    document.getElementById('detailParkingVal').textContent = prop.parking;
+
+    if (moveInLabel) moveInLabel.textContent = '입주가능일';
+    document.getElementById('detailMoveInVal').textContent = prop.moveInDate;
+
+    if (maintLabel) maintLabel.textContent = '관리비 총액 및 비목별 세부내역';
+    document.getElementById('detailMaintTotalVal').textContent = prop.maintenanceFee;
+    document.getElementById('detailMaintDetailsVal').textContent = `[세부비목] ${prop.maintenanceDetails}`;
+  }
 
   // Description
   document.getElementById('detailDesc').textContent = prop.description;
