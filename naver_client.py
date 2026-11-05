@@ -239,17 +239,7 @@ class NaverRealEstateClient:
                         rem_val = int(m_rem.group(1).replace(',', '')) if m_rem else 0
                         deposit = uk_val + rem_val
 
-            category = "아파트"
-            if "아파트" in html:
-                category = "아파트"
-            elif "오피스텔" in html or "라온프라이빗시티" in title:
-                category = "오피스텔"
-            elif "원룸" in html:
-                category = "원룸/투룸"
-            elif "상가" in html:
-                category = "상가"
-            elif "토지" in html or "택지" in html:
-                category = "택지"
+# [Category determination moved after full_decoded]
 
             # 4. 네이버 구조화 Next.js 청크 파싱
             feature_desc = ""
@@ -273,6 +263,26 @@ class NaverRealEstateClient:
                     if m_desc and not detail_desc:
                         raw_desc = m_desc.group(1)
                         detail_desc = raw_desc.replace("\\n", "\n").replace("\\r", "").replace('\\"', '"').strip()
+
+            # (0) 카테고리 (Category) & 매물명 정밀 판별
+            art_match = re.search(r'"articleName":"([^"]+)"', full_decoded)
+            art_name_val = art_match.group(1).strip() if art_match else ""
+            rlet_match = re.search(r'"realEstateType":"([^"]+)"', full_decoded)
+            rlet_code = rlet_match.group(1).strip() if rlet_match else ""
+
+            category = "아파트"
+            if rlet_code in ["D01", "D02", "D03", "E01", "E02", "E03"] or any(k in art_name_val or k in title for k in ["상가", "점포", "사무실", "근린"]):
+                category = "상가"
+            elif rlet_code in ["B01", "B02"] or "오피스텔" in art_name_val or "오피스텔" in title or "라온프라이빗시티" in title or "허브시티" in title:
+                category = "오피스텔"
+            elif rlet_code in ["C01", "C02", "C03"] or any(k in art_name_val or k in title for k in ["원룸", "투룸"]):
+                category = "원룸/투룸"
+            elif rlet_code in ["F01", "F02"] or any(k in art_name_val or k in title for k in ["토지", "택지", "대지"]):
+                category = "택지"
+            elif rlet_code in ["A01", "A02"] or any(k in art_name_val or k in title for k in ["아파트", "단지"]):
+                category = "아파트"
+            elif any(k in art_name_val for k in ["상가", "점포"]):
+                category = "상가"
 
             # (1) 방향 (direction & directionStandard)
             direction_map = {
@@ -334,12 +344,21 @@ class NaverRealEstateClient:
                 parking_parsed = "지하 주차장 완비"
 
             # (7) 동명 포함 정밀 매물명
-            art_name = re.search(r'"articleName":"([^"]+)"', full_decoded)
+            c_name = re.search(r'"complexName":"([^"]+)"', full_decoded)
             dong_name = re.search(r'"dongName":"([^"]+)"', full_decoded)
-            if art_name and dong_name:
-                title = f"{art_name.group(1)} {dong_name.group(1)}동"
-            elif art_name:
-                title = art_name.group(1)
+            if c_name and dong_name:
+                title = f"{c_name.group(1)} {dong_name.group(1)}동"
+            elif c_name:
+                title = c_name.group(1)
+            elif art_name_val:
+                if category == "상가":
+                    feat_short = feature_desc.split(',')[0].strip() if feature_desc else ""
+                    if feat_short and len(feat_short) > 3:
+                        title = f"충무공동 {art_name_val} ({feat_short})"
+                    else:
+                        title = f"충무공동 {art_name_val}"
+                else:
+                    title = art_name_val
 
             # 중개사 매물설명 구성 (상대 중개업소 홍보문구는 배제하고 실매물 특징만 정제)
             final_description = ""
@@ -350,6 +369,11 @@ class NaverRealEstateClient:
                 final_description = f"📌 매물특징\n\n✔ {feature_desc}"
             else:
                 final_description = f"네이버부동산 등록 검증 실매물(매물번호: {atcl_no})입니다."
+
+            # 상가 매물인데 실사진이 전혀 없는 경우 상가 전용 클린 타이틀 카드 매핑
+            if category == "상가" and len(photos) == 0:
+                photos = ["images/complex_cards/일반상가_클린카드.jpg"]
+                logger.info(f"[상가 클린 타이틀 카드 매핑] images/complex_cards/일반상가_클린카드.jpg")
 
             # 아파트 매물인데 실사진이 전혀 없는 경우 깨끗한 아파트 이름 타이틀 카드 매핑
             if category == "아파트" and len(photos) == 0:

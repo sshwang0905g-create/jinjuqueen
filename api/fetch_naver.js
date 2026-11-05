@@ -166,11 +166,7 @@ module.exports = async (req, res) => {
       }
     }
 
-    let category = '오피스텔';
-    if (html.includes('아파트')) category = '아파트';
-    else if (html.includes('오피스텔') || title.includes('라온')) category = '오피스텔';
-    else if (html.includes('원룸')) category = '원룸/투룸';
-    else if (html.includes('상가')) category = '상가/점포';
+// [Category parsed below from structured data]
 
     // 6. Parse structured Next.js chunk fields
     const chunks = html.match(/self\.__next_f\.push\(\[1,"(.*?)"\]\)/g) || [];
@@ -277,6 +273,11 @@ module.exports = async (req, res) => {
       finalDescription = `📌 매물특징\n\n✔ ${featureDesc}`;
     } else {
       finalDescription = `네이버부동산 등록 검증 실매물(매물번호: ${atclNo})입니다.`;
+    }
+
+    // 상가 매물인데 실사진이 전혀 없는 경우 상가 전용 클린 타이틀 카드 매핑
+    if (category === '상가' && allPhotos.length === 0) {
+      allPhotos = ['images/complex_cards/일반상가_클린카드.jpg'];
     }
 
     // 아파트 매물인데 실사진이 전혀 없는 경우 깨끗한 아파트 이름 타이틀 카드 매핑

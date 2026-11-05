@@ -165,3 +165,4 @@ for item in cards:
     print(f"Generated card: {out_path}")
 
 print("All clean cards successfully generated with distinct, non-dark luxury palettes!")
+

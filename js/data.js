@@ -74,6 +74,55 @@ const BLOG_POSTS = [
 
 let PROPERTIES_DATA = [
   {
+    "id": "prop-2655464204",
+    "title": "충무공동 일반상가 (LH남동발전 인근 즉시입주 가능한 소형사무실 월세)",
+    "category": "상가",
+    "transactionType": "월세",
+    "status": "ACTIVE",
+    "sourceType": "NAVER",
+    "naverArticleNo": "2655464204",
+    "price": 500,
+    "deposit": 500,
+    "monthlyRent": 50,
+    "priceFormatted": "보증금 500만원 / 월세 50만원",
+    "location": "진주시 충무공동 (혁신도시 중심상권)",
+    "addressMasked": "진주시 충무공동 (혁신도시 중심상권) 일원",
+    "lat": 35.1764,
+    "lng": 128.1451,
+    "exclusiveArea": 26.53,
+    "exclusiveAreaPyeong": 8.0,
+    "supplyArea": 57.0,
+    "supplyAreaPyeong": 17.2,
+    "floor": "5층 / 총 6층",
+    "direction": "남향(주된출입구기준)",
+    "rooms": 1,
+    "bathrooms": 1,
+    "approvalDate": "2016년",
+    "moveInDate": "즉시입주 가능 (협의)",
+    "parking": "총 55대 주차가능",
+    "maintenanceFee": "약 8~9만원 (공용관리비 실비 정산)",
+    "maintenanceDetails": "공용관리비 실비 정산, 부가세 별도",
+    "badge": "네이버확인",
+    "isRecommended": true,
+    "tags": [
+      "네이버등록",
+      "실매물인증",
+      "월세",
+      "사무실"
+    ],
+    "images": [
+      "images/complex_cards/일반상가_클린카드.jpg"
+    ],
+    "agent": {
+      "name": "황선숙 대표공인중개사",
+      "phone": "010-4670-7248",
+      "role": "개업공인중개사"
+    },
+    "description": "📋 매물 특징\n\n즉시입주가능! 진주혁신도시 업무용 사무실 임대\nLH·한국남동발전 인근에 위치한 업무시설(사무소)\n\n✔ 업무시설로 사무실 용도에 적합\n✔ LH·한국남동발전 인근으로 편리한 업무 접근성\n✔ 월세에 대한 부가세 별도, 세금계산서 발급\n✔ 현 공실로 빠른 입주가능",
+    "feature": "LH남동발전 인근 즉시입주 가능한 소형사무실 월세, 부가세별도",
+    "adminMemo": "5층 501호 전용 8평 소형사무실 (LH·남동발전 앞)"
+  },
+  {
     "id": "prop-2659240864",
     "title": "혁신도시LH8단지 803동",
     "category": "아파트",
