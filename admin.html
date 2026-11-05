@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>진주퀸공인중개사 관리자 센터 | 매물 & 거래완료 관리 시스템</title>
+  <link rel="icon" type="image/png" href="images/logo.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0B132B',
+              slate: '#1E293B',
+              gold: '#C29B38',
+              goldHover: '#A6832A',
+              emerald: '#0D9488'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Pretendard Font & Lucide Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Pretendard', sans-serif; letter-spacing: -0.02em; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ==========================================
+       1. LOGIN OVERLAY (비밀번호: queen1234!)
+       ========================================== -->
+  <div id="loginOverlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-brand-navy border border-brand-gold/40 flex items-center justify-center p-2 mx-auto mb-4 shadow-lg">
+        <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain">
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">진주퀸 관리자 로그인</h2>
+      <p class="text-xs text-slate-500 mt-1 mb-6">부동산 매물 관리 및 거래완료 설정 시스템</p>
+
+      <form id="adminLoginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <input type="password" id="adminPasswordInput" placeholder="관리자 비밀번호를 입력하세요" required 
+                 class="w-full px-4 py-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm text-center font-semibold">
+          <div class="text-[11px] text-slate-400 mt-1.5">
+            기본 비밀번호 : <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700 font-bold">queen1234!</code>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-brand-navy hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2">
+          <i data-lucide="lock" class="w-4 h-4 text-brand-gold"></i>
+          <span>관리자 대시보드 입장</span>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-100">
+        <a href="index.html" class="text-xs text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> 홈페이지 메인으로 돌아가기
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       2. ADMIN MAIN DASHBOARD
+       ========================================== -->
+  <header class="bg-brand-navy text-white border-b border-slate-800 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-slate-900 border border-brand-gold/40 flex items-center justify-center p-1">
+          <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <span class="font-bold text-base text-white tracking-tight">진주퀸 관리자 센터</span>
+          <span class="ml-2 text-[11px] bg-brand-gold/20 text-brand-gold font-semibold px-2 py-0.5 rounded border border-brand-gold/40">매물 & 거래관리</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 text-xs">
+        <!-- Vercel Serverless GitHub DB Status -->
+        <div id="githubDbStatusBadge" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-slate-300 border border-white/15 text-[11px] font-semibold cursor-pointer" onclick="openDbGuideModal()" title="서버리스 GitHub DB 연동 상태 안내">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span id="githubDbStatusText">서버리스 Git DB 모드</span>
+        </div>
+        <a href="index.html" target="_blank" class="hidden sm:flex items-center gap-1 text-slate-300 hover:text-white bg-white/10 px-3 py-1.5 rounded-lg transition">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> 사이트 바로가기
+        </a>
+        <button onclick="handleLogout()" class="text-rose-300 hover:text-white bg-rose-950/80 hover:bg-rose-900 border border-rose-800/80 px-3 py-1.5 rounded-lg transition font-semibold flex items-center gap-1">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> 로그아웃
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <!-- Admin Navigation Tabs -->
+    <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <button id="tabBtnProperties" onclick="switchAdminTab('properties')" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow transition flex items-center gap-2">
+        <i data-lucide="building-2" class="w-4 h-4 text-brand-gold"></i>
+        <span>실시간 매물 관리 & 거래완료 설정</span>
+        <span id="adminPropBadge" class="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
+      </button>
+      <button id="tabBtnBoard" onclick="switchAdminTab('board')" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition flex items-center gap-2">
+        <i data-lucide="newspaper" class="w-4 h-4 text-slate-500"></i>
+        <span>부동산 소식 & 칼럼 관리</span>
+        <span id="adminBoardBadge" class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">0</span>
+      </button>
+    </div>
+
+    <!-- ==========================================
+         TAB 1. PROPERTY MANAGEMENT
+         ========================================== -->
+    <div id="adminSectionProperties" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <h3 class="text-lg font-bold text-slate-900">실매물 및 거래완료 상태 관리</h3>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">
+            거래가 체결된 매물은 <strong class="text-rose-600 font-bold">[거래완료 처리]</strong> 버튼을 누르면 홈페이지 사진에 도장이 찍히며 상세정보 열람이 자동 차단됩니다.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="adminPropFilter" onchange="renderAdminProperties()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+            <option value="ALL">전체 매물 보기</option>
+            <option value="ACTIVE">진행중 매물만</option>
+            <option value="SOLD">거래완료 매물만</option>
+            <option value="NAVER">네이버 확인 매물</option>
+            <option value="HOMEPAGE">홈페이지 단독 매물</option>
+          </select>
+          <button onclick="openAddPropModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-1.5 shadow">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>+ 네이버 매물 등록</span>
+          </button>
+          <button type="button" onclick="downloadAdminExcel()" class="px-3.5 py-2.5 bg-brand-navy hover:bg-slate-800 text-amber-300 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow border border-brand-gold/40 cursor-pointer">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>전체 매물 엑셀 다운로드 (관리자 전용)</span>
+          </button>
+          <button onclick="loadAdminProperties()" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center gap-1.5 border border-slate-300">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-500"></i> 새로고침
+          </button>
+        </div>
+      </div>
+
+      <!-- Property Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 uppercase">
+            <tr>
+              <th class="px-6 py-3.5">사진/상태</th>
+              <th class="px-6 py-3.5">유형/채널</th>
+              <th class="px-6 py-3.5">매물명 및 위치</th>
+              <th class="px-6 py-3.5">거래금액</th>
+              <th class="px-6 py-3.5 text-center">거래완료 설정</th>
+            </tr>
+          </thead>
+          <tbody id="adminPropertiesTableBody" class="divide-y divide-slate-100">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 2. BOARD MANAGEMENT
+         ========================================== -->
+    <div id="adminSectionBoard" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hidden">
+      <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">부동산 소식 및 공지사항 관리</h3>
+          <p class="text-xs text-slate-500 mt-0.5">총 <span id="postCount" class="font-bold text-amber-700">0</span>개의 게시글이 등록되어 있습니다.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="adminCategoryFilter" onchange="filterAdminPosts()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+            <option value="ALL">전체 카테고리</option>
+            <option value="혁신도시 소식">혁신도시 소식</option>
+            <option value="주간 시세 리포트">주간 시세 리포트</option>
+            <option value="부동산 세무/상식">부동산 세무/상식</option>
+            <option value="부동산 투자 분석">부동산 투자 분석</option>
+            <option value="사무소 공지">사무소 공지</option>
+          </select>
+          <button onclick="openWriteModal()" class="px-4 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-extrabold rounded-xl transition shadow flex items-center gap-1.5">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>새 글 작성하기</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 uppercase">
+            <tr>
+              <th class="px-6 py-3.5">카테고리</th>
+              <th class="px-6 py-3.5">제목</th>
+              <th class="px-6 py-3.5">작성자</th>
+              <th class="px-6 py-3.5">등록일</th>
+              <th class="px-6 py-3.5 text-right">관리</th>
+            </tr>
+          </thead>
+          <tbody id="adminPostsTableBody" class="divide-y divide-slate-100">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       PROPERTY REGISTER MODAL (네이버 매물)
+       ========================================== -->
+  <div id="propRegisterModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs">NAVER</div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">네이버 매물 간편등록</h3>
+            <p class="text-xs text-slate-500">매물번호를 입력하시면 홈페이지에 1초 만에 등록됩니다.</p>
+          </div>
+        </div>
+        <button onclick="closeAddPropModal()" class="p-1 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Quick Import Box -->
+      <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 mb-5 space-y-2.5">
+        <label class="block text-xs font-extrabold text-emerald-950 flex items-center gap-1.5" for="naverQuickInput">
+          <i data-lucide="link-2" class="w-4 h-4 text-emerald-600"></i>
+          <span>네이버 매물번호(8~10자리) 입력 :</span>
+        </label>
+        <div class="flex gap-2">
+          <input type="text" id="naverQuickInput" placeholder="예: 24591230 또는 매물 관리번호" 
+                 class="flex-1 px-3.5 py-2.5 rounded-xl border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs bg-white font-medium">
+          <button type="button" onclick="autoFetchNaverProperty()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow shrink-0 flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>정보 불러오기</span>
+          </button>
+        </div>
+        <p class="text-[11px] text-emerald-800/80 leading-relaxed">
+          💡 매물번호를 넣고 <strong>[정보 불러오기]</strong>를 누르면 제목과 가격 정보가 자동 채워집니다.
+        </p>
+      </div>
+
+      <!-- Detail Form -->
+      <form id="propRegisterForm" onsubmit="handleSaveProperty(event)" class="space-y-4 text-xs sm:text-sm">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="newPropCategory">매물 유형</label>
+            <select id="newPropCategory" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold">
+              <option value="아파트">아파트</option>
+              <option value="오피스텔">오피스텔</option>
+              <option value="상가">상가</option>
+              <option value="택지">단독주택용지/택지</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="newPropTrans">거래 유형</label>
+            <select id="newPropTrans" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold">
+              <option value="매매">매매</option>
+              <option value="전세">전세</option>
+              <option value="월세">월세</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1" for="newPropTitle">매물명 (제목)</label>
+          <input type="text" id="newPropTitle" placeholder="예: 진주혁신 대방노블랜드 34평 로열동 판상형" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="newPropPrice">가격 표시</label>
+            <input type="text" id="newPropPrice" placeholder="예: 매매 5억 3,000만원 / 보증금 3,000/100" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="newPropArea">전용면적 / 층수</label>
+            <input type="text" id="newPropArea" placeholder="예: 전용 84㎡ (34평) / 15층" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1" for="newPropLocation">소재지 위치</label>
+          <input type="text" id="newPropLocation" value="경남 진주시 충무공동" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1" for="newPropDesc">매물 특징 설명</label>
+          <textarea id="newPropDesc" rows="3" placeholder="남향 일조권 최상, 시스템에어컨, 빠른 입주 협의 가능 등 핵심 특징" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold leading-relaxed"></textarea>
+        </div>
+
+        <!-- 네이버 실사진 연동 미리보기 박스 -->
+        <div id="naverPhotoPreviewBox" class="hidden p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200">
+          <p class="text-xs font-bold text-emerald-900 mb-2 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="image" class="w-4 h-4 text-emerald-600"></i>
+              <span>네이버부동산 실사진 자동 연동 (<span id="naverPhotoCount" class="text-emerald-700">0</span>장)</span>
+            </span>
+            <span class="text-[11px] font-medium text-emerald-600">홈페이지 매물사진으로 자동 저장</span>
+          </p>
+          <div id="naverPhotoList" class="flex gap-2.5 overflow-x-auto pb-1 pt-1"></div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeAddPropModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition">
+            취소
+          </button>
+          <button type="submit" id="savePropSubmitBtn" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>홈페이지에 즉시 등록</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="adminToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 pointer-events-none opacity-0 transition-all duration-300">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="adminToastMsg">알림</span>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script>
+    let adminToken = sessionStorage.getItem('jinjuqueen_admin_token') || '';
+    let adminProperties = [];
+    let boardPosts = [];
+    let currentAdminTab = 'properties';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // If already logged in, hide overlay and load data
+      if (adminToken === 'queen1234!') {
+        document.getElementById('loginOverlay').classList.add('hidden');
+        loadAdminProperties();
+        loadBoardPosts();
+      }
+      if (window.lucide) lucide.createIcons();
+    });
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById('adminPasswordInput').value.trim();
+
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          adminToken = data.token || pass;
+          sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
+          document.getElementById('loginOverlay').classList.add('hidden');
+          updateDbStatusBadge(data.githubConnected, data.githubRepo);
+          showAdminToast('관리자 인증 완료! 환영합니다.');
+          loadAdminProperties();
+          loadBoardPosts();
+          return;
+        }
+      } catch (err) {
+        // fallback to offline password match
+      }
+
+      if (pass === 'queen1234!') {
+        adminToken = 'queen1234!';
+        sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
+        document.getElementById('loginOverlay').classList.add('hidden');
+        updateDbStatusBadge(false, null);
+        showAdminToast('관리자 인증 완료! 환영합니다.');
+        loadAdminProperties();
+        loadBoardPosts();
+      } else {
+        alert('비밀번호가 올바르지 않습니다. (기본 비밀번호: queen1234!)');
+      }
+    }
+
+    function updateDbStatusBadge(connected, repo) {
+      const badge = document.getElementById('githubDbStatusBadge');
+      const text = document.getElementById('githubDbStatusText');
+      if (!badge || !text) return;
+
+      if (connected && repo) {
+        badge.className = 'hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/70 text-emerald-300 border border-emerald-600/70 text-[11px] font-bold cursor-pointer';
+        text.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub DB: ' + repo;
+      } else {
+        badge.className = 'hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-slate-300 border border-white/15 text-[11px] font-semibold cursor-pointer';
+        text.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span> 서버리스 Git DB 모드';
+      }
+    }
+
+    function openDbGuideModal() {
+      document.getElementById('dbGuideModal').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeDbGuideModal() {
+      document.getElementById('dbGuideModal').classList.add('hidden');
+    }
+
+    
+    function downloadAdminExcel() {
+      if (!adminToken || adminToken !== 'queen1234!') {
+        alert('관리자 인증이 필요합니다. 먼저 로그인해 주세요.');
+        return;
+      }
+      showAdminToast('관리자 인증 확인: 전체 매물 엑셀 대장을 다운로드합니다.');
+      window.location.href = `/api/download_properties_excel?token=${encodeURIComponent(adminToken)}`;
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('jinjuqueen_admin_token');
+      adminToken = '';
+      document.getElementById('loginOverlay').classList.remove('hidden');
+      document.getElementById('adminPasswordInput').value = '';
+    }
+
+    function switchAdminTab(tab) {
+      currentAdminTab = tab;
+      const secProp = document.getElementById('adminSectionProperties');
+      const secBoard = document.getElementById('adminSectionBoard');
+      const btnProp = document.getElementById('tabBtnProperties');
+      const btnBoard = document.getElementById('tabBtnBoard');
+
+      if (tab === 'properties') {
+        secProp.classList.remove('hidden');
+        secBoard.classList.add('hidden');
+        btnProp.className = 'px-5 py-2.5 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow transition flex items-center gap-2';
+        btnBoard.className = 'px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition flex items-center gap-2';
+        loadAdminProperties();
+      } else {
+        secProp.classList.add('hidden');
+        secBoard.classList.remove('hidden');
+        btnBoard.className = 'px-5 py-2.5 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow transition flex items-center gap-2';
+        btnProp.className = 'px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition flex items-center gap-2';
+        loadBoardPosts();
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // PROPERTIES LOGIC
+    async function loadAdminProperties() {
+      try {
+        const res = await fetch('/api/properties?t=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          adminProperties = data.properties || [];
+        } else {
+          const fileRes = await fetch('data/properties.json?t=' + Date.now());
+          adminProperties = await fileRes.json();
+        }
+      } catch (e) {
+        adminProperties = [];
+      }
+      document.getElementById('adminPropBadge').textContent = adminProperties.length;
+      renderAdminProperties();
+    }
+
+    function renderAdminProperties() {
+      const tbody = document.getElementById('adminPropertiesTableBody');
+      const filter = document.getElementById('adminPropFilter').value;
+      if (!tbody) return;
+
+      const filtered = adminProperties.filter(p => {
+        if (filter === 'ACTIVE') return p.status !== 'SOLD';
+        if (filter === 'SOLD') return p.status === 'SOLD';
+        if (filter === 'NAVER') return p.sourceType === 'NAVER';
+        if (filter === 'HOMEPAGE') return p.sourceType === 'HOMEPAGE';
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">조건에 해당하는 매물이 없습니다.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(prop => {
+        const isSold = prop.status === 'SOLD';
+        const sourceBadge = prop.sourceType === 'NAVER' 
+          ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold px-2 py-0.5 rounded text-[10px]">네이버</span>`
+          : `<span class="bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2 py-0.5 rounded text-[10px]">진주퀸단독</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition ${isSold ? 'bg-slate-50/60' : ''}">
+            <td class="px-6 py-4">
+              <div class="relative w-16 h-12 rounded-lg overflow-hidden border border-slate-200">
+                <img src="${prop.images[0]}" class="w-full h-full object-cover">
+                ${isSold ? '<div class="absolute inset-0 bg-slate-900/70 flex items-center justify-center text-white text-[10px] font-black">완료</div>' : ''}
+              </div>
+            </td>
+            <td class="px-6 py-4 space-y-1">
+              <div class="font-bold text-slate-900">${prop.category} · ${prop.transactionType}</div>
+              <div>${sourceBadge}</div>
+            </td>
+            <td class="px-6 py-4 max-w-sm">
+              <div class="font-bold text-slate-900 truncate">${prop.title}</div>
+              <div class="text-[11px] text-slate-500 truncate mt-0.5">${prop.location} (${prop.floor})</div>
+            </td>
+            <td class="px-6 py-4 font-extrabold text-amber-700 text-sm">
+              ${prop.priceFormatted}
+            </td>
+            <td class="px-6 py-4 text-center">
+              <button onclick="handleTogglePropStatus('${prop.id}')" 
+                      class="px-4 py-2 rounded-xl font-black text-xs transition shadow-sm flex items-center gap-1.5 mx-auto ${isSold ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'}">
+                <i data-lucide="${isSold ? 'rotate-ccw' : 'check-circle'}" class="w-3.5 h-3.5"></i>
+                <span>${isSold ? '진행중으로 복구' : '거래완료 처리'}</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function handleTogglePropStatus(propId) {
+      const prop = adminProperties.find(p => p.id === propId);
+      if (!prop) return;
+
+      const willBeSold = prop.status !== 'SOLD';
+      const confirmMsg = willBeSold 
+        ? `[${prop.title}] 매물을 '거래완료'로 변경하시겠습니까?\n홈페이지 사진에 [계약완료] 도장이 찍히며 상세정보 열람이 차단됩니다.`
+        : `[${prop.title}] 매물을 다시 '진행중'으로 복구하시겠습니까?`;
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({
+            action: 'toggle_status',
+            property: { id: propId }
+          })
+        });
+
+        if (res.ok) {
+          const result = await res.json();
+          adminProperties = result.properties;
+          renderAdminProperties();
+          showAdminToast(willBeSold ? '매물이 거래완료 처리되었습니다.' : '매물이 진행중으로 복구되었습니다.');
+        }
+      } catch (e) {
+        prop.status = willBeSold ? 'SOLD' : 'ACTIVE';
+        prop.badge = willBeSold ? '거래완료' : '추천매물';
+        renderAdminProperties();
+        showAdminToast('상태 변경 완료');
+      }
+    }
+
+    let fetchedNaverPhotos = [];
+
+    function openAddPropModal() {
+      document.getElementById('propRegisterForm').reset();
+      document.getElementById('newPropLocation').value = '경남 진주시 충무공동';
+      fetchedNaverPhotos = [];
+      const previewBox = document.getElementById('naverPhotoPreviewBox');
+      if (previewBox) previewBox.classList.add('hidden');
+      document.getElementById('propRegisterModal').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeAddPropModal() {
+      fetchedNaverPhotos = [];
+      document.getElementById('propRegisterModal').classList.add('hidden');
+    }
+
+    async function autoFetchNaverProperty() {
+      const input = document.getElementById('naverQuickInput').value.trim();
+      if (!input) {
+        alert('네이버 매물번호(예: 2658178200)를 입력해 주세요.');
+        return;
+      }
+
+      const quickBtn = document.querySelector('button[onclick="autoFetchNaverProperty()"]');
+      const originalHtml = quickBtn ? quickBtn.innerHTML : '';
+      if (quickBtn) {
+        quickBtn.disabled = true;
+        quickBtn.innerHTML = '<span class="inline-block animate-spin mr-1">↻</span> 수집 중...';
+      }
+
+      try {
+        const res = await fetch('/api/fetch_naver', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ articleInput: input })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          if (data.title) document.getElementById('newPropTitle').value = data.title;
+          if (data.priceFormatted) document.getElementById('newPropPrice').value = data.priceFormatted;
+          if (data.category) document.getElementById('newPropCategory').value = data.category;
+          if (data.transactionType) document.getElementById('newPropTrans').value = data.transactionType;
+          if (data.location) document.getElementById('newPropLocation').value = data.location;
+          if (data.description) document.getElementById('newPropDesc').value = data.description;
+          document.getElementById('newPropArea').value = '전용 28㎡ / 중층 (원룸/오피스텔)';
+
+          fetchedNaverPhotos = data.photos || [];
+          window.lastFetchedNaverData = data;
+
+          // Render photo preview if photos found
+          const previewBox = document.getElementById('naverPhotoPreviewBox');
+          const photoList = document.getElementById('naverPhotoList');
+          const countSpan = document.getElementById('naverPhotoCount');
+
+          if (previewBox && photoList && fetchedNaverPhotos.length > 0) {
+            countSpan.textContent = fetchedNaverPhotos.length;
+            photoList.innerHTML = fetchedNaverPhotos.map(url => `
+              <div class="relative w-24 h-18 rounded-xl overflow-hidden border-2 border-emerald-500 shrink-0 shadow-sm">
+                <img src="${url}" class="w-full h-full object-cover">
+                <span class="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">실사진</span>
+              </div>
+            `).join('');
+            previewBox.classList.remove('hidden');
+          }
+
+          showAdminToast(`네이버 실매물 [${data.title}] 및 사진 ${fetchedNaverPhotos.length}장이 자동 연동되었습니다!`);
+        } else {
+          showAdminToast(data.message || '매물 정보를 불러오지 못했습니다.');
+        }
+      } catch (err) {
+        console.error(err);
+        showAdminToast('네이버 서버 연결 오류가 발생했습니다.');
+      } finally {
+        if (quickBtn) {
+          quickBtn.disabled = false;
+          quickBtn.innerHTML = originalHtml;
+        }
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    async function handleSaveProperty(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById('savePropSubmitBtn');
+      const category = document.getElementById('newPropCategory').value;
+      const trans = document.getElementById('newPropTrans').value;
+      const title = document.getElementById('newPropTitle').value;
+      const priceFormatted = document.getElementById('newPropPrice').value;
+      const area = document.getElementById('newPropArea').value;
+      const location = document.getElementById('newPropLocation').value;
+      const desc = document.getElementById('newPropDesc').value;
+      const naverNo = document.getElementById('naverQuickInput').value.trim();
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span>홈페이지 저장 중...</span>';
+
+      // Parse deposit & rent
+      let depVal = 0;
+      let rentVal = 0;
+      let priceVal = 1000;
+      if (window.lastFetchedNaverData && window.lastFetchedNaverData.deposit !== undefined) {
+        depVal = window.lastFetchedNaverData.deposit;
+        rentVal = window.lastFetchedNaverData.monthlyRent || 0;
+        priceVal = depVal;
+      } else {
+        const pm = priceFormatted.match(/(\d[\d,]*)\s*\/\s*(\d[\d,]*)/);
+        if (pm) {
+          depVal = parseInt(pm[1].replace(/,/g, '')) || 0;
+          rentVal = parseInt(pm[2].replace(/,/g, '')) || 0;
+          priceVal = depVal;
+        }
+      }
+
+      // Coordinates slightly separated per listing
+      const jitterLat = 35.1764 + (Math.random() - 0.5) * 0.0018;
+      const jitterLng = 128.1485 + (Math.random() - 0.5) * 0.0018;
+
+      const newProperty = {
+        id: 'prop-' + Date.now(),
+        category,
+        transactionType: trans,
+        status: 'ACTIVE',
+        sourceType: 'NAVER',
+        naverArticleNo: naverNo,
+        title,
+        price: priceVal,
+        priceFormatted,
+        deposit: depVal,
+        monthlyRent: rentVal,
+        location,
+        addressMasked: location + ' 일원',
+        lat: Number(jitterLat.toFixed(4)),
+        lng: Number(jitterLng.toFixed(4)),
+        exclusiveArea: 84.9,
+        exclusiveAreaPyeong: 25.7,
+        supplyArea: 112.0,
+        supplyAreaPyeong: 34.0,
+        floor: area,
+        direction: '남향 (거실 기준)',
+        rooms: 3,
+        bathrooms: 2,
+        approvalDate: '2020년',
+        moveInDate: '즉시입주 가능',
+        parking: '세대당 1.4대',
+        maintenanceFee: '약 16만원',
+        maintenanceDetails: '공용관리비 실비 정산',
+        badge: '네이버확인',
+        isRecommended: true,
+        tags: ['네이버등록', '실매물인증', trans],
+        images: (fetchedNaverPhotos && fetchedNaverPhotos.length > 0)
+          ? fetchedNaverPhotos
+          : [
+              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+              'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80'
+            ],
+        agent: {
+          name: '황선숙 대표공인중개사',
+          phone: '010-4670-7248',
+          role: '개업공인중개사'
+        },
+        description: desc
+      };
+
+      try {
+        const res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({
+            action: 'create',
+            property: newProperty
+          })
+        });
+
+        if (res.ok) {
+          const result = await res.json();
+          adminProperties = result.properties;
+          closeAddPropModal();
+          renderAdminProperties();
+          showAdminToast('새 매물이 홈페이지에 성공적으로 등록되었습니다!');
+        }
+      } catch (err) {
+        adminProperties.unshift(newProperty);
+        closeAddPropModal();
+        renderAdminProperties();
+        showAdminToast('등록 완료');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>홈페이지에 즉시 등록</span>';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    // BOARD LOGIC
+    async function loadBoardPosts() {
+      try {
+        let res = await fetch('/api/board?t=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          boardPosts = data.posts || [];
+        } else {
+          res = await fetch('data/board.json?t=' + Date.now());
+          boardPosts = await res.json();
+        }
+      } catch (e) {
+        boardPosts = [];
+      }
+      document.getElementById('adminBoardBadge').textContent = boardPosts.length;
+      document.getElementById('postCount').textContent = boardPosts.length;
+      renderAdminPosts();
+    }
+
+    function renderAdminPosts() {
+      const tbody = document.getElementById('adminPostsTableBody');
+      const filterCat = document.getElementById('adminCategoryFilter').value;
+      if (!tbody) return;
+
+      const filtered = boardPosts.filter(p => filterCat === 'ALL' || p.category === filterCat);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">등록된 게시글이 없습니다.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(post => `
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="px-6 py-4 font-bold text-amber-800">
+            <span class="bg-amber-100 px-2 py-0.5 rounded text-[11px]">${post.category}</span>
+          </td>
+          <td class="px-6 py-4 font-semibold text-slate-900 max-w-md truncate">
+            ${post.title}
+            <div class="text-[11px] text-slate-400 font-normal truncate mt-0.5">${post.summary || ''}</div>
+          </td>
+          <td class="px-6 py-4 text-slate-600">${post.author || '황선숙 대표'}</td>
+          <td class="px-6 py-4 text-slate-400">${post.date}</td>
+          <td class="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+            <button onclick="openEditModal('${post.id}')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold rounded-lg transition border border-amber-300/50">
+              수정
+            </button>
+            <button onclick="handleDeletePost('${post.id}')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg transition">
+              삭제
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function filterAdminPosts() {
+      renderAdminPosts();
+    }
+
+
+    function getTodayDateStr() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${yyyy}.${mm}.${dd}`;
+    }
+
+    function openWriteModal() {
+      document.getElementById('postWriteForm').reset();
+      document.getElementById('postEditId').value = '';
+      document.getElementById('aiQuickPasteInput').value = '';
+      document.getElementById('postAuthor').value = '황선숙 대표';
+      document.getElementById('postDate').value = getTodayDateStr();
+      document.getElementById('writePostModalTitle').textContent = '부동산 칼럼 & 블로그 새 글 작성';
+      document.getElementById('savePostBtnText').textContent = '홈페이지에 즉시 발행';
+      switchEditorTab('editor');
+      document.getElementById('writePostModal').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function openEditModal(postId) {
+      const post = boardPosts.find(p => p.id === postId);
+      if (!post) return;
+      document.getElementById('postEditId').value = post.id;
+      document.getElementById('postCategory').value = post.category || '혁신도시 소식';
+      document.getElementById('postAuthor').value = post.author || '황선숙 대표';
+      document.getElementById('postDate').value = post.date || getTodayDateStr();
+      document.getElementById('postTitle').value = post.title || '';
+      document.getElementById('postSummary').value = post.summary || '';
+      document.getElementById('postContent').value = post.content || '';
+      document.getElementById('aiQuickPasteInput').value = '';
+      document.getElementById('writePostModalTitle').textContent = '게시글 수정 (' + post.title.substring(0, 18) + '...)';
+      document.getElementById('savePostBtnText').textContent = '수정 내용 저장';
+      switchEditorTab('editor');
+      document.getElementById('writePostModal').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeWriteModal() {
+      document.getElementById('writePostModal').classList.add('hidden');
+    }
+
+    function switchEditorTab(tab) {
+      const editorPane = document.getElementById('editorPane');
+      const previewPane = document.getElementById('previewPane');
+      const tabBtnEditor = document.getElementById('tabBtnEditor');
+      const tabBtnPreview = document.getElementById('tabBtnPreview');
+      const previewEl = document.getElementById('liveMarkdownPreview');
+
+      if (tab === 'preview') {
+        const content = document.getElementById('postContent').value || '';
+        if (window.marked && typeof window.marked.parse === 'function') {
+          try {
+            window.marked.setOptions({ breaks: true, gfm: true });
+            previewEl.innerHTML = window.marked.parse(content);
+          } catch (e) {
+            previewEl.innerHTML = content.replace(/\n/g, '<br>');
+          }
+        } else {
+          previewEl.innerHTML = content.replace(/\n/g, '<br>');
+        }
+        editorPane.classList.add('hidden');
+        previewPane.classList.remove('hidden');
+        tabBtnPreview.className = 'px-2.5 py-1 rounded font-bold bg-white text-slate-900 shadow-xs transition';
+        tabBtnEditor.className = 'px-2.5 py-1 rounded font-medium text-slate-500 hover:text-slate-800 transition';
+      } else {
+        editorPane.classList.remove('hidden');
+        previewPane.classList.add('hidden');
+        tabBtnEditor.className = 'px-2.5 py-1 rounded font-bold bg-white text-slate-900 shadow-xs transition';
+        tabBtnPreview.className = 'px-2.5 py-1 rounded font-medium text-slate-500 hover:text-slate-800 transition';
+      }
+    }
+
+    function autoParseAIText() {
+      const raw = document.getElementById('aiQuickPasteInput').value.trim();
+      if (!raw) {
+        alert('Claude, 재미나이, ChatGPT에서 복사한 내용을 먼저 붙여넣어 주세요.');
+        return;
+      }
+
+      const lines = raw.split('\n');
+      let extractedTitle = '';
+      let extractedSummary = '';
+      let extractedCategory = '';
+      let cleanBodyLines = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!extractedTitle) {
+          if (line.startsWith('# ')) {
+            extractedTitle = line.replace(/^#\s+/, '').trim();
+            continue;
+          } else if (line.startsWith('## ') && !extractedTitle) {
+            extractedTitle = line.replace(/^##\s+/, '').trim();
+            continue;
+          } else if (line.match(/^[\*\_]{0,2}제목[\*\_]{0,2}\s*[:：]\s*(.*)$/i)) {
+            extractedTitle = line.replace(/^[\*\_]{0,2}제목[\*\_]{0,2}\s*[:：]\s*/i, '').replace(/[\*\_]/g, '').trim();
+            continue;
+          } else if (line.length > 5 && line.length < 80 && (line.includes('분석') || line.includes('리포트') || line.includes('전망') || line.includes('안내') || line.includes('시세'))) {
+            extractedTitle = line.replace(/^[#\*\_\-\s]+/, '').replace(/[#\*\_\-\s]+$/, '').trim();
+            continue;
+          }
+        }
+        cleanBodyLines.push(lines[i]);
+      }
+
+      // Detect category
+      const fullText = raw.toLowerCase();
+      if (fullText.includes('시세') || fullText.includes('실거래가') || fullText.includes('전세가') || fullText.includes('매매가')) {
+        extractedCategory = '주간 시세 리포트';
+      } else if (fullText.includes('투자') || fullText.includes('수익률') || fullText.includes('상가분석') || fullText.includes('전망')) {
+        extractedCategory = '부동산 투자 분석';
+      } else if (fullText.includes('세금') || fullText.includes('양도세') || fullText.includes('취득세') || fullText.includes('세무') || fullText.includes('상식') || fullText.includes('공인중개사법')) {
+        extractedCategory = '부동산 세무/상식';
+      } else if (fullText.includes('공지') || fullText.includes('사무소') || fullText.includes('휴무') || fullText.includes('개편')) {
+        extractedCategory = '사무소 공지';
+      } else {
+        extractedCategory = '혁신도시 소식';
+      }
+
+      // Detect summary
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.match(/^[\*\_]{0,2}요약[\*\_]{0,2}\s*[:：]\s*(.*)$/i)) {
+          extractedSummary = trimmed.replace(/^[\*\_]{0,2}요약[\*\_]{0,2}\s*[:：]\s*/i, '').replace(/[\*\_]/g, '').trim();
+          break;
+        }
+      }
+      if (!extractedSummary) {
+        for (const line of cleanBodyLines) {
+          const trimmed = line.trim();
+          if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('![')) {
+            extractedSummary = trimmed.replace(/[#\*`_~>\[\]]/g, '').substring(0, 110) + '...';
+            break;
+          }
+        }
+      }
+
+      if (extractedTitle) document.getElementById('postTitle').value = extractedTitle;
+      if (extractedSummary) document.getElementById('postSummary').value = extractedSummary;
+      if (extractedCategory) document.getElementById('postCategory').value = extractedCategory;
+      document.getElementById('postContent').value = cleanBodyLines.join('\n').trim();
+
+      const todayStr = getTodayDateStr();
+      if (!document.getElementById('postDate').value) {
+        document.getElementById('postDate').value = todayStr;
+      }
+
+      showAdminToast('🤖 AI 글 분석 완료! 제목, 카테고리, 요약, 본문이 자동 추출되었습니다.');
+    }
+
+    async function handleSavePost(e) {
+      e.preventDefault();
+      const editId = document.getElementById('postEditId').value.trim();
+      const postData = {
+        category: document.getElementById('postCategory').value,
+        title: document.getElementById('postTitle').value.trim(),
+        author: document.getElementById('postAuthor').value.trim() || '황선숙 대표',
+        date: document.getElementById('postDate').value.trim() || getTodayDateStr(),
+        summary: document.getElementById('postSummary').value.trim(),
+        content: document.getElementById('postContent').value.trim()
+      };
+
+      const saveBtn = document.getElementById('savePostSubmitBtn');
+      saveBtn.disabled = true;
+
+      try {
+        const isUpdate = !!editId;
+        if (isUpdate) {
+          postData.id = editId;
+        }
+        const res = await fetch('/api/board', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({
+            action: isUpdate ? 'update' : 'create',
+            post: postData
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          boardPosts = data.posts || [];
+          renderAdminPosts();
+          document.getElementById('adminBoardBadge').textContent = boardPosts.length;
+          document.getElementById('postCount').textContent = boardPosts.length;
+          closeWriteModal();
+          showAdminToast(isUpdate ? '게시글이 성공적으로 수정되었습니다!' : '새 칼럼이 홈페이지에 성공적으로 발행되었습니다!');
+          return;
+        } else {
+          alert('저장 실패: 관리자 권한을 확인해주세요.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('저장 중 통신 오류가 발생했습니다.');
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    async function handleDeletePost(postId) {
+      if (!confirm('이 게시글을 삭제하시겠습니까?')) return;
+      try {
+        const res = await fetch('/api/board', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({
+            action: 'delete',
+            post: { id: postId }
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          boardPosts = data.posts || [];
+          renderAdminPosts();
+          document.getElementById('adminBoardBadge').textContent = boardPosts.length;
+          document.getElementById('postCount').textContent = boardPosts.length;
+          showAdminToast('게시글이 삭제되었습니다.');
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      boardPosts = boardPosts.filter(p => p.id !== postId);
+      renderAdminPosts();
+      showAdminToast('게시글이 삭제되었습니다.');
+    }
+
+    function showAdminToast(msg) {
+      const toast = document.getElementById('adminToast');
+      document.getElementById('adminToastMsg').textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+  </script>
+
+  <!-- ==========================================
+       AI BLOG & COLUMN WRITE MODAL (AI 마크다운 칼럼 작성 모달)
+       ========================================== -->
+  <div id="writePostModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center font-black shadow-sm">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="writePostModalTitle" class="text-lg font-bold text-slate-900">부동산 칼럼 & 블로그 게시글 작성</h3>
+            <p class="text-xs text-slate-500">Claude, 재미나이(Gemini), ChatGPT에서 작성된 글을 그대로 업로드하실 수 있습니다.</p>
+          </div>
+        </div>
+        <button onclick="closeWriteModal()" class="p-1 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- AI Smart Paste Box (AI 생성 글 원클릭 자동 파싱 마법사) -->
+      <div class="p-4 bg-gradient-to-r from-amber-50 to-orange-50/60 rounded-2xl border border-amber-200/80 mb-5 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-extrabold text-amber-950 flex items-center gap-1.5" for="aiQuickPasteInput">
+            <i data-lucide="bot" class="w-4 h-4 text-amber-600"></i>
+            <span>🤖 AI(Claude · Gemini · ChatGPT) 생성 글 원클릭 자동 완성 마법사</span>
+          </label>
+          <span class="text-[11px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">제목·요약·카테고리 자동 추출</span>
+        </div>
+        <p class="text-[11px] text-amber-900/80 leading-relaxed">
+          AI에게 답변받은 전체 글(제목, 소제목, 본문)을 복사하여 아래 상자에 넣고 <strong>[AI 내용 자동 분석]</strong>을 누르면 양식이 자동으로 채워집니다.
+        </p>
+        <textarea id="aiQuickPasteInput" rows="2" placeholder="Claude, 재미나이, ChatGPT의 글 전체를 여기에 붙여넣으세요..." class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs bg-white font-medium resize-none"></textarea>
+        <div class="flex justify-end">
+          <button type="button" onclick="autoParseAIText()" class="px-4 py-2 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-black rounded-xl transition shadow flex items-center gap-1.5">
+            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+            <span>AI 내용 자동 분석 및 입력</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Article Form -->
+      <form id="postWriteForm" onsubmit="handleSavePost(event)" class="space-y-4 text-xs sm:text-sm">
+        <input type="hidden" id="postEditId" value="">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="postCategory">카테고리</label>
+            <select id="postCategory" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+              <option value="혁신도시 소식">혁신도시 소식</option>
+              <option value="주간 시세 리포트">주간 시세 리포트</option>
+              <option value="부동산 투자 분석">부동산 투자 분석</option>
+              <option value="부동산 세무/상식">부동산 세무/상식</option>
+              <option value="사무소 공지">사무소 공지</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="postAuthor">작성자</label>
+            <input type="text" id="postAuthor" value="황선숙 대표" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="postDate">등록일자</label>
+            <input type="text" id="postDate" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1" for="postTitle">칼럼 및 게시글 제목</label>
+          <input type="text" id="postTitle" placeholder="예: [혁신도시 심층분석] 2026년 하반기 충무공동 아파트 실거래가 및 매수 전략" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-semibold text-slate-900">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1" for="postSummary">요약 설명 (목록 카드에 표시될 1~2줄 요약)</label>
+          <input type="text" id="postSummary" placeholder="예: 가을 이사철 국민평형 전세 매물 품귀와 매매가 회복세를 중심으로 분석한 현장 브리핑." required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold text-slate-700">
+        </div>
+
+        <!-- Content Editor with Dual Tabs (Markdown / Live Preview) -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="font-bold text-slate-700 flex items-center gap-1.5">
+              <span>본문 내용</span>
+              <span class="text-[11px] font-normal text-slate-400">(마크다운 #소제목, **굵게**, -목록, >인용구 완벽 지원)</span>
+            </label>
+            <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
+              <button type="button" id="tabBtnEditor" onclick="switchEditorTab('editor')" class="px-2.5 py-1 rounded font-bold bg-white text-slate-900 shadow-xs transition">✏️ 마크다운 작성</button>
+              <button type="button" id="tabBtnPreview" onclick="switchEditorTab('preview')" class="px-2.5 py-1 rounded font-medium text-slate-500 hover:text-slate-800 transition">👁️ 실시간 미리보기</button>
+            </div>
+          </div>
+
+          <!-- Editor Pane -->
+          <div id="editorPane">
+            <textarea id="postContent" rows="12" placeholder="Claude, 재미나이, GPT에서 복사한 마크다운이나 일반 텍스트를 입력하세요.&#10;# 대제목&#10;## 소제목&#10;**굵은 글씨**와 - 목록 형태, > 인용구 등이 홈페이지에 세련되게 나타납니다." required class="w-full border border-slate-300 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-brand-gold font-mono text-xs leading-relaxed resize-y"></textarea>
+          </div>
+
+          <!-- Live Preview Pane -->
+          <div id="previewPane" class="hidden border border-slate-300 rounded-2xl p-5 bg-white min-h-[280px] max-h-[400px] overflow-y-auto">
+            <div id="liveMarkdownPreview" class="markdown-body"></div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeWriteModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition">
+            취소
+          </button>
+          <button type="submit" id="savePostSubmitBtn" class="px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-extrabold transition shadow flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span id="savePostBtnText">홈페이지에 즉시 발행</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       GITHUB SERVERLESS DATABASE GUIDE MODAL
+       ========================================== -->
+  <div id="dbGuideModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
+            <i data-lucide="database" class="w-5 h-5 text-amber-400"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Vercel 서버리스 Git DB 시스템</h3>
+            <p class="text-xs text-slate-500">외부 DB 비용 없이 GitHub 저장소를 DB로 영구 활용</p>
+          </div>
+        </div>
+        <button onclick="closeDbGuideModal()" class="p-1 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
+          <h4 class="font-bold text-emerald-950 text-xs mb-1 flex items-center gap-1.5">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+            <span>동작 방식 (Git as a Database)</span>
+          </h4>
+          <p class="text-[12px] text-emerald-900/80">
+            관리자 모드에서 매물 상태를 변경하거나 AI 칼럼을 작성하면, Vercel 서버리스 API가 GitHub 저장소의 <code class="font-bold text-emerald-800">data/board.json</code>과 <code class="font-bold text-emerald-800">data/properties.json</code> 파일에 직접 자동 커밋(Commit)하여 영구 보존합니다.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 mb-2">Vercel 배포 시 필요한 환경변수 (30초 설정)</h4>
+          <div class="bg-slate-900 text-slate-100 p-3.5 rounded-xl text-xs font-mono space-y-1.5 overflow-x-auto">
+            <div><span class="text-amber-400">GITHUB_TOKEN</span> = ghp_xxxxxxxxxxxx (GitHub 토큰)</div>
+            <div><span class="text-amber-400">GITHUB_OWNER</span> = 본인 GitHub 아이디</div>
+            <div><span class="text-amber-400">GITHUB_REPO</span> = jinjuqueen (저장소 이름)</div>
+            <div><span class="text-amber-400">GITHUB_BRANCH</span> = main (기본 브랜치)</div>
+            <div><span class="text-amber-400">ADMIN_PASSWORD</span> = queen1234! (관리자 비밀번호)</div>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500">
+          💡 환경변수가 등록되면 Vercel에서도 로컬처럼 수정·등록·삭제 내역이 GitHub 히스토리에 안전하게 영구 저장됩니다.
+        </p>
+
+        <div class="pt-3 border-t border-slate-100 flex justify-end">
+          <button type="button" onclick="closeDbGuideModal()" class="px-5 py-2.5 rounded-xl bg-brand-navy hover:bg-slate-800 text-white font-bold text-xs transition">
+            확인 및 닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

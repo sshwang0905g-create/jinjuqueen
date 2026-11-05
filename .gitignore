@@ -1,0 +1,19 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env.local
+.venv/
+env/
+venv/
+
+# Logs & System
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Vercel & Deploy
+.vercel
+node_modules/

@@ -1,0 +1,504 @@
+/* ========================================================
+   진주퀸공인중개사사무소 - Modern Editorial & Taste Design Stylesheet
+   UI UX Pro Max & Taste Skill Principles Applied
+   ======================================================== */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+:root {
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --color-primary: #0F172A; /* Deep Trust Slate */
+  --color-accent: #C29B38;  /* Royal Queen Gold */
+  --color-accent-hover: #A6832A;
+  --color-emerald: #0D9488;
+  --color-bg-subtle: #F8FAFC;
+  --color-border: #E2E8F0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #1E293B;
+  background-color: #F8FAFC;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Subtle Gradient Glows */
+.hero-gradient {
+  background: radial-gradient(circle at 80% 20%, rgba(194, 155, 56, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 10% 90%, rgba(15, 23, 42, 0.05) 0%, transparent 60%);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Card Hover Micro-interaction */
+.property-card {
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.28s ease;
+}
+.property-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.12);
+  border-color: #CBD5E1;
+}
+
+.property-card.active-selected {
+  border-color: #C29B38 !important;
+  box-shadow: 0 0 0 2px rgba(194, 155, 56, 0.4), 0 16px 32px -8px rgba(15, 23, 42, 0.16) !important;
+}
+
+/* Custom Leaflet Map Styling */
+.custom-map-pin {
+  background: #0F172A;
+  color: #FFFFFF;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+  border: 2px solid #C29B38;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.custom-map-pin:hover, .custom-map-pin.active {
+  background: #C29B38;
+  color: #0F172A;
+  transform: scale(1.08);
+  border-color: #0F172A;
+  z-index: 1000 !important;
+}
+.custom-map-pin::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: #0F172A transparent transparent transparent;
+}
+.custom-map-pin.active::after {
+  border-color: #C29B38 transparent transparent transparent;
+}
+
+/* Mobile Fixed Bottom Navigation Bar */
+.mobile-bottom-bar {
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Pulse indicator for live contact */
+.pulse-badge {
+  position: relative;
+}
+.pulse-badge::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-green 2s infinite;
+}
+@keyframes pulse-green {
+  0% {
+    transform: translateY(-50%) scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: translateY(-50%) scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* Smooth modal fade */
+.modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.25s ease;
+}
+
+/* Toast animation */
+#toastNotification {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+
+
+/* ========================================================
+   KOREAN EDITORIAL TYPOGRAPHY & TEXT JUSTIFICATION RULES
+   (문단단위 단어 끊김 방지 및 다중행 양쪽 가지런한 정렬)
+   ======================================================== */
+
+*, *::before, *::after {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+body {
+  word-break: keep-all;
+  text-rendering: optimizeLegibility;
+}
+
+/* 긴 설명글, 카드 본문, 모달 상세 설명 등의 앞뒤 끝선 양쪽 정렬 */
+.text-justify-korean, 
+#detailDesc, 
+.property-card p, 
+.news-content, 
+.office-desc,
+.editorial-text,
+#soldNoticeModal p,
+.modal-body p {
+  text-align: justify;
+  text-justify: inter-word;
+  word-break: keep-all;
+}
+
+/* 중앙 정렬 요소는 단어 간격이 벌어지지 않도록 깔끔하게 중앙 정렬 유지 */
+.text-center, 
+.text-center p, 
+[class*="text-center"] {
+  text-align: center !important;
+  text-justify: none !important;
+  word-spacing: normal !important;
+}
+
+/* 제목 및 헤딩: 어절 단위로만 자연스럽게 줄바꿈 */
+h1, h2, h3, h4, h5, h6 {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 버튼, 뱃지, 태그는 줄바꿈 방지 */
+.category-btn, .trans-btn, .badge, .status-badge, .pill, select {
+  white-space: nowrap;
+}
+
+
+/* ========================================================
+   AI 칼럼 & 블로그 마크다운 에디토리얼 스타일
+   (Claude, Gemini, ChatGPT 생성 글 완벽 렌더링)
+   ======================================================== */
+.markdown-body {
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.markdown-body h1 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #E2E8F0;
+  line-height: 1.35;
+}
+.markdown-body h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-left: 0.75rem;
+  border-left: 4px solid #C29B38;
+  line-height: 1.4;
+}
+.markdown-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+.markdown-body p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.markdown-body strong {
+  font-weight: 700;
+  color: #0F172A;
+  background-color: rgba(194, 155, 56, 0.12);
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+}
+.markdown-body em {
+  font-style: italic;
+  color: #475569;
+}
+.markdown-body ul, .markdown-body ol {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+.markdown-body ul {
+  list-style-type: disc;
+}
+.markdown-body ol {
+  list-style-type: decimal;
+}
+.markdown-body li {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.7;
+}
+.markdown-body blockquote {
+  margin: 1.25rem 0;
+  padding: 0.85rem 1.25rem;
+  background-color: #F8FAFC;
+  border-left: 4px solid #C29B38;
+  border-radius: 0 0.75rem 0.75rem 0;
+  color: #334155;
+  font-style: normal;
+}
+.markdown-body hr {
+  margin: 1.75rem 0;
+  border: 0;
+  border-top: 1px dashed #CBD5E1;
+}
+.markdown-body table {
+  width: 100%;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.markdown-body th {
+  background-color: #F1F5F9;
+  color: #0F172A;
+  font-weight: 700;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #CBD5E1;
+  text-align: left;
+}
+.markdown-body td {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+}
+.markdown-body tr:nth-child(even) {
+  background-color: #F8FAFC;
+}
+.markdown-body img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  margin: 1rem auto;
+  display: block;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.markdown-body a {
+  color: #0284C7;
+  text-decoration: underline;
+}
+
+
+/* ========================================================
+   REFINED HERO FILTER BUTTONS & SOFT COLOR PALETTE
+   (너무 과하지 않으면서 품격 있는 파스텔 & 포인트 컬러 시스템)
+   ======================================================== */
+
+/* 1. Category Tab Buttons */
+.category-btn {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+/* Category: 전체 */
+.category-btn[data-category="ALL"] {
+  background-color: transparent;
+  color: #475569;
+}
+.category-btn[data-category="ALL"]:hover {
+  background-color: #FFFFFF;
+  color: #0F172A;
+}
+.category-btn[data-category="ALL"].active {
+  background-color: #0F172A !important;
+  color: #FDE047 !important; /* Soft Queen Gold */
+  border-color: #0F172A !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+}
+
+/* Category: 아파트 (Soft Powder Blue) */
+.category-btn[data-category="아파트"] {
+  background-color: rgba(239, 246, 255, 0.9);
+  color: #1D4ED8;
+  border-color: rgba(191, 219, 254, 0.85);
+}
+.category-btn[data-category="아파트"]:hover {
+  background-color: #DBEAFE;
+}
+.category-btn[data-category="아파트"].active {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+  border-color: #1D4ED8 !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* Category: 오피스텔 (Soft Lavender Indigo) */
+.category-btn[data-category="오피스텔"] {
+  background-color: rgba(238, 242, 255, 0.9);
+  color: #4338CA;
+  border-color: rgba(199, 210, 254, 0.85);
+}
+.category-btn[data-category="오피스텔"]:hover {
+  background-color: #E0E7FF;
+}
+.category-btn[data-category="오피스텔"].active {
+  background-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+  border-color: #4338CA !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
+/* Category: 상가 (Soft Warm Amber Gold) */
+.category-btn[data-category="상가"] {
+  background-color: rgba(254, 243, 199, 0.9);
+  color: #92400E;
+  border-color: rgba(253, 230, 138, 0.95);
+}
+.category-btn[data-category="상가"]:hover {
+  background-color: #FDE68A;
+}
+.category-btn[data-category="상가"].active {
+  background-color: #D97706 !important;
+  color: #FFFFFF !important;
+  border-color: #B45309 !important;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
+}
+
+/* Category: 택지 (Soft Fresh Mint Emerald) */
+.category-btn[data-category="택지"] {
+  background-color: rgba(236, 253, 245, 0.9);
+  color: #065F46;
+  border-color: rgba(167, 243, 208, 0.85);
+}
+.category-btn[data-category="택지"]:hover {
+  background-color: #D1FAE5;
+}
+.category-btn[data-category="택지"].active {
+  background-color: #059669 !important;
+  color: #FFFFFF !important;
+  border-color: #047857 !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+}
+
+
+/* 2. Transaction Type Pills (매매, 전세, 월세) */
+.trans-btn {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+/* Trans: 전체 */
+.trans-btn[data-trans="ALL"] {
+  background-color: #F1F5F9;
+  color: #475569;
+  border-color: #E2E8F0;
+}
+.trans-btn[data-trans="ALL"]:hover {
+  background-color: #E2E8F0;
+  color: #0F172A;
+}
+.trans-btn[data-trans="ALL"].active {
+  background-color: #0F172A !important;
+  color: #FFFFFF !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+}
+
+/* Trans: 매매 (Soft Coral Rose) */
+.trans-btn[data-trans="매매"] {
+  background-color: rgba(255, 241, 242, 0.9);
+  color: #BE123C;
+  border-color: rgba(254, 205, 211, 0.85);
+}
+.trans-btn[data-trans="매매"]:hover {
+  background-color: #FFE4E6;
+}
+.trans-btn[data-trans="매매"].active {
+  background-color: #E11D48 !important;
+  color: #FFFFFF !important;
+  border-color: #BE123C !important;
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);
+}
+
+/* Trans: 전세 (Soft Sky Cyan) */
+.trans-btn[data-trans="전세"] {
+  background-color: rgba(240, 249, 255, 0.9);
+  color: #0369A1;
+  border-color: rgba(186, 230, 253, 0.85);
+}
+.trans-btn[data-trans="전세"]:hover {
+  background-color: #E0F2FE;
+}
+.trans-btn[data-trans="전세"].active {
+  background-color: #0284C7 !important;
+  color: #FFFFFF !important;
+  border-color: #0369A1 !important;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+
+/* Trans: 월세 (Soft Emerald Teal) */
+.trans-btn[data-trans="월세"] {
+  background-color: rgba(240, 253, 250, 0.9);
+  color: #0F766E;
+  border-color: rgba(153, 246, 228, 0.85);
+}
+.trans-btn[data-trans="월세"]:hover {
+  background-color: #CCFBF1;
+}
+.trans-btn[data-trans="월세"].active {
+  background-color: #0D9488 !important;
+  color: #FFFFFF !important;
+  border-color: #0F766E !important;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
+}
