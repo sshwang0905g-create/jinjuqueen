@@ -166,7 +166,7 @@
               <th class="px-6 py-3.5">유형/채널</th>
               <th class="px-6 py-3.5">매물명 및 위치</th>
               <th class="px-6 py-3.5">거래금액</th>
-              <th class="px-6 py-3.5 text-center">거래완료 설정</th>
+              <th class="px-6 py-3.5 text-center">매물 관리 (수정·복사·완료·삭제)</th>
             </tr>
           </thead>
           <tbody id="adminPropertiesTableBody" class="divide-y divide-slate-100">
@@ -359,14 +359,20 @@
           </div>
         </div>
 
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-          <button type="button" onclick="closeAddPropModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition">
-            취소
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+          <button type="button" id="modalDeletePropBtn" onclick="handleDeleteFromModal()" class="hidden px-4 py-2.5 rounded-xl border border-rose-300 text-rose-600 hover:bg-rose-50 font-bold transition flex items-center gap-1.5 text-xs cursor-pointer">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <span>이 매물 삭제</span>
           </button>
-          <button type="submit" id="savePropSubmitBtn" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow flex items-center gap-2">
-            <i data-lucide="check" class="w-4 h-4"></i>
-            <span>홈페이지에 즉시 등록</span>
-          </button>
+          <div class="flex items-center gap-3 ml-auto">
+            <button type="button" onclick="closeAddPropModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition cursor-pointer">
+              취소
+            </button>
+            <button type="submit" id="savePropSubmitBtn" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow flex items-center gap-2 cursor-pointer">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>홈페이지에 즉시 등록</span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
@@ -630,16 +636,26 @@
               ${prop.priceFormatted}
             </td>
             <td class="px-6 py-4 text-center">
-              <div class="flex items-center justify-center gap-2">
+              <div class="flex items-center justify-center gap-1.5 flex-wrap">
                 <button onclick="openEditPropModal('${prop.id}')" 
-                        class="px-3 py-2 rounded-xl font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition shadow-xs flex items-center gap-1">
+                        class="px-2.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition shadow-xs flex items-center gap-1 cursor-pointer" title="매물 정보 수정">
                   <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-600"></i>
                   <span>수정</span>
                 </button>
+                <button onclick="handleCopyProperty('${prop.id}')" 
+                        class="px-2.5 py-1.5 rounded-lg font-bold text-xs bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-300 transition shadow-xs flex items-center gap-1 cursor-pointer" title="매물 복사하여 새 매물 등록">
+                  <i data-lucide="copy" class="w-3.5 h-3.5 text-sky-600"></i>
+                  <span>복사</span>
+                </button>
                 <button onclick="handleTogglePropStatus('${prop.id}')" 
-                        class="px-3.5 py-2 rounded-xl font-black text-xs transition shadow-sm flex items-center gap-1.5 ${isSold ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'}">
+                        class="px-2.5 py-1.5 rounded-lg font-black text-xs transition shadow-xs flex items-center gap-1 cursor-pointer ${isSold ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-slate-800 hover:bg-slate-900 text-amber-300'}" title="${isSold ? '진행중으로 복구' : '거래완료 설정'}">
                   <i data-lucide="${isSold ? 'rotate-ccw' : 'check-circle'}" class="w-3.5 h-3.5"></i>
-                  <span>${isSold ? '진행중으로' : '거래완료'}</span>
+                  <span>${isSold ? '진행중' : '완료'}</span>
+                </button>
+                <button onclick="handleDeleteProperty('${prop.id}')" 
+                        class="px-2.5 py-1.5 rounded-lg font-bold text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 transition shadow-xs flex items-center gap-1 cursor-pointer hover:bg-rose-600 hover:text-white" title="매물 삭제">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  <span>삭제</span>
                 </button>
               </div>
             </td>
@@ -648,6 +664,165 @@
       }).join('');
 
       if (window.lucide) lucide.createIcons();
+    }
+
+
+    function handleDeleteFromModal() {
+      const editInput = document.getElementById('editPropId');
+      const editId = editInput ? editInput.value : '';
+      if (!editId) return;
+      closeAddPropModal();
+      handleDeleteProperty(editId);
+    }
+
+    async function handleCopyProperty(propId) {
+      const prop = adminProperties.find(p => p.id === propId);
+      if (!prop) {
+        alert('복사할 매물을 찾을 수 없습니다.');
+        return;
+      }
+
+      if (!confirm(`[${prop.title}] 매물을 복사하여 새 매물로 등록하시겠습니까?`)) {
+        return;
+      }
+
+      const clone = JSON.parse(JSON.stringify(prop));
+      const newId = 'prop-' + Date.now();
+      clone.id = newId;
+      clone.title = '[복사] ' + clone.title;
+      clone.status = 'ACTIVE';
+      clone.badge = '추천매물';
+      clone.sourceType = 'HOMEPAGE';
+      clone.naverArticleNo = '';
+
+      // 1. LocalStorage 즉시 보존
+      try {
+        const localSaved = JSON.parse(localStorage.getItem('jinjuqueen_saved_properties') || '[]');
+        localSaved.unshift(clone);
+        localStorage.setItem('jinjuqueen_saved_properties', JSON.stringify(localSaved));
+
+        if (clone.adminMemo) {
+          const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
+          localMemos[newId] = clone.adminMemo;
+          localStorage.setItem('jinjuqueen_admin_memos', JSON.stringify(localMemos));
+        }
+      } catch (e) {}
+
+      // 2. 화면 반영
+      adminProperties.unshift(clone);
+      renderAdminProperties();
+
+      // 3. 서버 및 백엔드 동기화
+      try {
+        let res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken || 'queen1234!'}`
+          },
+          body: JSON.stringify({
+            action: 'create',
+            property: clone
+          })
+        });
+
+        if (!res.ok && location.hostname !== 'localhost') {
+          try {
+            res = await fetch('http://localhost:8080/api/properties', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer queen1234!`
+              },
+              body: JSON.stringify({
+                action: 'create',
+                property: clone
+              })
+            });
+          } catch (locErr) {}
+        }
+
+        if (res.ok) {
+          const result = await res.json();
+          if (result.properties) {
+            adminProperties = result.properties;
+            renderAdminProperties();
+          }
+        }
+        showAdminToast('매물이 성공적으로 복사되었습니다! 최상단에서 수정하실 수 있습니다.');
+      } catch (err) {
+        showAdminToast('매물이 복사되었습니다. (로컬 보존)');
+      }
+    }
+
+    async function handleDeleteProperty(propId) {
+      const prop = adminProperties.find(p => p.id === propId);
+      if (!prop) {
+        alert('삭제할 매물을 찾을 수 없습니다.');
+        return;
+      }
+
+      const confirmMsg = `정말로 [${prop.title}] 매물을 삭제하시겠습니까?\n\n* 삭제 시 홈페이지 매물 목록과 관리자 화면에서 완전히 제거됩니다.`;
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+
+      // 1. LocalStorage에서 제거
+      try {
+        const localSaved = JSON.parse(localStorage.getItem('jinjuqueen_saved_properties') || '[]');
+        const filteredSaved = localSaved.filter(p => p.id !== propId && (!p.naverArticleNo || p.naverArticleNo !== prop.naverArticleNo));
+        localStorage.setItem('jinjuqueen_saved_properties', JSON.stringify(filteredSaved));
+
+        const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
+        delete localMemos[propId];
+        localStorage.setItem('jinjuqueen_admin_memos', JSON.stringify(localMemos));
+      } catch (e) {}
+
+      // 2. 화면에서 즉시 제거
+      adminProperties = adminProperties.filter(p => p.id !== propId);
+      renderAdminProperties();
+
+      // 3. 서버 및 백엔드 동기화
+      try {
+        let res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken || 'queen1234!'}`
+          },
+          body: JSON.stringify({
+            action: 'delete',
+            property: { id: propId }
+          })
+        });
+
+        if (!res.ok && location.hostname !== 'localhost') {
+          try {
+            res = await fetch('http://localhost:8080/api/properties', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer queen1234!`
+              },
+              body: JSON.stringify({
+                action: 'delete',
+                property: { id: propId }
+              })
+            });
+          } catch (locErr) {}
+        }
+
+        if (res.ok) {
+          const result = await res.json();
+          if (result.properties) {
+            adminProperties = result.properties;
+            renderAdminProperties();
+          }
+        }
+        showAdminToast(`[${prop.title}] 매물이 안전하게 삭제되었습니다.`);
+      } catch (err) {
+        showAdminToast('매물이 삭제되었습니다.');
+      }
     }
 
     function editAdminMemo(propId) {
@@ -859,6 +1034,8 @@
       const importBox = document.getElementById('naverQuickImportBox');
       const submitBtn = document.getElementById('savePropSubmitBtn');
 
+      const modalDelBtn = document.getElementById('modalDeletePropBtn');
+      if (modalDelBtn) modalDelBtn.classList.add('hidden');
       if (titleEl) titleEl.textContent = '새 매물 간편등록';
       if (subEl) subEl.textContent = '네이버 매물번호를 입력하거나 직접 입력하여 홈페이지에 등록합니다.';
       if (badgeEl) {
@@ -897,6 +1074,8 @@
       const importBox = document.getElementById('naverQuickImportBox');
       const submitBtn = document.getElementById('savePropSubmitBtn');
 
+      const modalDelBtn = document.getElementById('modalDeletePropBtn');
+      if (modalDelBtn) modalDelBtn.classList.remove('hidden');
       if (titleEl) titleEl.textContent = '매물 정보 및 비공개 적요 수정';
       if (subEl) subEl.textContent = '대표님 전용 비공개 적요(동·호수 등) 및 매물 정보를 수정하여 안전하게 저장합니다.';
       if (badgeEl) {
