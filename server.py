@@ -10,6 +10,20 @@ import urllib.parse
 
 PORT = 8080
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load .env variables
+env_file = os.path.join(BASE_DIR, ".env")
+if os.path.exists(env_file):
+    try:
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip()
+    except Exception as e:
+        print("Error loading .env:", e)
+
 BOARD_FILE = os.path.join(BASE_DIR, "data", "board.json")
 PROPERTIES_FILE = os.path.join(BASE_DIR, "data", "properties.json")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "queen1234!")
