@@ -1,4 +1,4 @@
-from naver_client import client
+ㅇfrom naver_client import client
 # Local Development Server supporting /api/board and /api/auth
 # Run with: python server.py
 
@@ -10,20 +10,6 @@ import urllib.parse
 
 PORT = 8080
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Load .env variables
-env_file = os.path.join(BASE_DIR, ".env")
-if os.path.exists(env_file):
-    try:
-        with open(env_file, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    os.environ[k.strip()] = v.strip()
-    except Exception as e:
-        print("Error loading .env:", e)
-
 BOARD_FILE = os.path.join(BASE_DIR, "data", "board.json")
 PROPERTIES_FILE = os.path.join(BASE_DIR, "data", "properties.json")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "queen1234!")
@@ -186,15 +172,10 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 
             password = payload.get('password', '')
             if password == ADMIN_PASSWORD:
-                gh_token = os.environ.get("GITHUB_TOKEN")
-                gh_owner = os.environ.get("GITHUB_OWNER")
-                gh_repo = os.environ.get("GITHUB_REPO")
                 resp = {
                     "success": True,
                     "token": ADMIN_PASSWORD,
-                    "message": "인증 성공",
-                    "githubConnected": bool(gh_token and gh_owner and gh_repo),
-                    "githubRepo": f"{gh_owner}/{gh_repo}" if (gh_owner and gh_repo) else "로컬 저장소"
+                    "message": "인증 성공"
                 }
             else:
                 self.send_response(401)
@@ -238,20 +219,6 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 
             with open(BOARD_FILE, 'w', encoding='utf-8') as f:
                 json.dump(posts, f, ensure_ascii=False, indent=2)
-
-            # Sync into js/data.js for static / local preview
-            js_data_path = os.path.join(BASE_DIR, 'js', 'data.js')
-            if os.path.exists(js_data_path):
-                try:
-                    with open(js_data_path, 'r', encoding='utf-8') as jf:
-                        js_content = jf.read()
-                    start_i = js_content.find('const NEWS_DATA = [')
-                    if start_i != -1:
-                        updated_js = js_content[:start_i] + 'const NEWS_DATA = ' + json.dumps(posts, ensure_ascii=False, indent=2) + ';\n'
-                        with open(js_data_path, 'w', encoding='utf-8') as jf:
-                            jf.write(updated_js)
-                except Exception as ex:
-                    print("Error syncing NEWS_DATA to js/data.js:", ex)
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')

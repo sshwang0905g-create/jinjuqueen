@@ -1,6 +1,3 @@
+# Search Engine Indexing Blocked (개발 및 준비 중 - 검색 노출 차단)
 User-agent: *
-Allow: /
-Disallow: /admin.html
-Disallow: /api/
-
-Sitemap: https://jinjuqueen.vercel.app/sitemap.xml
+Disallow: /
