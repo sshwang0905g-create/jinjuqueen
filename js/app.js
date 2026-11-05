@@ -487,6 +487,9 @@ function renderProperties() {
             <div class="flex items-baseline gap-2 mb-3">
               <span class="text-xl font-extrabold ${isSold ? 'text-slate-500 line-through' : 'text-amber-600'} tracking-tight">${prop.priceFormatted}</span>
               ${isSold ? '<span class="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">거래완료</span>' : ''}
+              <span class="text-xs font-semibold text-slate-500">
+                전용 ${prop.exclusiveArea}㎡ (${prop.exclusiveAreaPyeong}평)
+              </span>
             </div>
 
             <!-- Tags -->
