@@ -537,25 +537,33 @@
     </div>
   </section>
 
-  <!-- Owner Property Request Banner Section (집주인 매물 내놓기) -->
+  <!-- Real Estate Custom Inquiry Banner Section (매물 내놓기 & 매물 찾아주세요) -->
   <section class="py-12 bg-amber-50/50 border-b border-amber-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-gradient-to-r from-brand-navy to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
-        <div class="relative z-10 max-w-xl">
-          <span class="inline-block bg-brand-gold text-slate-950 font-bold text-xs px-3 py-1 rounded-full mb-3">소유주 전용 서비스</span>
-          <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">충무공동에 집이나 상가를 내놓으시나요?</h3>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            진주퀸공인중개사사무소에 매물을 의뢰하시면 최적의 가격 매칭과 안전한 권리분석을 통해 가장 신속하게 거래를 성사시켜 드립니다.
+      <div class="bg-gradient-to-r from-brand-navy via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden border border-slate-800">
+        <div class="relative z-10 max-w-2xl">
+          <span class="inline-block bg-brand-gold text-slate-950 font-extrabold text-xs px-3.5 py-1 rounded-full mb-3 shadow-xs">
+            진주혁신도시 1:1 맞춤 부동산 의뢰
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2.5">
+            충무공동 매물을 내놓으시거나, 찾으시는 매물이 있으신가요?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+            진주퀸공인중개사사무소에 의뢰해 주세요. <strong class="text-amber-300 font-semibold">내놓으시는 소중한 매물</strong>은 최적의 가격 매칭과 신속한 거래를, <strong class="text-emerald-300 font-semibold">찾으시는 분</strong>께는 비공개 알짜 매물까지 안전하게 찾아드립니다.
           </p>
         </div>
-        <div class="relative z-10 flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <button onclick="openListingModal()" class="bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-bold px-6 py-4 rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
-            <i data-lucide="file-edit" class="w-4 h-4"></i>
-            <span>간편 매물 의뢰하기</span>
+        <div class="relative z-10 flex flex-col sm:flex-row flex-wrap gap-3 w-full lg:w-auto shrink-0">
+          <button onclick="openListingModal('sell')" class="bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-extrabold px-5 py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-95">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            <span>매물 내놓기 (매도·임대)</span>
           </button>
-          <a href="tel:010-4670-7248" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-6 py-4 rounded-xl text-sm transition text-center flex items-center justify-center gap-2">
+          <button onclick="openListingModal('buy')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-95 border border-emerald-500">
+            <i data-lucide="search" class="w-4 h-4"></i>
+            <span>매물 찾아주세요 (매수·임차)</span>
+          </button>
+          <a href="tel:010-4670-7248" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-4 py-3.5 rounded-xl text-xs sm:text-sm transition text-center flex items-center justify-center gap-1.5 cursor-pointer">
             <i data-lucide="phone" class="w-4 h-4 text-amber-300"></i>
-            <span>010-4670-7248 전화상담</span>
+            <span>전화상담</span>
           </a>
         </div>
       </div>
@@ -1109,66 +1117,80 @@
     </div>
   </div>
 
-  <!-- 3. Owner Listing Request Modal (매물의뢰 폼) -->
+  <!-- 3. All Client Property Inquiry Modal (매물 내놓기 & 매물 찾아주세요 2-in-1 모달) -->
   <div id="listingModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" role="dialog" aria-modal="true" aria-labelledby="listingModalTitle">
     <div class="fixed inset-0 modal-backdrop" onclick="closeListingModal()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto m-4 z-10 p-6 sm:p-8 border border-slate-200">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+    <div class="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto m-4 z-10 p-6 sm:p-8 border border-slate-200">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between pb-4 border-b border-slate-200 mb-4">
         <div>
-          <h2 id="listingModalTitle" class="text-lg font-bold text-slate-900">간편 매물 의뢰 (집주인 전용)</h2>
-          <p class="text-xs text-slate-500 mt-0.5">상세동호수는 비공개로 안전하게 보호됩니다.</p>
+          <h2 id="listingModalTitle" class="text-lg font-extrabold text-slate-900">간편 매물 의뢰</h2>
+          <p id="listingModalSubtitle" class="text-xs text-slate-500 mt-1 leading-snug">소유주님의 소중한 매물을 최적의 가격으로 신속 매칭해 드립니다.</p>
         </div>
-        <button onclick="closeListingModal()" class="p-1 text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-6 h-6"></i>
+        <button onclick="closeListingModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Mode Selector Tabs (매물 내놓기 vs 매물 찾아주세요) -->
+      <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-5 border border-slate-200">
+        <button type="button" id="tabReqSell" onclick="switchListingMode('sell')" class="py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm cursor-pointer border border-slate-200">
+          <i data-lucide="home" class="w-4 h-4 text-brand-gold"></i>
+          <span>매물 내놓기 (매도·임대)</span>
+        </button>
+        <button type="button" id="tabReqBuy" onclick="switchListingMode('buy')" class="py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer">
+          <i data-lucide="search" class="w-4 h-4 text-emerald-600"></i>
+          <span>매물 찾아주세요 (매수·임차)</span>
         </button>
       </div>
 
       <form id="listingForm" onsubmit="handleListingSubmit(event)" class="space-y-4 text-xs sm:text-sm">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1" for="reqPropType">매물 종류</label>
-          <select id="reqPropType" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white focus:ring-2 focus:ring-brand-gold outline-none">
-            <option value="아파트">아파트</option>
-            <option value="오피스텔">오피스텔</option>
-            <option value="상가">상가</option>
-            <option value="택지">택지 (토지)</option>
-            <option value="단독·다가구">단독·다가구</option>
-          </select>
-        </div>
-
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1" for="reqTransType">거래 형태</label>
-            <select id="reqTransType" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white focus:ring-2 focus:ring-brand-gold outline-none">
-              <option value="매매">매매</option>
+            <label class="block font-bold text-slate-700 mb-1" for="reqPropType">매물 종류</label>
+            <select id="reqPropType" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white focus:ring-2 focus:ring-brand-gold outline-none font-semibold">
+              <option value="아파트">아파트</option>
+              <option value="오피스텔">오피스텔</option>
+              <option value="상가">상가 / 사무실</option>
+              <option value="택지">택지 (토지)</option>
+              <option value="단독·다가구">단독 · 다가구</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="reqTransType">희망 거래형태</label>
+            <select id="reqTransType" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white focus:ring-2 focus:ring-brand-gold outline-none font-semibold">
+              <option value="매매">매매 (구입/매도)</option>
               <option value="전세">전세</option>
               <option value="월세">월세</option>
             </select>
           </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1" for="reqPrice">희망 금액 (만원)</label>
-            <input type="text" id="reqPrice" placeholder="예: 매매 5억 2000" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
-          </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1" for="reqAddress">소재지 (단지명 / 주소)</label>
-          <input type="text" id="reqAddress" placeholder="예: 대방노블랜드 105동 또는 충무공동 상가" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          <label id="labelReqAddress" class="block font-bold text-slate-700 mb-1" for="reqAddress">매물 소재지 (단지명 / 주소)</label>
+          <input type="text" id="reqAddress" placeholder="예: 혁신LH8단지 803동 또는 라온프라이빗 24평" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+        </div>
+
+        <div>
+          <label id="labelReqPrice" class="block font-bold text-slate-700 mb-1" for="reqPrice">희망 금액 (매매가 또는 보증금/월세)</label>
+          <input type="text" id="reqPrice" placeholder="예: 매매 5억 2,000 또는 보증금 3000 / 월 80" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="reqName">의뢰인 성함</label>
-            <input type="text" id="reqName" placeholder="홍길동" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+            <input type="text" id="reqName" placeholder="홍길동" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="reqPhone">연락처</label>
-            <input type="tel" id="reqPhone" placeholder="010-0000-0000" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+            <input type="tel" id="reqPhone" placeholder="010-0000-0000" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1" for="reqNotes">특이사항 및 메모 (선택)</label>
-          <textarea id="reqNotes" rows="2" placeholder="입주시기, 확장여부, 주차 등 추가 메모" class="w-full border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-brand-gold"></textarea>
+          <label id="labelReqNotes" class="block font-bold text-slate-700 mb-1" for="reqNotes">입주가능시기 및 특이사항 (선택)</label>
+          <textarea id="reqNotes" rows="2" placeholder="예: 정상 입주 가능, 전세 안고 매매, 인테리어 수리 완료 등" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium resize-none"></textarea>
         </div>
 
         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-500 space-y-1">
@@ -1176,11 +1198,12 @@
             <input type="checkbox" required checked class="rounded text-brand-gold focus:ring-brand-gold">
             <span>[필수] 개인정보 수집 및 중개 상담 이용 동의</span>
           </label>
-          <p>수집항목 : 성명, 연락처, 매물정보 | 보유기간 : 상담 완료 시까지</p>
+          <p>수집항목 : 성명, 연락처, 매물정보 | 보유기간 : 상담 및 중개 완료 시까지</p>
         </div>
 
-        <button type="submit" class="w-full bg-brand-navy hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition shadow">
-          황선숙 대표에게 매물 의뢰 접수하기
+        <button type="submit" id="listingSubmitBtn" class="w-full bg-brand-navy hover:bg-slate-800 text-white font-extrabold py-3.5 rounded-xl transition shadow flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="send" class="w-4 h-4 text-brand-gold"></i>
+          <span id="listingSubmitBtnText">황선숙 대표에게 매물 내놓기 접수하기</span>
         </button>
       </form>
     </div>

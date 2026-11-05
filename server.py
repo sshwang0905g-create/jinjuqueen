@@ -53,6 +53,44 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(resp, ensure_ascii=False).encode('utf-8'))
             return
 
+        if parsed.path == '/api/inquiry':
+            inquiry_file = os.path.join(DATA_DIR, 'inquiries.json')
+            inquiries = []
+            if os.path.exists(inquiry_file):
+                try:
+                    with open(inquiry_file, 'r', encoding='utf-8') as f:
+                        inquiries = json.load(f)
+                except Exception:
+                    inquiries = []
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": True, "inquiries": inquiries}, ensure_ascii=False).encode('utf-8'))
+            return
+
+        if parsed.path == '/api/inquiry':
+            inquiry_file = os.path.join(DATA_DIR, 'inquiries.json')
+            inquiries = []
+            if os.path.exists(inquiry_file):
+                try:
+                    with open(inquiry_file, 'r', encoding='utf-8') as f:
+                        inquiries = json.load(f)
+                except Exception:
+                    inquiries = []
+            import datetime
+            payload['id'] = f"inq-{int(time.time()*1000)}"
+            payload['createdAt'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            inquiries.insert(0, payload)
+            with open(inquiry_file, 'w', encoding='utf-8') as f:
+                json.dump(inquiries, f, ensure_ascii=False, indent=2)
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({"success": True, "message": "의뢰가 접수되었습니다."}).encode('utf-8'))
+            return
+
         if parsed.path == '/api/properties':
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')

@@ -1042,13 +1042,69 @@ function closeNewsModal() {
 }
 
 // ----------------------------------------------------
-// OWNER LISTING REQUEST FORM (집주인 매물 내놓기)
+// ALL-CLIENT REAL ESTATE INQUIRY FORM (매물 내놓기 & 매물 찾아주세요 2-in-1)
 // ----------------------------------------------------
-function openListingModal() {
+let currentListingMode = 'sell'; // 'sell' (내놓기) or 'buy' (구하기)
+
+function switchListingMode(mode) {
+  currentListingMode = mode;
+  const tabSell = document.getElementById('tabReqSell');
+  const tabBuy = document.getElementById('tabReqBuy');
+  const titleEl = document.getElementById('listingModalTitle');
+  const subEl = document.getElementById('listingModalSubtitle');
+  const addressLabel = document.getElementById('labelReqAddress');
+  const addressInput = document.getElementById('reqAddress');
+  const priceLabel = document.getElementById('labelReqPrice');
+  const priceInput = document.getElementById('reqPrice');
+  const notesLabel = document.getElementById('labelReqNotes');
+  const notesInput = document.getElementById('reqNotes');
+  const submitBtnText = document.getElementById('listingSubmitBtnText');
+
+  if (mode === 'buy') {
+    // 1. 매물 찾아주세요 (매수 · 임차)
+    if (tabBuy) {
+      tabBuy.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm cursor-pointer';
+    }
+    if (tabSell) {
+      tabSell.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900 cursor-pointer';
+    }
+    if (titleEl) titleEl.textContent = '맞춤 매물 찾기 의뢰 (매수 · 임차)';
+    if (subEl) subEl.textContent = '원하시는 조건을 남겨주시면, 아직 광고 전인 비공개 알짜 매물까지 신속하게 찾아 연락드립니다.';
+    if (addressLabel) addressLabel.textContent = '희망 지역 / 선호 단지';
+    if (addressInput) addressInput.placeholder = '예: LH8단지 34평, 대방노블랜드 또는 혁신도시 1층 상가';
+    if (priceLabel) priceLabel.textContent = '예산 범위 (희망 금액)';
+    if (priceInput) priceInput.placeholder = '예: 매매 4억 이하 또는 전세 2억 5천 선, 보증금 3000/70 선';
+    if (notesLabel) notesLabel.textContent = '희망 입주시점 및 추가 요구조건 (선택)';
+    if (notesInput) notesInput.placeholder = '예: 3개월 이내 입주 희망, 로열층 남향 선호, 즉시 입주 등';
+    if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 맞춤 매물 찾기 의뢰하기';
+  } else {
+    // 2. 매물 내놓기 (매도 · 임대)
+    if (tabSell) {
+      tabSell.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm cursor-pointer border border-slate-200';
+    }
+    if (tabBuy) {
+      tabBuy.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900 cursor-pointer';
+    }
+    if (titleEl) titleEl.textContent = '간편 매물 내놓기 (매도 · 임대)';
+    if (subEl) subEl.textContent = '소유주님의 소중한 매물을 최적의 가격으로 신속 매칭해 드립니다. (상세동호수 비공개 보장)';
+    if (addressLabel) addressLabel.textContent = '매물 소재지 (단지명 / 주소)';
+    if (addressInput) addressInput.placeholder = '예: 혁신LH8단지 803동 또는 라온프라이빗 24평';
+    if (priceLabel) priceLabel.textContent = '희망 금액 (매매가 또는 보증금/월세)';
+    if (priceInput) priceInput.placeholder = '예: 매매 5억 2,000 또는 보증금 3000 / 월 80';
+    if (notesLabel) notesLabel.textContent = '입주가능시기 및 특이사항 (선택)';
+    if (notesInput) notesInput.placeholder = '예: 정상 입주 가능, 전세 안고 매매, 인테리어 수리 완료 등';
+    if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 매물 내놓기 접수하기';
+  }
+  if (window.lucide) lucide.createIcons();
+}
+
+function openListingModal(mode = 'sell') {
   const modal = document.getElementById('listingModal');
   if (modal) {
+    switchListingMode(mode);
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    if (window.lucide) lucide.createIcons();
   }
 }
 
@@ -1060,19 +1116,48 @@ function closeListingModal() {
   }
 }
 
-function handleListingSubmit(e) {
+async function handleListingSubmit(e) {
   e.preventDefault();
-  const type = document.getElementById('reqPropType').value;
-  const trans = document.getElementById('reqTransType').value;
-  const price = document.getElementById('reqPrice').value;
-  const address = document.getElementById('reqAddress').value;
-  const name = document.getElementById('reqName').value;
-  const phone = document.getElementById('reqPhone').value;
+  const propType = document.getElementById('reqPropType').value;
+  const transType = document.getElementById('reqTransType').value;
+  const price = document.getElementById('reqPrice').value.trim();
+  const address = document.getElementById('reqAddress').value.trim();
+  const name = document.getElementById('reqName').value.trim();
+  const phone = document.getElementById('reqPhone').value.trim();
+  const notes = document.getElementById('reqNotes') ? document.getElementById('reqNotes').value.trim() : '';
+
+  const modeName = currentListingMode === 'buy' ? '매물 구하기' : '매물 내놓기';
+  const inquiryData = {
+    mode: currentListingMode,
+    modeName,
+    propType,
+    transType,
+    price,
+    address,
+    name,
+    phone,
+    notes,
+    createdAt: new Date().toISOString()
+  };
+
+  // 1. 브라우저 로컬 저장소 영구 보관 (고객 문의 유실 방지)
+  try {
+    const list = JSON.parse(localStorage.getItem('jinjuqueen_client_inquiries') || '[]');
+    list.unshift(inquiryData);
+    localStorage.setItem('jinjuqueen_client_inquiries', JSON.stringify(list));
+  } catch (err) {}
+
+  // 2. 서버 DB 자동 전송
+  try {
+    fetch('/api/inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(inquiryData)
+    }).catch(() => {});
+  } catch (err) {}
 
   closeListingModal();
-  showToast(`[접수완료] ${name} 고객님의 ${address} (${type}/${trans}) 매물의뢰가 성공적으로 접수되었습니다. 황선숙 대표가 곧 연락드리겠습니다.`);
-  
-  // Reset form
+  showToast(`[접수완료] ${name} 고객님의 ${modeName} 의뢰가 안전하게 접수되었습니다. 황선숙 대표가 신속히 연락드리겠습니다.`);
   e.target.reset();
 }
 
