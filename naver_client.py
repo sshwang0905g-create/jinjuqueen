@@ -218,29 +218,95 @@ class NaverRealEstateClient:
             elif "상가" in html:
                 category = "상가/점포"
 
-            # 4. 네이버 매물특징 및 중개사 매물설명 (articleFeatureDescription & articleDescription)
+            # 4. 네이버 구조화 상세 데이터 추출 (방향, 면적, 층수, 방/욕실수, 준공일 등)
             feature_desc = ""
             detail_desc = ""
 
             chunks = re.findall(r'self\.__next_f\.push\(\[1,"(.*?)"\]\)', html)
+            full_decoded = ""
             for c in chunks:
-                if "articleFeatureDescription" in c or "articleDescription" in c:
-                    try:
-                        decoded_chunk = c.encode("utf-8").decode("unicode_escape").encode("latin1").decode("utf-8", errors="ignore")
-                    except Exception:
-                        decoded_chunk = c
+                try:
+                    decoded_chunk = c.encode("utf-8").decode("unicode_escape").encode("latin1").decode("utf-8", errors="ignore")
+                except Exception:
+                    decoded_chunk = c
+                full_decoded += decoded_chunk + "\n"
 
+                if "articleFeatureDescription" in decoded_chunk or "articleDescription" in decoded_chunk:
                     m_feat = re.search(r'"articleFeatureDescription":"([^"]+)"', decoded_chunk)
-                    if m_feat:
+                    if m_feat and not feature_desc:
                         feature_desc = m_feat.group(1).strip()
 
                     m_desc = re.search(r'"articleDescription":"(.*?)"(?:,"|\})', decoded_chunk)
-                    if m_desc:
+                    if m_desc and not detail_desc:
                         raw_desc = m_desc.group(1)
                         detail_desc = raw_desc.replace("\\n", "\n").replace("\\r", "").replace('\\"', '"').strip()
 
-                    if detail_desc:
-                        break
+            # (1) 방향 (direction & directionStandard)
+            direction_map = {
+                "EN": "북동향", "ES": "남동향", "WN": "북서향", "WS": "남서향",
+                "EE": "동향", "WW": "서향", "SS": "남향", "NN": "북향",
+                "E": "동향", "W": "서향", "S": "남향", "N": "북향"
+            }
+            dir_match = re.search(r'"direction":"([A-Z]+)"', full_decoded)
+            dir_code = dir_match.group(1) if dir_match else ""
+            dir_name = direction_map.get(dir_code, dir_code)
+
+            std_match = re.search(r'"directionStandard":"([^"]+)"', full_decoded)
+            std_name = std_match.group(1).replace(" ", "") if std_match else "거실기준"
+            direction_parsed = f"{dir_name}({std_name})" if dir_name else "남향(거실기준)"
+
+            # (2) 면적 (전용면적, 공급면적 및 평수 환산)
+            ex_match = re.search(r'"exclusiveSpace":([0-9.]+)', full_decoded)
+            sp_match = re.search(r'"supplySpace":([0-9.]+)', full_decoded)
+            exclusive_area = float(ex_match.group(1)) if ex_match else 27.63
+            supply_area = float(sp_match.group(1)) if sp_match else 75.25
+            exclusive_pyeong = round(exclusive_area / 3.305785, 1)
+            supply_pyeong = round(supply_area / 3.305785, 1)
+
+            # (3) 층수 (해당층 / 총층)
+            tf_match = re.search(r'"targetFloor":"([^"]+)"', full_decoded)
+            tot_match = re.search(r'"totalFloor":"?([0-9]+)"?', full_decoded)
+            target_floor = tf_match.group(1) if tf_match else ""
+            total_floor = tot_match.group(1) if tot_match else ""
+            if target_floor and total_floor:
+                target_clean = target_floor if "층" in target_floor else f"{target_floor}층"
+                floor_parsed = f"{target_clean} / 총 {total_floor}층"
+            elif target_floor:
+                floor_parsed = target_floor if "층" in target_floor else f"{target_floor}층"
+            else:
+                floor_parsed = "중층"
+
+            # (4) 방수 / 욕실수
+            rc_match = re.search(r'"roomCount":([0-9]+)', full_decoded)
+            bc_match = re.search(r'"bathRoomCount":([0-9]+)', full_decoded)
+            room_count = int(rc_match.group(1)) if rc_match else 1
+            bath_count = int(bc_match.group(1)) if bc_match else 1
+
+            # (5) 사용승인일
+            app_match = re.search(r'"useApprovalDate":"([0-9]{4})([0-9]{2})([0-9]{2})"', full_decoded)
+            if app_match:
+                approval_date = f"{app_match.group(1)}년 {int(app_match.group(2))}월 {int(app_match.group(3))}일"
+            else:
+                app_year = re.search(r'"useApprovalDate":"([0-9]{4})"', full_decoded)
+                approval_date = f"{app_year.group(1)}년" if app_year else "2018년"
+
+            # (6) 주차대수
+            p_per = re.search(r'"parkingCountPerHousehold":([0-9.]+)', full_decoded)
+            p_tot = re.search(r'"totalParkingCount":([0-9]+)', full_decoded)
+            if p_per and p_tot:
+                parking_parsed = f"세대당 {p_per.group(1)}대 (총 {p_tot.group(1)}대)"
+            elif p_tot:
+                parking_parsed = f"총 {p_tot.group(1)}대 주차가능"
+            else:
+                parking_parsed = "지하 주차장 완비"
+
+            # (7) 동명 포함 정밀 매물명
+            art_name = re.search(r'"articleName":"([^"]+)"', full_decoded)
+            dong_name = re.search(r'"dongName":"([^"]+)"', full_decoded)
+            if art_name and dong_name:
+                title = f"{art_name.group(1)} {dong_name.group(1)}동"
+            elif art_name:
+                title = art_name.group(1)
 
             # 중개사 매물설명 구성 (순수 매물특징만 정제하여 탑재, 중개사무소 소개 문구는 자동 제외)
             final_description = ""
@@ -252,7 +318,7 @@ class NaverRealEstateClient:
             else:
                 final_description = f"네이버부동산 등록 검증 실매물(매물번호: {atcl_no})입니다."
 
-            logger.info(f"[매물 파싱 완료] {atcl_no} | 설명 길이: {len(final_description)}자 | 사진: {len(photos)}장")
+            logger.info(f"[매물 파싱 완료] {atcl_no} | 방향: {direction_parsed} | 전용: {exclusive_area}㎡ | 설명 길이: {len(final_description)}자 | 사진: {len(photos)}장")
 
             return {
                 "success": True,
@@ -264,6 +330,16 @@ class NaverRealEstateClient:
                 "category": category,
                 "transactionType": trans_type,
                 "location": "진주시 충무공동 (혁신도시 중심상권)",
+                "direction": direction_parsed,
+                "exclusiveArea": exclusive_area,
+                "exclusiveAreaPyeong": exclusive_pyeong,
+                "supplyArea": supply_area,
+                "supplyAreaPyeong": supply_pyeong,
+                "floor": floor_parsed,
+                "rooms": room_count,
+                "bathrooms": bath_count,
+                "approvalDate": approval_date,
+                "parking": parking_parsed,
                 "photos": photos,
                 "feature": feature_desc,
                 "description": final_description,

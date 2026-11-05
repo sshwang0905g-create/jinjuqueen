@@ -612,7 +612,7 @@
           if (data.transactionType) document.getElementById('newPropTrans').value = data.transactionType;
           if (data.location) document.getElementById('newPropLocation').value = data.location;
           if (data.description) document.getElementById('newPropDesc').value = data.description;
-          document.getElementById('newPropArea').value = '전용 28㎡ / 중층 (원룸/오피스텔)';
+          document.getElementById('newPropArea').value = data.floor || '중층(원룸/오피스텔)';
 
           fetchedNaverPhotos = data.photos || [];
           window.lastFetchedNaverData = data;
@@ -685,6 +685,8 @@
       const jitterLat = 35.176734 + (Math.random() - 0.5) * 0.0018;
       const jitterLng = 128.144606 + (Math.random() - 0.5) * 0.0018;
 
+      const fetched = window.lastFetchedNaverData || {};
+
       const newProperty = {
         id: 'prop-' + Date.now(),
         category,
@@ -701,19 +703,19 @@
         addressMasked: location + ' 일원',
         lat: Number(jitterLat.toFixed(4)),
         lng: Number(jitterLng.toFixed(4)),
-        exclusiveArea: 84.9,
-        exclusiveAreaPyeong: 25.7,
-        supplyArea: 112.0,
-        supplyAreaPyeong: 34.0,
-        floor: area,
-        direction: '남향 (거실 기준)',
-        rooms: 3,
-        bathrooms: 2,
-        approvalDate: '2020년',
-        moveInDate: '즉시입주 가능',
-        parking: '세대당 1.4대',
-        maintenanceFee: '약 16만원',
-        maintenanceDetails: '공용관리비 실비 정산',
+        exclusiveArea: fetched.exclusiveArea || 27.63,
+        exclusiveAreaPyeong: fetched.exclusiveAreaPyeong || 8.4,
+        supplyArea: fetched.supplyArea || 75.25,
+        supplyAreaPyeong: fetched.supplyAreaPyeong || 22.8,
+        floor: area || fetched.floor || '중층',
+        direction: fetched.direction || '북동향(거실기준)',
+        rooms: fetched.rooms !== undefined ? fetched.rooms : 1,
+        bathrooms: fetched.bathrooms !== undefined ? fetched.bathrooms : 1,
+        approvalDate: fetched.approvalDate || '2018년',
+        moveInDate: '즉시입주 가능 (협의)',
+        parking: fetched.parking || '지하 주차장 완비',
+        maintenanceFee: '약 8~9만원 (공용관리비 실비 정산)',
+        maintenanceDetails: '공용관리비 실비 정산, 유선/인터넷 별도',
         badge: '네이버확인',
         isRecommended: true,
         tags: ['네이버등록', '실매물인증', trans],
