@@ -279,6 +279,13 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 except Exception as ex:
                     print("Error syncing js/data.js:", ex)
 
+            # Auto-regenerate Excel workbook so adminMemo is always up to date
+            try:
+                import subprocess
+                subprocess.run(['python', os.path.join(BASE_DIR, 'generate_excel.py')], check=False)
+            except Exception as ex:
+                print("Error updating excel workbook:", ex)
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.send_header('Access-Control-Allow-Origin', '*')

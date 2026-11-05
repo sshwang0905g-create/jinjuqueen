@@ -5,8 +5,8 @@ const fs = require('fs');
 const path = require('path');
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_OWNER = process.env.GITHUB_OWNER;
-const GITHUB_REPO = process.env.GITHUB_REPO;
+const GITHUB_OWNER = process.env.GITHUB_OWNER || 'sshwang0905g-create';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'jinjuqueen';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'queen1234!';
 const FILE_PATH = 'data/board.json';

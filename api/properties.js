@@ -5,8 +5,8 @@ const fs = require('fs');
 const path = require('path');
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_OWNER = process.env.GITHUB_OWNER;
-const GITHUB_REPO = process.env.GITHUB_REPO;
+const GITHUB_OWNER = process.env.GITHUB_OWNER || 'sshwang0905g-create';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'jinjuqueen';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'queen1234!';
 const FILE_PATH = 'data/properties.json';
@@ -157,6 +157,23 @@ module.exports = async (req, res) => {
 
     // 3. Save to GitHub Repository (Vercel Serverless Persistent DB)
     if (GITHUB_TOKEN && GITHUB_OWNER && GITHUB_REPO) {
+      if (!currentSha) {
+        try {
+          const ghUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}?ref=${GITHUB_BRANCH}&t=${Date.now()}`;
+          const headRes = await fetch(ghUrl, {
+            headers: {
+              'Authorization': `Bearer ${GITHUB_TOKEN}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'User-Agent': 'JinjuQueen-Serverless-Admin'
+            }
+          });
+          if (headRes.ok) {
+            const hData = await headRes.json();
+            currentSha = hData.sha;
+          }
+        } catch (e) {}
+      }
+
       const ghPutUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}`;
       const commitMessage = `feat(properties): ${action || 'update'} properties.json by Serverless Admin`;
       const base64Content = Buffer.from(jsonString, 'utf-8').toString('base64');

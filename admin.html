@@ -51,8 +51,9 @@
         <div>
           <input type="password" id="adminPasswordInput" placeholder="관리자 비밀번호를 입력하세요" required 
                  class="w-full px-4 py-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm text-center font-semibold">
-          <div class="text-[11px] text-slate-400 mt-1.5">
-            기본 비밀번호 : <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700 font-bold">queen1234!</code>
+          <div class="text-[11px] text-slate-500 mt-2.5 flex items-center justify-center gap-1.5 bg-slate-50 py-1.5 rounded-lg border border-slate-200">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span>진주퀸 대표 전용 보안 구역 (비밀번호 인증)</span>
           </div>
         </div>
 
@@ -226,10 +227,10 @@
     <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs">NAVER</div>
+          <div id="propModalBadge" class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs">NAVER</div>
           <div>
-            <h3 class="text-lg font-bold text-slate-900">네이버 매물 간편등록</h3>
-            <p class="text-xs text-slate-500">매물번호를 입력하시면 홈페이지에 1초 만에 등록됩니다.</p>
+            <h3 id="propModalTitle" class="text-lg font-bold text-slate-900">네이버 매물 간편등록</h3>
+            <p id="propModalSubtitle" class="text-xs text-slate-500">매물번호를 입력하시면 홈페이지에 1초 만에 등록됩니다.</p>
           </div>
         </div>
         <button onclick="closeAddPropModal()" class="p-1 text-slate-400 hover:text-slate-700">
@@ -238,7 +239,7 @@
       </div>
 
       <!-- Quick Import Box -->
-      <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 mb-5 space-y-2.5">
+      <div id="naverQuickImportBox" class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 mb-5 space-y-2.5">
         <label class="block text-xs font-extrabold text-emerald-950 flex items-center gap-1.5" for="naverQuickInput">
           <i data-lucide="link-2" class="w-4 h-4 text-emerald-600"></i>
           <span>네이버 매물번호(8~10자리) 입력 :</span>
@@ -258,6 +259,7 @@
 
       <!-- Detail Form -->
       <form id="propRegisterForm" onsubmit="handleSaveProperty(event)" class="space-y-4 text-xs sm:text-sm">
+        <input type="hidden" id="editPropId" value="">
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="newPropCategory">매물 유형</label>
@@ -403,7 +405,7 @@
         loadAdminProperties();
         loadBoardPosts();
       } else {
-        alert('비밀번호가 올바르지 않습니다. (기본 비밀번호: queen1234!)');
+        alert('비밀번호가 올바르지 않습니다. 비밀번호를 다시 확인해 주세요.');
       }
     }
 
@@ -546,11 +548,18 @@
               ${prop.priceFormatted}
             </td>
             <td class="px-6 py-4 text-center">
-              <button onclick="handleTogglePropStatus('${prop.id}')" 
-                      class="px-4 py-2 rounded-xl font-black text-xs transition shadow-sm flex items-center gap-1.5 mx-auto ${isSold ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'}">
-                <i data-lucide="${isSold ? 'rotate-ccw' : 'check-circle'}" class="w-3.5 h-3.5"></i>
-                <span>${isSold ? '진행중으로 복구' : '거래완료 처리'}</span>
-              </button>
+              <div class="flex items-center justify-center gap-2">
+                <button onclick="openEditPropModal('${prop.id}')" 
+                        class="px-3 py-2 rounded-xl font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition shadow-xs flex items-center gap-1">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-600"></i>
+                  <span>수정</span>
+                </button>
+                <button onclick="handleTogglePropStatus('${prop.id}')" 
+                        class="px-3.5 py-2 rounded-xl font-black text-xs transition shadow-sm flex items-center gap-1.5 ${isSold ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-rose-600 hover:bg-rose-700 text-white'}">
+                  <i data-lucide="${isSold ? 'rotate-ccw' : 'check-circle'}" class="w-3.5 h-3.5"></i>
+                  <span>${isSold ? '진행중으로' : '거래완료'}</span>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -559,41 +568,8 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    async function editAdminMemo(propId) {
-      const prop = adminProperties.find(p => p.id === propId);
-      if (!prop) return;
-
-      const currentMemo = prop.adminMemo || '';
-      const newMemo = prompt(`[${prop.title}]\n관리자 전용 비공개 적요(동·호수, 비밀번호, 소유주 연락처 등)를 입력하세요.\n* 일반 방문자에게는 절대 노출되지 않으며 관리자 화면과 엑셀 파일에만 저장됩니다:`, currentMemo);
-      
-      if (newMemo === null) return; // User canceled prompt
-
-      const trimmed = newMemo.trim();
-      prop.adminMemo = trimmed;
-
-      try {
-        const res = await fetch('/api/properties', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminToken}`
-          },
-          body: JSON.stringify({
-            action: 'update',
-            property: { id: propId, adminMemo: trimmed }
-          })
-        });
-
-        if (res.ok) {
-          const result = await res.json();
-          adminProperties = result.properties;
-          renderAdminProperties();
-          showAdminToast('적요(동·호수 메모)가 안전하게 저장되었습니다.');
-        }
-      } catch (e) {
-        renderAdminProperties();
-        showAdminToast('적요가 로컬에 임시 저장되었습니다.');
-      }
+    function editAdminMemo(propId) {
+      openEditPropModal(propId, true);
     }
 
     async function handleTogglePropStatus(propId) {
@@ -637,8 +613,29 @@
     let fetchedNaverPhotos = [];
 
     function openAddPropModal() {
+      const editInput = document.getElementById('editPropId');
+      if (editInput) editInput.value = '';
+
+      const titleEl = document.getElementById('propModalTitle');
+      const subEl = document.getElementById('propModalSubtitle');
+      const badgeEl = document.getElementById('propModalBadge');
+      const importBox = document.getElementById('naverQuickImportBox');
+      const submitBtn = document.getElementById('savePropSubmitBtn');
+
+      if (titleEl) titleEl.textContent = '새 매물 간편등록';
+      if (subEl) subEl.textContent = '네이버 매물번호를 입력하거나 직접 입력하여 홈페이지에 등록합니다.';
+      if (badgeEl) {
+        badgeEl.textContent = 'NAVER';
+        badgeEl.className = 'w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs';
+      }
+      if (importBox) importBox.classList.remove('hidden');
+      if (submitBtn) {
+        submitBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>홈페이지에 즉시 등록</span>';
+      }
+
       document.getElementById('propRegisterForm').reset();
       document.getElementById('newPropLocation').value = '경남 진주시 충무공동';
+      if (document.getElementById('naverQuickInput')) document.getElementById('naverQuickInput').value = '';
       if (document.getElementById('newPropAdminMemo')) document.getElementById('newPropAdminMemo').value = '';
       fetchedNaverPhotos = [];
       const previewBox = document.getElementById('naverPhotoPreviewBox');
@@ -647,8 +644,65 @@
       if (window.lucide) lucide.createIcons();
     }
 
+    function openEditPropModal(propId, focusMemo = false) {
+      const prop = adminProperties.find(p => p.id === propId);
+      if (!prop) {
+        alert('매물 정보를 찾을 수 없습니다.');
+        return;
+      }
+
+      const editInput = document.getElementById('editPropId');
+      if (editInput) editInput.value = prop.id;
+
+      const titleEl = document.getElementById('propModalTitle');
+      const subEl = document.getElementById('propModalSubtitle');
+      const badgeEl = document.getElementById('propModalBadge');
+      const importBox = document.getElementById('naverQuickImportBox');
+      const submitBtn = document.getElementById('savePropSubmitBtn');
+
+      if (titleEl) titleEl.textContent = '매물 정보 및 비공개 적요 수정';
+      if (subEl) subEl.textContent = '대표님 전용 비공개 적요(동·호수 등) 및 매물 정보를 수정하여 안전하게 저장합니다.';
+      if (badgeEl) {
+        badgeEl.textContent = '수정';
+        badgeEl.className = 'w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center font-black text-xs';
+      }
+      if (importBox) importBox.classList.add('hidden');
+      if (submitBtn) {
+        submitBtn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>수정 내용 안전하게 저장</span>';
+      }
+
+      document.getElementById('newPropCategory').value = prop.category || '오피스텔';
+      document.getElementById('newPropTrans').value = prop.transactionType || '월세';
+      document.getElementById('newPropTitle').value = prop.title || '';
+      document.getElementById('newPropPrice').value = prop.priceFormatted || '';
+      document.getElementById('newPropArea').value = prop.floor || '';
+      document.getElementById('newPropLocation').value = prop.location || '';
+      document.getElementById('newPropDesc').value = prop.description || '';
+      if (document.getElementById('newPropAdminMemo')) {
+        document.getElementById('newPropAdminMemo').value = prop.adminMemo || '';
+      }
+
+      const previewBox = document.getElementById('naverPhotoPreviewBox');
+      if (previewBox) previewBox.classList.add('hidden');
+
+      document.getElementById('propRegisterModal').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+
+      if (focusMemo) {
+        setTimeout(() => {
+          const memoInput = document.getElementById('newPropAdminMemo');
+          if (memoInput) {
+            memoInput.focus();
+            memoInput.select();
+          }
+        }, 150);
+      }
+    }
+
     function closeAddPropModal() {
       fetchedNaverPhotos = [];
+      const editInput = document.getElementById('editPropId');
+      if (editInput) editInput.value = '';
       document.getElementById('propRegisterModal').classList.add('hidden');
     }
 
@@ -721,18 +775,71 @@
     async function handleSaveProperty(e) {
       e.preventDefault();
       const saveBtn = document.getElementById('savePropSubmitBtn');
+      const editId = (document.getElementById('editPropId') ? document.getElementById('editPropId').value : '');
       const category = document.getElementById('newPropCategory').value;
       const trans = document.getElementById('newPropTrans').value;
-      const title = document.getElementById('newPropTitle').value;
-      const priceFormatted = document.getElementById('newPropPrice').value;
-      const area = document.getElementById('newPropArea').value;
-      const location = document.getElementById('newPropLocation').value;
-      const desc = document.getElementById('newPropDesc').value;
-      const naverNo = document.getElementById('naverQuickInput').value.trim();
+      const title = document.getElementById('newPropTitle').value.trim();
+      const priceFormatted = document.getElementById('newPropPrice').value.trim();
+      const area = document.getElementById('newPropArea').value.trim();
+      const location = document.getElementById('newPropLocation').value.trim();
+      const desc = document.getElementById('newPropDesc').value.trim();
+      const naverNo = document.getElementById('naverQuickInput') ? document.getElementById('naverQuickInput').value.trim() : '';
       const adminMemo = (document.getElementById('newPropAdminMemo') ? document.getElementById('newPropAdminMemo').value.trim() : '');
 
       saveBtn.disabled = true;
-      saveBtn.innerHTML = '<span>홈페이지 저장 중...</span>';
+      saveBtn.innerHTML = '<span>저장 처리 중...</span>';
+
+      // [수정 모드] 기존 매물 정보 및 적요란 업데이트
+      if (editId) {
+        const updatedFields = {
+          id: editId,
+          category,
+          transactionType: trans,
+          title,
+          priceFormatted,
+          floor: area,
+          location,
+          description: desc,
+          adminMemo: adminMemo
+        };
+
+        try {
+          const res = await fetch('/api/properties', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${adminToken}`
+            },
+            body: JSON.stringify({
+              action: 'update',
+              property: updatedFields
+            })
+          });
+
+          if (res.ok) {
+            const result = await res.json();
+            adminProperties = result.properties;
+            closeAddPropModal();
+            renderAdminProperties();
+            showAdminToast('매물 정보 및 비공개 적요(동·호수)가 안전하게 저장되었습니다.');
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            alert('저장 실패: ' + (errData.message || res.statusText));
+          }
+        } catch (err) {
+          const idx = adminProperties.findIndex(p => p.id === editId);
+          if (idx > -1) {
+            adminProperties[idx] = { ...adminProperties[idx], ...updatedFields };
+            renderAdminProperties();
+          }
+          closeAddPropModal();
+          showAdminToast('적요가 임시 저장되었습니다.');
+        } finally {
+          saveBtn.disabled = false;
+          if (window.lucide) lucide.createIcons();
+        }
+        return;
+      }
 
       // Parse deposit & rent
       let depVal = 0;
@@ -1294,7 +1401,7 @@
             <div><span class="text-amber-400">GITHUB_OWNER</span> = 본인 GitHub 아이디</div>
             <div><span class="text-amber-400">GITHUB_REPO</span> = jinjuqueen (저장소 이름)</div>
             <div><span class="text-amber-400">GITHUB_BRANCH</span> = main (기본 브랜치)</div>
-            <div><span class="text-amber-400">ADMIN_PASSWORD</span> = queen1234! (관리자 비밀번호)</div>
+            <div><span class="text-amber-400">ADMIN_PASSWORD</span> = 대표님 설정 비밀번호</div>
           </div>
         </div>
 
