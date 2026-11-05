@@ -473,9 +473,9 @@ function renderProperties() {
         <div class="p-5 flex-1 flex flex-col justify-between">
           <div>
             <!-- Location & Direction -->
-            <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-              <span class="font-medium text-slate-600">${prop.location}</span>
-              <span>${prop.floor} · ${prop.direction}</span>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-1 gap-2">
+              <span class="font-medium text-slate-600 shrink-0">${prop.location}</span>
+              <span class="text-right">${[prop.floor, prop.direction].filter(Boolean).join(' ')}</span>
             </div>
 
             <!-- Title -->
@@ -487,9 +487,6 @@ function renderProperties() {
             <div class="flex items-baseline gap-2 mb-3">
               <span class="text-xl font-extrabold ${isSold ? 'text-slate-500 line-through' : 'text-amber-600'} tracking-tight">${prop.priceFormatted}</span>
               ${isSold ? '<span class="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">거래완료</span>' : ''}
-              <span class="text-xs font-semibold text-slate-500">
-                전용 ${prop.exclusiveArea}㎡ (${prop.exclusiveAreaPyeong}평)
-              </span>
             </div>
 
             <!-- Tags -->
