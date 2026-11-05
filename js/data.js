@@ -93,7 +93,7 @@ let PROPERTIES_DATA = [
     "exclusiveAreaPyeong": 8.4,
     "supplyArea": 75.25,
     "supplyAreaPyeong": 22.8,
-    "floor": "전용 28㎡ / 중층(원룸/오피스텔)",
+    "floor": "중층(원룸/오피스텔)",
     "direction": "남향(거실기준)",
     "rooms": 3,
     "bathrooms": 2,
