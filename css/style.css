@@ -502,3 +502,26 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #0F766E !important;
   box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
 }
+
+/* 3. Utility: Hide Scrollbars for smooth mobile swipes */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 4. Mobile screen fine-tuning (screen widths < 640px) */
+@media (max-width: 639px) {
+  .category-btn {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    font-size: 11.5px !important;
+  }
+  .trans-btn {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    font-size: 11px !important;
+  }
+}
