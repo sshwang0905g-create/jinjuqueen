@@ -500,38 +500,42 @@
   </section>
 
   <!-- Real Estate News & Local Trends Board Section -->
-  <section id="news-section" class="py-16 bg-white border-t border-b border-slate-200">
+  <section id="news-section" class="py-16 bg-slate-50/60 border-t border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <!-- Section Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-8">
         <div>
-          <div class="flex items-center gap-2 text-xs font-bold text-brand-gold uppercase tracking-wider mb-1.5">
+          <div class="inline-flex items-center gap-2 text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full uppercase tracking-wider mb-2">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Official Blog & Market Insights</span>
+            <span>Official Research & Market Insights</span>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">진주퀸 공식 블로그 · 부동산 칼럼 & 시세 분석</h2>
-          <p class="text-sm text-slate-500 mt-1">
-            황선숙 대표가 직접 작성하는 진주 혁신도시 단지별 실거래가 분석, 세무 상식 및 현장 임장 리포트
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            진주 혁신도시 부동산 칼럼 & 실거래가 분석 리포트
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 mt-1.5 font-medium">
+            황선숙 대표가 직접 작성하는 진주 혁신도시 실거래가 분석, 부동산 상식 및 현장 임장 리포트
           </p>
         </div>
 
         <!-- Write button shortcut & Category Filter Pills -->
-        <div class="flex flex-wrap items-center gap-2">
-          <a href="admin.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center gap-1 transition shadow-sm">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <a href="admin.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center gap-1.5 transition shadow-xs">
             <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-600"></i>
-            <span>새 블로그 글쓰기</span>
+            <span>새 칼럼 작성</span>
           </a>
-        <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl overflow-x-auto no-scrollbar w-full sm:w-auto" id="newsCategoryFilter">
-          <button onclick="filterNews('ALL')" class="news-cat-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-navy shadow-sm transition whitespace-nowrap">전체</button>
-          <button onclick="filterNews('혁신도시 소식')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">혁신도시 소식</button>
-          <button onclick="filterNews('주간 시세 리포트')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">주간 시세</button>
-          <button onclick="filterNews('부동산 세무/상식')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">부동산 상식</button>
-          <button onclick="filterNews('부동산 투자 분석')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">투자 분석</button>
-          <button onclick="filterNews('사무소 공지')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">사무소 공지</button>
+          <div class="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl overflow-x-auto no-scrollbar shadow-xs" id="newsCategoryFilter">
+            <button onclick="filterNews('ALL')" class="news-cat-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-xs transition whitespace-nowrap">전체</button>
+            <button onclick="filterNews('혁신도시 소식')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">혁신도시 소식</button>
+            <button onclick="filterNews('주간 시세 리포트')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">주간 시세</button>
+            <button onclick="filterNews('부동산 세무/상식')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">부동산 상식</button>
+            <button onclick="filterNews('부동산 투자 분석')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">투자 분석</button>
+            <button onclick="filterNews('사무소 공지')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">사무소 공지</button>
+          </div>
         </div>
       </div>
 
-      <!-- News Articles Grid -->
-      <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Real Estate Insight Reports List (Card format completely replaced by Editorial Feed List) -->
+      <div id="newsGrid" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm divide-y divide-slate-100 overflow-hidden">
         <!-- Rendered by js/app.js -->
       </div>
     </div>
