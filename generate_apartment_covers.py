@@ -109,3 +109,4 @@ create_complex_image("혁신도시LH8단지", "803동", "LH8단지_803동_전경
 create_complex_image("진주혁신 대방노블랜드", "더센트럴", "대방노블랜드_전경.jpg", "대방")
 create_complex_image("중흥S-클래스", "센트럴시티", "중흥S클래스_전경.jpg", "중흥")
 create_complex_image("진주혁신도시", "아파트 단지 전경", "기본_아파트전경.jpg", "default")
+

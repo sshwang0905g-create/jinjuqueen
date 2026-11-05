@@ -279,15 +279,13 @@ module.exports = async (req, res) => {
       finalDescription = `네이버부동산 등록 검증 실매물(매물번호: ${atclNo})입니다.`;
     }
 
-    // 아파트 매물인데 실사진이 없거나 1장뿐인 경우 아파트 단지 전경 이미지 자동 매핑
-    if (category === '아파트' && allPhotos.length < 2) {
-      let complexCover = 'images/complexes/기본_아파트전경.jpg';
-      if (title.includes('더힐')) complexCover = 'images/complexes/더힐_505동_전경.jpg';
-      else if (title.includes('라온')) complexCover = 'images/complexes/라온프라이빗_204동_전경.jpg';
-      else if (title.includes('LH8') || title.includes('8단지')) complexCover = 'images/complexes/LH8단지_803동_전경.jpg';
-      else if (title.includes('대방')) complexCover = 'images/complexes/대방노블랜드_전경.jpg';
-      else if (title.includes('중흥')) complexCover = 'images/complexes/중흥S클래스_전경.jpg';
-      allPhotos.unshift(complexCover);
+    // 아파트 매물인데 실사진이 전혀 없는 경우 깨끗한 아파트 이름 타이틀 카드 매핑
+    if (category === '아파트' && allPhotos.length === 0) {
+      let complexCover = 'images/complex_cards/기본_아파트_클린카드.jpg';
+      if (title.includes('더힐')) complexCover = 'images/complex_cards/더힐_505동_클린카드.jpg';
+      else if (title.includes('라온')) complexCover = 'images/complex_cards/라온프라이빗_204동_클린카드.jpg';
+      else if (title.includes('LH8') || title.includes('8단지')) complexCover = 'images/complex_cards/LH8단지_803동_클린카드.jpg';
+      allPhotos = [complexCover];
     }
 
     return res.status(200).json({

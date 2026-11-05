@@ -351,22 +351,17 @@ class NaverRealEstateClient:
             else:
                 final_description = f"네이버부동산 등록 검증 실매물(매물번호: {atcl_no})입니다."
 
-            # 아파트 매물인데 실사진이 없거나 1장뿐인 경우 아파트 단지 전경 이미지 자동 생성/매핑
-            if category == "아파트" and len(photos) < 2:
-                complex_cover = "images/complexes/기본_아파트전경.jpg"
+            # 아파트 매물인데 실사진이 전혀 없는 경우 깨끗한 아파트 이름 타이틀 카드 매핑
+            if category == "아파트" and len(photos) == 0:
+                complex_cover = "images/complex_cards/기본_아파트_클린카드.jpg"
                 if "더힐" in title:
-                    complex_cover = "images/complexes/더힐_505동_전경.jpg"
+                    complex_cover = "images/complex_cards/더힐_505동_클린카드.jpg"
                 elif "라온" in title:
-                    complex_cover = "images/complexes/라온프라이빗_204동_전경.jpg"
+                    complex_cover = "images/complex_cards/라온프라이빗_204동_클린카드.jpg"
                 elif "LH8" in title or "8단지" in title:
-                    complex_cover = "images/complexes/LH8단지_803동_전경.jpg"
-                elif "대방" in title:
-                    complex_cover = "images/complexes/대방노블랜드_전경.jpg"
-                elif "중흥" in title:
-                    complex_cover = "images/complexes/중흥S클래스_전경.jpg"
-                
-                photos = [complex_cover] + photos
-                logger.info(f"[단지 전경 이미지 자동 매핑] {complex_cover}")
+                    complex_cover = "images/complex_cards/LH8단지_803동_클린카드.jpg"
+                photos = [complex_cover]
+                logger.info(f"[아파트 클린 타이틀 카드 매핑] {complex_cover}")
 
             logger.info(f"[매물 파싱 완료] {atcl_no} | {title} | {price_formatted} | 사진 {len(photos)}장")
 

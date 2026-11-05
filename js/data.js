@@ -110,7 +110,6 @@ let PROPERTIES_DATA = [
       "매매"
     ],
     "images": [
-      "images/complexes/LH8단지_803동_전경.jpg",
       "https://landthumb-phinf.pstatic.net/20201205_28/land_naver_1607123175511sWpBF_JPEG/1077052202010141955104712671205080615368000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20201205_144/land_naver_1607123175203B06zp_JPEG/107705220201014195510281015120508061558000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20140115_9/hscp_img_13897540187210baXM_JPEG/photoinfra_1389754018353.jpg?type=m1024",
@@ -164,7 +163,7 @@ let PROPERTIES_DATA = [
       "매매"
     ],
     "images": [
-      "images/complexes/더힐_505동_전경.jpg",
+      "images/complex_cards/더힐_505동_클린카드.jpg",
       "https://landthumb-phinf.pstatic.net/20210115_242/land_naver_1610671716109jIFtV_JPEG/137446120210115094835999212011509483665000000.jpg?type=m1024"
     ],
     "agent": {
@@ -213,7 +212,6 @@ let PROPERTIES_DATA = [
       "매매"
     ],
     "images": [
-      "images/complexes/라온프라이빗_204동_전경.jpg",
       "https://landthumb-phinf.pstatic.net/20201204_51/land_naver_160709089786981yMF_JPEG/1128174202010142121243790901204230817711000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20201204_48/land_naver_1607090897239JmGXP_JPEG/112817420201014212123961538120423081785000000.jpg?type=m1024",
       "https://landthumb-phinf.pstatic.net/20160715_258/hscp_img_1468551195864w91qU_JPEG/photoinfra_1468551195536.jpg?type=m1024"

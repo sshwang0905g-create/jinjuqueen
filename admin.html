@@ -30,6 +30,7 @@
   <!-- Pretendard Font & Lucide Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/data.js"></script>
   <style>
     body { font-family: 'Pretendard', sans-serif; letter-spacing: -0.02em; }
   </style>
@@ -149,8 +150,8 @@
             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-amber-400"></i>
             <span>전체 매물 엑셀 다운로드 (관리자 전용)</span>
           </button>
-          <button id="adminRefreshBtn" type="button" onclick="handleRefreshAdmin()" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-extrabold rounded-xl transition flex items-center gap-2 border-2 border-slate-300 hover:border-slate-400 shadow-sm cursor-pointer active:scale-95" title="최신 매물 목록 새로고침">
-            <i id="adminRefreshIcon" data-lucide="refresh-cw" class="w-4 h-4 text-emerald-600 font-bold transition-transform"></i>
+          <button id="adminRefreshBtn" type="button" onclick="handleRefreshAdmin()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition flex items-center gap-2 shadow-md hover:shadow cursor-pointer active:scale-95 border border-blue-500" title="최신 매물 목록 새로고침">
+            <i id="adminRefreshIcon" data-lucide="refresh-cw" class="w-4 h-4 text-white font-bold transition-transform"></i>
             <span>새로고침</span>
           </button>
         </div>
@@ -512,7 +513,11 @@
           const fileRes = await fetch('data/properties.json?t=' + Date.now());
           adminProperties = await fileRes.json();
         } catch (ex) {
-          adminProperties = [];
+          if (window.PROPERTIES && Array.isArray(window.PROPERTIES)) {
+            adminProperties = JSON.parse(JSON.stringify(window.PROPERTIES));
+          } else {
+            adminProperties = [];
+          }
         }
       }
 
