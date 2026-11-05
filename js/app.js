@@ -1077,6 +1077,14 @@ function switchListingMode(mode) {
     if (notesLabel) notesLabel.textContent = '희망 입주시점 및 추가 요구조건 (선택)';
     if (notesInput) notesInput.placeholder = '예: 3개월 이내 입주 희망, 로열층 남향 선호, 즉시 입주 등';
     if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 맞춤 매물 찾기 의뢰하기';
+    const transSelect = document.getElementById('reqTransType');
+    if (transSelect) {
+      transSelect.innerHTML = `
+        <option value="매매(구입)">매매 (구입)</option>
+        <option value="전세">전세</option>
+        <option value="월세">월세</option>
+      `;
+    }
   } else {
     // 2. 매물 내놓기 (매도 · 임대)
     if (tabSell) {
@@ -1094,6 +1102,14 @@ function switchListingMode(mode) {
     if (notesLabel) notesLabel.textContent = '입주가능시기 및 특이사항 (선택)';
     if (notesInput) notesInput.placeholder = '예: 정상 입주 가능, 전세 안고 매매, 인테리어 수리 완료 등';
     if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 매물 내놓기 접수하기';
+    const transSelect = document.getElementById('reqTransType');
+    if (transSelect) {
+      transSelect.innerHTML = `
+        <option value="매매(매도)">매매 (매도·팔기)</option>
+        <option value="전세(임대)">전세 (세놓기)</option>
+        <option value="월세(임대)">월세 (세놓기)</option>
+      `;
+    }
   }
   if (window.lucide) lucide.createIcons();
 }
