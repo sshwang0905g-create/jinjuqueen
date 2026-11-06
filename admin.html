@@ -1874,7 +1874,11 @@ let fetchedNaverPhotos = [];
 
           if (fetchedNaverPhotos && fetchedNaverPhotos.length > 0 && !isFallbackCard) {
             currentPropertyPhotos = fetchedNaverPhotos.slice(0, 6);
-            showAdminToast(`네이버 실매물 사진 ${currentPropertyPhotos.length}장을 불러왔습니다. [+ 사진 추가]로 현장 사진을 더 추가하실 수 있습니다.`);
+            if (data.hasRoomPhotos === false || fetchedNaverPhotos[0].includes('pastel_')) {
+              showAdminToast('🎨 실내 실사진 미등록 매물입니다. 밝고 화사한 맞춤 파스텔 타이틀 카드가 메인 대표 사진으로 자동 생성되었습니다.');
+            } else {
+              showAdminToast(`네이버 실매물 사진 ${currentPropertyPhotos.length}장을 불러왔습니다. [+ 사진 추가]로 현장 사진을 더 추가하실 수 있습니다.`);
+            }
           } else {
             const cat = data.category || document.getElementById('newPropCategory').value || '아파트';
             let detail = '';

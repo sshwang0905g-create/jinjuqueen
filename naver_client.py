@@ -426,8 +426,10 @@ class NaverRealEstateClient:
             else:
                 final_description = f"네이버부동산 등록 검증 실매물(매물번호: {atcl_no})입니다."
 
-            # 사진이 전혀 없는 경우 화사하고 밝은 파스텔(Pastel) 컬러 타이틀 카드 동적 자동생성
-            if len(photos) == 0:
+            # 실내/현장 실사진(room_photos)이 없는 경우 (포털 기본 단지 외관 사진만 있거나 사진이 아예 없는 경우)
+            # 첫 번째 메인 대표 이미지로 밝고 화사한 맞춤형 파스텔(Pastel) 컬러 타이틀 카드 자동생성하여 전면 배치
+            has_room_photos = len(room_photos) > 0
+            if not has_room_photos or len(photos) == 0:
                 detail_str = ""
                 if category == "택지":
                     detail_str = f"{land_pyeong}평 · {usage_district or '제1종일반주거'}"
@@ -439,20 +441,21 @@ class NaverRealEstateClient:
                 try:
                     from generate_pastel_card import generate_pastel_card
                     card_path = generate_pastel_card(title, category, detail_str, atcl_no)
-                    photos = [card_path]
-                    logger.info(f"[화사한 파스텔 타이틀 카드 동적 생성 완료] {card_path}")
+                    photos = [card_path] + complex_photos
+                    logger.info(f"[현장 실사진 미등록 매물 -> 화사한 파스텔 메인 타이틀 카드 생성 완료] {card_path}")
                 except Exception as card_err:
                     logger.error(f"[파스텔 카드 생성 예외 Fallback] {card_err}")
                     if category == "택지":
-                        photos = ["images/complex_cards/토지_클린카드.jpg"]
+                        fallback_card = "images/complex_cards/토지_클린카드.jpg"
                     elif category == "상가":
-                        photos = ["images/complex_cards/일반상가_클린카드.jpg"]
+                        fallback_card = "images/complex_cards/일반상가_클린카드.jpg"
                     elif category == "오피스텔":
-                        photos = ["images/complex_cards/pastel_ea18771ace.jpg"]
+                        fallback_card = "images/complex_cards/pastel_ea18771ace.jpg"
                     else:
-                        photos = ["images/complex_cards/기본_아파트_클린카드.jpg"]
+                        fallback_card = "images/complex_cards/기본_아파트_클린카드.jpg"
+                    photos = [fallback_card] + complex_photos
 
-            logger.info(f"[매물 파싱 완료] {atcl_no} | {title} | {price_formatted} | 사진 {len(photos)}장")
+            logger.info(f"[매물 파싱 완료] {atcl_no} | {title} | {price_formatted} | 사진 {len(photos)}장 (실내실사진: {len(room_photos)}장)")
 
             return {
                 "success": True,
@@ -462,6 +465,7 @@ class NaverRealEstateClient:
                 "deposit": deposit,
                 "monthlyRent": monthly,
                 "category": category,
+                "hasRoomPhotos": has_room_photos,
                 "landArea": land_area if category == "택지" else None,
                 "landAreaPyeong": land_pyeong if category == "택지" else None,
                 "landCategory": land_category_name if category == "택지" else None,
