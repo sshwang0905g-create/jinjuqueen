@@ -310,6 +310,23 @@
           <div id="naverLiveStatusNotice" class="text-[11px] font-medium mt-2 hidden"></div>
         </div>
 
+        <!-- 관리자 전용 비공개 적요란 (동·호수, 비밀번호, 소유주 연락처 등 관리자만 열람) -->
+        <div class="p-3.5 bg-amber-50/80 rounded-2xl border border-amber-300">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5" for="newPropAdminMemo">
+              <i data-lucide="lock" class="w-4 h-4 text-amber-600"></i>
+              <span>적요란 (동·호수 / 관리자 전용 비공개 메모)</span>
+            </label>
+            <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200">🔒 고객·홈페이지 절대 비공개</span>
+          </div>
+          <input type="text" id="newPropAdminMemo" placeholder="예: 105동 1402호 / 현관비번 1234* / 소유주 010-XXXX-XXXX / 희망 잔금일 등" 
+                 class="w-full border border-amber-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-amber-500 bg-white font-medium text-xs sm:text-sm text-slate-800 placeholder:text-slate-400">
+          <p class="text-[11px] text-amber-800 mt-1.5 flex items-center gap-1">
+            <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 text-amber-600"></i>
+            <span>동·호수 및 소유주 정보 등은 관리자 모드와 엑셀 다운로드 파일에만 기록되며, 일반 방문객에게는 노출되지 않습니다.</span>
+          </p>
+        </div>
+
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="newPropTitle">매물명 (제목)</label>
           <input type="text" id="newPropTitle" placeholder="예: 진주혁신 대방노블랜드 34평 로열동 판상형" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
@@ -513,23 +530,6 @@
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="newPropDesc">매물 특징 설명</label>
           <textarea id="newPropDesc" rows="3" placeholder="남향 일조권 최상, 시스템에어컨, 빠른 입주 협의 가능 등 핵심 특징" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold leading-relaxed"></textarea>
-        </div>
-
-        <!-- 관리자 전용 비공개 적요란 (동·호수, 비밀번호, 소유주 연락처 등 관리자만 열람) -->
-        <div class="p-3.5 bg-amber-50/80 rounded-2xl border border-amber-300">
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="block font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5" for="newPropAdminMemo">
-              <i data-lucide="lock" class="w-4 h-4 text-amber-600"></i>
-              <span>적요란 (동·호수 / 관리자 전용 비공개 메모)</span>
-            </label>
-            <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200">🔒 고객·홈페이지 절대 비공개</span>
-          </div>
-          <input type="text" id="newPropAdminMemo" placeholder="예: 105동 1402호 / 현관비번 1234* / 소유주 010-XXXX-XXXX / 희망 잔금일 등" 
-                 class="w-full border border-amber-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-amber-500 bg-white font-medium text-xs sm:text-sm text-slate-800 placeholder:text-slate-400">
-          <p class="text-[11px] text-amber-800 mt-1.5 flex items-center gap-1">
-            <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 text-amber-600"></i>
-            <span>동·호수 및 소유주 정보 등은 관리자 모드와 엑셀 다운로드 파일에만 기록되며, 일반 방문객에게는 노출되지 않습니다.</span>
-          </p>
         </div>
 
         <!-- 비공개 매물 설정 스위치 (홈페이지 메인 및 지도에서 노출 차단) -->
@@ -854,25 +854,29 @@
               <div class="font-bold text-slate-900 truncate">${prop.title}</div>
               <div class="text-[11px] text-slate-500 truncate mt-0.5">${prop.location} (${prop.floor})</div>
               ${prop.naverArticleNo ? `
-                <div class="inline-flex items-center gap-1.5 mt-1 font-mono text-[10px] flex-wrap">
-                  <span class="text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
-                    <i data-lucide="hash" class="w-3 h-3 text-emerald-600"></i>
-                    <span>네이버 No. ${prop.naverArticleNo}</span>
-                  </span>
-                  ${prop.naverStatus === 'EXPIRED' 
-                    ? '<span class="text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded font-bold">네이버종료 (자동비공개)</span>' 
-                    : '<span class="text-emerald-600 font-bold flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>게시중</span>'}
+                <div class="mt-1">
+                  <div class="inline-flex items-center gap-1.5 font-mono text-[10px]">
+                    <span class="text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+                      <i data-lucide="hash" class="w-3 h-3 text-emerald-600"></i>
+                      <span>네이버 No. ${prop.naverArticleNo}</span>
+                    </span>
+                    ${prop.naverStatus === 'EXPIRED' 
+                      ? '<span class="text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded font-bold">네이버종료 (자동비공개)</span>' 
+                      : '<span class="text-emerald-600 font-bold flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>게시중</span>'}
+                  </div>
                 </div>
               ` : ''}
               ${prop.adminMemo ? `
-                <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 text-xs font-bold shadow-xs">
-                  <i data-lucide="lock" class="w-3 h-3 text-amber-600 shrink-0"></i>
-                  <span>적요: ${prop.adminMemo}</span>
-                  <button onclick="editAdminMemo('${prop.id}')" class="ml-1 text-[10px] text-amber-700 hover:text-amber-950 underline font-semibold">수정</button>
+                <div class="mt-1.5">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 text-xs font-bold shadow-xs">
+                    <i data-lucide="lock" class="w-3 h-3 text-amber-600 shrink-0"></i>
+                    <span>적요: ${prop.adminMemo}</span>
+                    <button onclick="editAdminMemo('${prop.id}')" class="ml-1 text-[10px] text-amber-700 hover:text-amber-950 underline font-semibold cursor-pointer">수정</button>
+                  </div>
                 </div>
               ` : `
                 <div class="mt-1">
-                  <button onclick="editAdminMemo('${prop.id}')" class="inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-700 font-medium hover:underline">
+                  <button onclick="editAdminMemo('${prop.id}')" class="inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-700 font-medium hover:underline cursor-pointer">
                     <i data-lucide="file-plus" class="w-3 h-3 text-amber-600"></i>
                     <span>+ 비공개 적요(동·호수) 입력</span>
                   </button>
