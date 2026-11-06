@@ -243,45 +243,47 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- 본문 내용과 100% 일치하는 와이드 12열 에디토리얼 타이틀 섹션 (시작과 끝 전체 높이 칼정렬) -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-10">
-        <!-- 좌측: 와이드 메인 타이틀 및 소개 (8열, flex-col로 우측 카드와 시작/끝 완벽 일치) -->
+        <!-- 좌측: 와이드 메인 타이틀 및 소개 (8열, 공간을 고르게 분배하여 빈 공간 없이 안정적 배치) -->
         <div class="lg:col-span-8 flex flex-col justify-between">
-          <div>
-            <!-- 상단 뱃지 (에메랄드 민트 & 앰버 골드 고유 색상 및 정돈된 문구) -->
-            <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-3.5 sm:mb-4">
-              <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-950/80 border border-emerald-500/60 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-300 shadow-sm">
+          <div class="flex flex-col">
+            <!-- 상단 뱃지 (H1과의 간격을 여유 있게 띄워 시선 집중) -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-5 sm:mb-7">
+              <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-950/80 border border-emerald-500/60 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-300 shadow-sm">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span>통계학 석사의 정밀 데이터 분석 · 2017년부터 충무공동 한 자리</span>
               </div>
-              <div class="inline-flex items-center gap-1.5 bg-amber-950/80 border border-amber-400/60 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-amber-300 shadow-sm">
+              <div class="inline-flex items-center gap-1.5 bg-amber-950/80 border border-amber-400/60 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-amber-300 shadow-sm">
                 <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span>등록 48170-2017-00038</span>
               </div>
             </div>
 
-            <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight leading-tight sm:leading-[1.28] lg:leading-[1.3] text-white mb-3 sm:mb-3.5">
+            <!-- 메인 큰 제목 (상단 여백 확보 및 안정적인 행간 적용) -->
+            <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight leading-snug sm:leading-[1.34] lg:leading-[1.38] text-white mb-4 sm:mb-5 lg:mb-6">
               <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 font-black">통계학 석사의 정밀 데이터 분석,</span><br class="hidden sm:inline">
-              <span class="inline-block mt-1 sm:mt-1.5 text-white">2017년부터 충무공동 한 자리를 지켜온 <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 font-black underline decoration-amber-400/50 decoration-2 underline-offset-4 sm:underline-offset-8">진주퀸공인중개사</span>입니다.</span>
+              <span class="inline-block mt-1 sm:mt-2 text-white">2017년부터 충무공동 한 자리를 지켜온 <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 font-black underline decoration-amber-400/50 decoration-2 underline-offset-4 sm:underline-offset-8">진주퀸공인중개사</span>입니다.</span>
             </h1>
 
-            <p class="text-xs sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed mb-4 sm:mb-6 text-left break-keep">
+            <!-- 2줄 요약 설명글 (행간을 편안하게 넓히고 아래 카드와의 빈 공간을 자연스럽게 해소) -->
+            <p class="text-sm sm:text-base lg:text-[17px] text-slate-300 font-normal leading-relaxed sm:leading-[1.8] text-left break-keep mb-6 sm:mb-8">
               실거래가 빅데이터와 정밀 권리분석을 바탕으로,<br class="hidden sm:inline">
               100% 현장 검증 실매물로 고객님의 소중한 자산을 안전하게 중개합니다.
             </p>
           </div>
 
-          <!-- 3대 신뢰 지표 카드 (바닥 라인이 우측 파란색 전화 버튼 바닥선과 1:1 완벽 일치) -->
-          <div class="grid grid-cols-3 gap-1.5 sm:gap-3.5 text-xs pt-2">
-            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 backdrop-blur-sm text-center">
+          <!-- 3대 신뢰 지표 카드 (위 설명글과의 간격을 이상적으로 좁히고 카드 패딩을 도톰하게 채움) -->
+          <div class="grid grid-cols-3 gap-2 sm:gap-4 text-xs pt-2">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 backdrop-blur-sm text-center transition hover:border-white/20">
               <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">통계학 석사</div>
-              <div class="text-slate-300 text-[10px] sm:text-xs mt-0.5 sm:mt-1 whitespace-nowrap">정밀 데이터 분석</div>
+              <div class="text-slate-300 text-[10px] sm:text-xs mt-1 sm:mt-1.5 whitespace-nowrap">정밀 데이터 분석</div>
             </div>
-            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 backdrop-blur-sm text-center">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 backdrop-blur-sm text-center transition hover:border-white/20">
               <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">충무공동 한 자리</div>
-              <div class="text-slate-300 text-[10px] sm:text-xs mt-0.5 sm:mt-1 whitespace-nowrap">2017년부터 우직한 신뢰</div>
+              <div class="text-slate-300 text-[10px] sm:text-xs mt-1 sm:mt-1.5 whitespace-nowrap">2017년부터 우직한 신뢰</div>
             </div>
-            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 backdrop-blur-sm text-center">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 backdrop-blur-sm text-center transition hover:border-white/20">
               <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">100% 실매물</div>
-              <div class="text-slate-300 text-[10px] sm:text-xs mt-0.5 sm:mt-1 whitespace-nowrap">현장 검증 책임 중개</div>
+              <div class="text-slate-300 text-[10px] sm:text-xs mt-1 sm:mt-1.5 whitespace-nowrap">현장 검증 책임 중개</div>
             </div>
           </div>
         </div>
