@@ -273,7 +273,6 @@ function initOfficeMap() {
     console.warn('officeMap init error:', err);
   }
 }
-}
 
 function updateMapMarkers() {
   if (!map) return;
