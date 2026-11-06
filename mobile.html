@@ -2,19 +2,59 @@
 <html lang="ko" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>진주퀸공인중개사 (진주퀸부동산) 모바일 | 충무공동 혁신도시 매물 전문</title>
-  <meta name="description" content="진주시 충무공동 혁신도시 전문 진주퀸공인중개사사무소 모바일 간편화면. 황선숙 대표 100% 확인 실매물, 아파트, 오피스텔, 상가, 토지 원클릭 전화 및 문자 상담.">
-  <meta name="keywords" content="진주퀸부동산, 진주퀸, 진주 혁신도시 부동산, 충무공동 아파트, 라온프라이빗시티, 황선숙 공인중개사">
-  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="진주시 충무공동 혁신도시 전문 진주퀸부동산(진주퀸공인중개사사무소 대표 황선숙). 대방노블랜드, 중흥S클래스, 한림풀에버 아파트 및 탑마트·LH 본사 앞 중심상가 100% 확인 실매물.">
+  <meta name="keywords" content="진주퀸부동산, 진주퀸공인중개사사무소, 진주퀸, 진주 혁신도시 부동산, 충무공동 부동산, 진주 아파트 매매, 충무공동 아파트, 라온프라이빗시티 부동산, 황선숙 공인중개사">
+  <meta name="author" content="진주퀸공인중개사사무소 황선숙">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="yeti" content="noindex, nofollow">
+  <link rel="canonical" href="https://jinjuqueen.vercel.app/">
   <link rel="icon" type="image/png" href="images/logo.png">
 
-  <!-- Open Graph -->
-  <meta property="og:site_name" content="진주퀸부동산 모바일">
-  <meta property="og:title" content="진주퀸공인중개사사무소 - 충무공동 혁신도시 실매물 모바일">
-  <meta property="og:description" content="진주시 충무공동 대표 황선숙 공인중개사. 원터치 전화·문자 상담 및 실매물 간편 보기.">
+  <!-- Open Graph / Naver / Kakao Preview -->
+  <meta property="og:site_name" content="진주퀸부동산">
+  <meta property="og:title" content="진주퀸공인중개사사무소 (진주퀸부동산) - 충무공동 혁신도시 매물 전문">
+  <meta property="og:description" content="진주시 충무공동 대표 공인중개사 황선숙. 아파트, 오피스텔, 상가, 택지 100% 확인 실매물 및 실거래가 정밀 분석">
   <meta property="og:image" content="images/logo.png">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jinjuqueen.vercel.app/">
+
+  <!-- Naver Search Advisor / Google Structured Data (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "진주퀸공인중개사사무소",
+    "alternateName": ["진주퀸부동산", "진주퀸", "진주퀸 공인중개사"],
+    "description": "진주시 충무공동 혁신도시 전문 진주퀸부동산. 아파트, 오피스텔, 상가, 택지 실매물 전문 중개.",
+    "url": "https://jinjuqueen.vercel.app/",
+    "telephone": "055-761-7248",
+    "image": "https://jinjuqueen.vercel.app/images/ceo-square.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "에나로 146, 105호 라온프라이빗시티",
+      "addressLocality": "진주시",
+      "addressRegion": "경상남도",
+      "addressCountry": "KR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 35.176734,
+      "longitude": 128.144606
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:30",
+        "closes": "19:00"
+      }
+    ],
+    "priceRange": "$$"
+  }
+  </script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -38,509 +78,882 @@
     }
   </script>
 
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <style>
-    /* Mobile-optimized smooth touch styling */
-    body {
-      -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    }
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .touch-press:active {
-      transform: scale(0.97);
-    }
-    .glass-header {
-      background: rgba(11, 19, 43, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-  </style>
-
+  <!-- Mobile View Preference & PC Switch Helper -->
   <script>
-    // Set view preference to mobile when opening this page
     (function() {
-      var params = new URLSearchParams(window.location.search);
-      if (params.get('mode') === 'mobile') {
-        sessionStorage.setItem('preferredView', 'mobile');
-      }
+      sessionStorage.setItem('preferredView', 'mobile');
     })();
 
-    // Switch to PC version explicitly
     function switchToPcMode() {
       sessionStorage.setItem('preferredView', 'pc');
       window.location.href = 'index.html?mode=pc';
     }
   </script>
-</head>
-<body class="bg-slate-100 text-slate-800 antialiased pb-24 select-none">
 
-  <!-- 1. Top Minimal Header -->
-  <header class="sticky top-0 z-40 glass-header text-white px-3 sm:px-3.5 py-2.5 shadow-md border-b border-slate-800 flex items-center justify-between gap-2">
-    <a href="mobile.html" class="flex items-center gap-2 min-w-0 flex-1">
-      <div class="w-8 h-8 min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px] rounded-xl bg-slate-900 border border-amber-500/40 flex items-center justify-center p-1 shadow shrink-0" style="width: 32px; height: 32px; min-width: 32px; min-height: 32px;">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased pb-20 md:pb-0">
+
+  
+
+  <!-- Mobile Navigation Header -->
+  <header class="sticky top-0 z-40 glass-header text-slate-900 px-3 sm:px-4 py-2.5 shadow-sm border-b border-slate-200 flex items-center justify-between gap-2 bg-white/95 backdrop-blur-md">
+    <a href="mobile.html" class="flex items-center gap-2.5 min-w-0 flex-1">
+      <div class="w-8 h-8 min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px] rounded-xl bg-brand-navy flex items-center justify-center p-1 shadow-sm shrink-0 border border-brand-gold/30" style="width: 32px; height: 32px; min-width: 32px; min-height: 32px;">
         <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain block" style="width: 24px; height: 24px; object-fit: contain;">
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-1.5 flex-nowrap">
-          <span class="text-sm sm:text-base font-black tracking-tight text-white truncate">진주퀸공인중개사</span>
+          <span class="text-sm sm:text-base font-black tracking-tight text-slate-900 truncate">진주퀸공인중개사</span>
           <span class="text-[9px] font-bold bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded font-mono shrink-0">모바일</span>
         </div>
-        <p class="text-[10px] text-amber-300 font-medium leading-none mt-0.5 truncate">황선숙 대표 · 충무공동 한 자리</p>
+        <p class="text-[10px] text-amber-700 font-bold leading-none mt-0.5 truncate">황선숙 대표 · 충무공동 한 자리</p>
       </div>
     </a>
 
     <!-- Header Action Buttons -->
     <div class="flex items-center gap-1.5 shrink-0">
-      <!-- Quick Listing Request Button in Header -->
-      <button onclick="openMobileListingModal('sell')" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 text-slate-950 font-black text-xs flex items-center gap-1 transition touch-press shadow-sm cursor-pointer shrink-0" title="매물 내놓기/구하기">
+      <!-- Quick Listing Request Button -->
+      <button onclick="openListingModal('sell')" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 text-slate-950 font-black text-xs flex items-center gap-1 transition shadow-sm cursor-pointer shrink-0" title="매물 내놓기/구하기">
         <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-950 shrink-0"></i>
         <span>매물의뢰</span>
       </button>
       <!-- Direct Call Button -->
-      <a href="tel:010-4670-7248" class="p-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm transition touch-press shrink-0" title="황선숙 대표 직통전화">
+      <a href="tel:010-4670-7248" class="p-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm transition shrink-0" title="황선숙 대표 직통전화">
         <i data-lucide="phone-call" class="w-4 h-4 shrink-0"></i>
       </a>
-      <!-- PC Mode Switch Button in Header -->
-      <button onclick="switchToPcMode()" class="px-2 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-bold transition touch-press cursor-pointer shrink-0" title="PC 전체 화면으로 보기">
+      <!-- PC Mode Switch Button -->
+      <button onclick="switchToPcMode()" class="px-2 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-bold transition cursor-pointer shrink-0" title="PC 전체 화면으로 보기">
         <span>PC</span>
       </button>
     </div>
   </header>
 
-  <!-- 2. Simple & Luxury Hero Section (군더더기 없는 심플 모바일 히어로) -->
-  <section class="bg-gradient-to-b from-[#0B132B] via-slate-900 to-slate-800 text-white px-4 pt-4 pb-4.5 rounded-b-3xl shadow-lg border-b border-slate-700/80">
-    <!-- Clean Representative Header -->
-    <div class="flex items-center gap-3 mb-3">
-      <div class="relative w-14 h-14 min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] rounded-2xl overflow-hidden border-2 border-amber-400 shrink-0 shadow-md bg-slate-950" style="width: 56px; height: 56px; min-width: 56px; min-height: 56px; max-width: 56px; max-height: 56px;">
-        <img src="images/ceo-square.jpg" alt="황선숙 대표" class="w-full h-full object-cover block" style="width: 56px; height: 56px; object-fit: cover;">
-      </div>
-      <div class="min-w-0 flex-1">
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-xs font-bold text-amber-300">대표 공인중개사</span>
-          <span class="text-base font-black text-white">황선숙</span>
-          <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-full">통계학 석사</span>
-        </div>
-        <p class="text-[11px] text-slate-300 mt-0.5 truncate">진주시 충무공동 라온프라이빗시티 105호</p>
-        <p class="text-[10px] text-amber-400/90 font-medium">2017년 2월 개업 이래 충무공동 한 자리</p>
-      </div>
-    </div>
+  <!-- Editorial Hero Section -->
+  <section id="hero" class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-12 sm:pt-16 sm:pb-24 md:pt-20 md:pb-28">
+    <!-- Background Architectural Texture -->
+    <div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#C29B38_1px,transparent_1px)] [background-size:24px_24px]"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- 본문 내용과 100% 일치하는 와이드 12열 에디토리얼 타이틀 섹션 (시작과 끝 전체 높이 칼정렬) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-10">
+        <!-- 좌측: 와이드 메인 타이틀 및 소개 (8열, 공간을 고르게 분배하여 빈 공간 없이 안정적 배치) -->
+        <div class="lg:col-span-8 flex flex-col justify-between">
+          <div class="flex flex-col">
+            <!-- 상단 뱃지 (H1과의 간격을 여유 있게 띄워 시선 집중) -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-5 sm:mb-7">
+              <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-950/80 border border-emerald-500/60 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-300 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>통계학 석사의 정밀 데이터 분석 · 2017년부터 충무공동 한 자리</span>
+              </div>
+              <div class="inline-flex items-center gap-1.5 bg-amber-950/80 border border-amber-400/60 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-amber-300 shadow-sm">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>등록 48170-2017-00038</span>
+              </div>
+            </div>
 
-    <!-- Core Headline (Clean & High Contrast) -->
-    <div class="mb-3">
-      <h1 class="text-base sm:text-lg font-black text-white leading-snug">
-        <span class="text-amber-400">통계학 석사의 정밀 데이터 분석,</span><br>
-        2017년부터 충무공동 한 자리를 지켜온 진주퀸입니다.
-      </h1>
-      <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
-        국토부 실거래가 빅데이터와 정밀 권리분석으로 안전하게 중개합니다.
-      </p>
-    </div>
+            <!-- 메인 큰 제목 (상단 여백 확보 및 안정적인 행간 적용) -->
+            <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight leading-snug sm:leading-[1.34] lg:leading-[1.38] text-white mb-4 sm:mb-5 lg:mb-6">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 font-black">통계학 석사의 정밀 데이터 분석,</span><br class="hidden sm:inline">
+              <span class="inline-block mt-1 sm:mt-2 text-white">2017년부터 충무공동 한 자리를 지켜온 <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 font-black underline decoration-amber-400/50 decoration-2 underline-offset-4 sm:underline-offset-8">진주퀸공인중개사</span>입니다.</span>
+            </h1>
 
-    <!-- 3 Core Highlight Tags (Compact & Clean) -->
-    <div class="grid grid-cols-3 gap-1.5 mb-3 text-center text-[11px]">
-      <div class="bg-slate-950/60 border border-slate-700/70 rounded-xl py-1.5 px-1">
-        <div class="font-bold text-amber-400 text-xs">통계학 석사</div>
-        <div class="text-[9.5px] text-slate-400">정밀 데이터 분석</div>
-      </div>
-      <div class="bg-slate-950/60 border border-slate-700/70 rounded-xl py-1.5 px-1">
-        <div class="font-bold text-amber-400 text-xs">충무공동 한 자리</div>
-        <div class="text-[9.5px] text-slate-400">2017년부터 신뢰</div>
-      </div>
-      <div class="bg-slate-950/60 border border-slate-700/70 rounded-xl py-1.5 px-1">
-        <div class="font-bold text-amber-400 text-xs">100% 실매물</div>
-        <div class="text-[9.5px] text-slate-400">현장 검증 책임중개</div>
-      </div>
-    </div>
+            <!-- 2줄 요약 설명글 (행간을 편안하게 넓히고 아래 카드와의 빈 공간을 자연스럽게 해소) -->
+            <p class="text-sm sm:text-base lg:text-[17px] text-slate-300 font-normal leading-relaxed sm:leading-[1.8] text-left break-keep mb-6 sm:mb-8">
+              실거래가 빅데이터와 정밀 권리분석을 바탕으로,<br class="hidden sm:inline">
+              100% 현장 검증 실매물로 고객님의 소중한 자산을 안전하게 중개합니다.
+            </p>
+          </div>
 
-    <!-- 2 Direct One-Touch Buttons (전화 & 문자) -->
-    <div class="grid grid-cols-2 gap-2">
-      <a href="tel:010-4670-7248" onclick="handleMobileCall(event, '010-4670-7248')" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 active:from-blue-700 text-white font-black py-2.5 px-3 rounded-xl shadow-md flex items-center justify-center gap-1.5 text-xs touch-press border border-blue-400/30">
-        <i data-lucide="phone-call" class="w-3.5 h-3.5 text-amber-300"></i>
-        <span>010-4670-7248 전화</span>
-      </a>
-      <a href="sms:010-4670-7248?body=%5B%EC%A7%84%EC%A3%BC%ED%80%B8%20%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%83%81%EB%8B%B4%5D%20%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%ED%99%A9%EC%84%A0%EC%88%99%20%EB%8C%80%ED%91%9C%EB%8B%98%2C%20%EB%B6%80%EB%8F%99%EC%82%B0%20%EC%83%81%EB%8B%B4%20%EB%AC%B8%EC%9D%98%EB%93%9C%EB%A6%BD%EB%8B%88%EB%8B%A4." onclick="handleMobileSms(event, '010-4670-7248')" class="bg-emerald-600 active:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl shadow-md flex items-center justify-center gap-1.5 text-xs touch-press border border-emerald-400/30">
-        <i data-lucide="message-square" class="w-3.5 h-3.5 text-white"></i>
-        <span>문자 상담 문의</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- 3. Client Property Inquiry Section (신규: 모바일 맞춤 매물 접수 배너) -->
-  <section class="px-3.5 pt-4 pb-1">
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-      <div class="flex items-center justify-between mb-1.5">
-        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-          <i data-lucide="sparkles" class="w-3 h-3 text-amber-500"></i>
-          진주혁신도시 1:1 맞춤 부동산 의뢰
-        </span>
-        <span class="text-[10px] text-emerald-600 font-bold">100% 비밀보장</span>
-      </div>
-      <h3 class="text-sm font-black text-slate-900 leading-snug mb-1">
-        매물을 내놓으시거나, 찾으시는 매물이 있으신가요?
-      </h3>
-      <p class="text-[11px] text-slate-500 leading-relaxed mb-3">
-        진주퀸에 의뢰해 주세요. 최적의 가격 매칭과 신속하고 안전한 거래를 약속드립니다.
-      </p>
-
-      <!-- 2 Major Action Buttons for Listing Request -->
-      <div class="grid grid-cols-2 gap-2">
-        <button onclick="openMobileListingModal('sell')" class="bg-gradient-to-r from-amber-500 to-amber-600 active:from-amber-600 active:to-amber-700 text-slate-950 font-black py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm touch-press cursor-pointer">
-          <i data-lucide="home" class="w-3.5 h-3.5"></i>
-          <span>집주인 매물 내놓기</span>
-        </button>
-        <button onclick="openMobileListingModal('buy')" class="bg-emerald-600 active:bg-emerald-700 text-white font-black py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm touch-press cursor-pointer border border-emerald-500">
-          <i data-lucide="search" class="w-3.5 h-3.5"></i>
-          <span>매물 찾아주세요</span>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Quick Category Filter Tabs (Horizontal Scroll) -->
-  <section id="properties-section" class="px-3.5 pt-5 pb-2">
-    <div class="flex items-center justify-between mb-2.5">
-      <div class="flex items-center gap-1.5">
-        <span class="w-2 h-4 bg-amber-500 rounded-full"></span>
-        <h2 class="text-base font-black text-slate-900">추천 실매물</h2>
-        <span id="propCountBadge" class="text-xs font-bold text-slate-500 bg-slate-200 px-2 py-0.5 rounded-full">0건</span>
-      </div>
-      <span class="text-[11px] text-slate-400 flex items-center gap-0.5">
-        <i data-lucide="sparkles" class="w-3 h-3 text-amber-500"></i> 실시간 반영
-      </span>
-    </div>
-
-    <!-- Category Chips (Horizontal Scrollable) -->
-    <div class="flex gap-1.5 overflow-x-auto pb-2 hide-scrollbar -mx-3.5 px-3.5 text-xs font-bold">
-      <button onclick="setCategoryFilter('ALL', this)" class="category-chip px-3 py-2 rounded-xl shrink-0 transition bg-brand-navy text-white shadow-xs border border-brand-navy">
-        전체 보기
-      </button>
-      <button onclick="setCategoryFilter('아파트', this)" class="category-chip px-3 py-2 rounded-xl shrink-0 transition bg-white text-slate-700 border border-slate-300 hover:border-slate-400">
-        🏢 아파트
-      </button>
-      <button onclick="setCategoryFilter('오피스텔', this)" class="category-chip px-3 py-2 rounded-xl shrink-0 transition bg-white text-slate-700 border border-slate-300 hover:border-slate-400">
-        🏬 오피스텔
-      </button>
-      <button onclick="setCategoryFilter('택지', this)" class="category-chip px-3 py-2 rounded-xl shrink-0 transition bg-white text-slate-700 border border-slate-300 hover:border-slate-400">
-        🌱 토지·택지
-      </button>
-      <button onclick="setCategoryFilter('상가', this)" class="category-chip px-3 py-2 rounded-xl shrink-0 transition bg-white text-slate-700 border border-slate-300 hover:border-slate-400">
-        🏪 상가·점포
-      </button>
-      <button onclick="setCategoryFilter('원룸/투룸', this)" class="category-chip px-3 py-2 rounded-xl shrink-0 transition bg-white text-slate-700 border border-slate-300 hover:border-slate-400">
-        🏠 원룸·투룸
-      </button>
-    </div>
-
-    <!-- Transaction Type Pills -->
-    <div class="flex gap-1.5 mt-1.5 text-[11px] font-semibold">
-      <button onclick="setTransFilter('ALL', this)" class="trans-chip flex-1 py-1 rounded-lg transition bg-slate-900 text-white text-center">
-        전체
-      </button>
-      <button onclick="setTransFilter('매매', this)" class="trans-chip flex-1 py-1 rounded-lg transition bg-white text-slate-600 border border-slate-200 text-center">
-        매매
-      </button>
-      <button onclick="setTransFilter('전세', this)" class="trans-chip flex-1 py-1 rounded-lg transition bg-white text-slate-600 border border-slate-200 text-center">
-        전세
-      </button>
-      <button onclick="setTransFilter('월세', this)" class="trans-chip flex-1 py-1 rounded-lg transition bg-white text-slate-600 border border-slate-200 text-center">
-        월세
-      </button>
-    </div>
-  </section>
-
-  <!-- 5. Property Cards List (Mobile Optimized) -->
-  <main class="px-3.5 space-y-3.5">
-    <div id="propertyCardList" class="space-y-3">
-      <!-- Loading skeleton -->
-      <div class="p-6 bg-white rounded-2xl shadow-sm text-center text-slate-400 text-xs">
-        <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto text-amber-500 mb-2"></i>
-        <span>실시간 매물 목록을 불러오고 있습니다...</span>
-      </div>
-    </div>
-  </main>
-
-  <!-- 6. Real Estate News & Announcements Section (4대 카테고리 지원) -->
-  <section id="news-section" class="px-3.5 pt-6 pb-2">
-    <div class="flex items-center justify-between mb-1.5">
-      <div class="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>Official Research & Market Insights</span>
-      </div>
-      <div class="flex items-center gap-1.5">
-        <a href="https://blog.naver.com/property70" target="_blank" rel="noopener noreferrer" class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 블로그
-        </a>
-        <a href="https://www.youtube.com/@jinju_queen" target="_blank" rel="noopener noreferrer" class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> 유튜브
-        </a>
-      </div>
-    </div>
-    <h2 class="text-base font-black text-slate-900 leading-snug">
-      진주 혁신도시 부동산 칼럼 & 실거래가 분석 리포트
-    </h2>
-    <p class="text-[11px] text-slate-500 mt-0.5 mb-2.5">
-      황선숙 대표가 직접 작성하는 실거래가 빅데이터 분석, 진주시 개발 정책 및 부동산 상식 가이드
-    </p>
-
-    <!-- Mobile Category Filter Chips (4대 카테고리) -->
-    <div class="flex gap-1.5 overflow-x-auto pb-2 mb-2 hide-scrollbar -mx-3.5 px-3.5 text-xs font-bold" id="mobileBoardCategoryFilter">
-      <button onclick="filterMobileBoard('ALL', this)" class="mobile-board-cat active px-2.5 py-1.5 rounded-xl transition bg-slate-900 text-white shadow-xs shrink-0 whitespace-nowrap">전체</button>
-      <button onclick="filterMobileBoard('실거래가 & 시세 분석', this)" class="mobile-board-cat px-2.5 py-1.5 rounded-xl transition bg-white text-slate-600 border border-slate-300 hover:border-slate-400 shrink-0 whitespace-nowrap">실거래가 & 시세 분석</button>
-      <button onclick="filterMobileBoard('진주시 개발 & 정책', this)" class="mobile-board-cat px-2.5 py-1.5 rounded-xl transition bg-white text-slate-600 border border-slate-300 hover:border-slate-400 shrink-0 whitespace-nowrap">진주시 개발 & 정책</button>
-      <button onclick="filterMobileBoard('부동산 상식 & 세무', this)" class="mobile-board-cat px-2.5 py-1.5 rounded-xl transition bg-white text-slate-600 border border-slate-300 hover:border-slate-400 shrink-0 whitespace-nowrap">부동산 상식 & 세무</button>
-      <button onclick="filterMobileBoard('공지사항', this)" class="mobile-board-cat px-2.5 py-1.5 rounded-xl transition bg-white text-slate-600 border border-slate-300 hover:border-slate-400 shrink-0 whitespace-nowrap">공지사항</button>
-    </div>
-
-    <div id="mobileBoardList" class="space-y-2">
-      <!-- Loaded dynamically from board.json -->
-    </div>
-  </section>
-
-  <!-- 7. Office Location & Directions -->
-  <section id="office-section" class="px-3.5 pt-6 pb-4">
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-      <div class="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
-        <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
-          <i data-lucide="map-pin" class="w-4 h-4"></i>
-        </div>
-        <div>
-          <h3 class="font-black text-slate-900 text-sm">진주퀸공인중개사사무소</h3>
-          <p class="text-[11px] text-slate-500">충무공동 라온프라이빗시티 105호</p>
-        </div>
-      </div>
-
-      <div class="text-xs text-slate-600 space-y-1 mb-3">
-        <p><strong>위치 :</strong> 경남 진주시 에나로 146, 105호 (라온프라이빗시티)</p>
-        <p class="text-[11px] text-slate-500">LH 토지주택공사 본사 맞은편 · 탑마트 도보 1분</p>
-        <p class="text-[11px] text-emerald-700 font-semibold">🅿️ 지하 주차장 2시간 무료 지원</p>
-      </div>
-
-      <!-- Embedded Google Satellite Hybrid Map for Mobile -->
-      <div class="rounded-xl overflow-hidden border border-slate-200 mb-3 shadow-xs h-44 relative bg-slate-100">
-        <iframe 
-          title="진주퀸공인중개사사무소 구글 위성지도" 
-          src="https://maps.google.com/maps?q=35.176734,128.144606&hl=ko&z=17&t=k&output=embed" 
-          class="w-full h-full border-0" 
-          loading="lazy">
-        </iframe>
-        <div class="absolute bottom-1.5 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[9px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-          <span>Google 고화질 위성지도</span>
-        </div>
-      </div>
-
-      <!-- Map App Direction Links (Google + Naver + Kakao) -->
-      <div class="grid grid-cols-3 gap-1.5 text-xs font-bold">
-        <a href="https://maps.google.com/?q=35.176734,128.144606&t=k" target="_blank" class="py-2.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-xl border border-blue-200 text-center flex items-center justify-center gap-1 transition touch-press">
-          <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-          <span>구글 위성</span>
-        </a>
-        <a href="https://map.naver.com/p/search/%EC%A7%84%EC%A3%BC%ED%80%B8%EA%B3%B5%EC%9D%B8%EC%44%91%EA%B0%9C%EC%82%AC" target="_blank" class="py-2.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl border border-emerald-300 text-center flex items-center justify-center gap-1 transition touch-press">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>네이버 지도</span>
-        </a>
-        <a href="https://map.kakao.com/link/to/%EC%A7%84%EC%A3%BC%ED%80%B8%EA%B3%B5%EC%9D%B8%EC%44%91%EA%B0%9C%EC%82%AC,35.176734,128.144606" target="_blank" class="py-2.5 px-2 bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-xl border border-amber-300 text-center flex items-center justify-center gap-1 transition touch-press">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-          <span>카카오맵</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. Legal Footer (공인중개사법 법정 5대 필수 항목) -->
-  <footer class="bg-slate-900 text-slate-400 text-[11px] px-4 pt-6 pb-20 border-t border-slate-800 space-y-3">
-    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 min-w-[24px] min-h-[24px] rounded-md bg-slate-800 border border-amber-400/30 flex items-center justify-center p-0.5 shrink-0" style="width: 24px; height: 24px;">
-          <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain block" style="width: 20px; height: 20px;">
-        </div>
-        <span class="font-bold text-white text-xs">진주퀸공인중개사사무소</span>
-      </div>
-      <button onclick="switchToPcMode()" class="text-amber-400 font-bold underline flex items-center gap-1 text-[11px] cursor-pointer">
-        <i data-lucide="monitor" class="w-3 h-3"></i> PC화면모드
-      </button>
-    </div>
-
-    <div class="space-y-1 leading-relaxed text-slate-300">
-      <p><strong>상호 :</strong> 진주퀸공인중개사사무소 | <strong>대표 :</strong> 황선숙</p>
-      <p><strong>등록번호 :</strong> 48170-2017-00038 | <strong>사업자등록 :</strong> 630-14-00632</p>
-      <p><strong>소재지 :</strong> 경상남도 진주시 에나로 146, 105호 (라온프라이빗시티)</p>
-      <p><strong>대표전화 :</strong> 055-761-7248 | <strong>직통 :</strong> 010-4670-7248</p>
-    </div>
-
-    <div class="pt-2 flex items-center gap-2">
-      <a href="https://blog.naver.com/property70" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 px-2 bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 rounded-lg text-center font-bold text-[10px] flex items-center justify-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> N 네이버 블로그
-      </a>
-      <a href="https://www.youtube.com/@jinju_queen" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 px-2 bg-rose-950/80 text-rose-300 border border-rose-800/80 rounded-lg text-center font-bold text-[10px] flex items-center justify-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> ▶ 유튜브 채널
-      </a>
-    </div>
-
-    <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-500">
-      <span>&copy; 2026 진주퀸공인중개사사무소. All rights reserved.</span>
-      <a href="admin.html" target="_blank" class="text-amber-400/80 hover:text-amber-300 font-bold flex items-center gap-0.5">
-        <i data-lucide="lock" class="w-2.5 h-2.5"></i> 관리자
-      </a>
-    </div>
-  </footer>
-
-  <!-- 9. Sticky Bottom Navigation Bar (Thumb Friendly with Direct Listing CTA) -->
-  <nav class="fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 py-1.5 px-2 flex justify-around items-center text-[10px] text-slate-300 shadow-2xl">
-    <a href="#" class="flex flex-col items-center gap-0.5 py-1 px-2 text-amber-400 font-bold touch-press">
-      <i data-lucide="home" class="w-4 h-4"></i>
-      <span>홈</span>
-    </a>
-    <a href="#properties-section" class="flex flex-col items-center gap-0.5 py-1 px-2 hover:text-white transition touch-press">
-      <i data-lucide="list" class="w-4 h-4"></i>
-      <span>매물보기</span>
-    </a>
-    <button onclick="openMobileListingModal('sell')" class="flex flex-col items-center gap-0.5 py-1 px-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black rounded-xl shadow-md touch-press scale-105 cursor-pointer">
-      <i data-lucide="edit-3" class="w-4 h-4 text-slate-950"></i>
-      <span>매물의뢰</span>
-    </button>
-    <a href="tel:010-4670-7248" class="flex flex-col items-center gap-0.5 py-1 px-2 hover:text-white transition touch-press">
-      <i data-lucide="phone-call" class="w-4 h-4 text-blue-400"></i>
-      <span>전화상담</span>
-    </a>
-    <a href="sms:010-4670-7248?body=[진주퀸 모바일 문의]%0A안녕하세요 황선숙 대표님, 부동산 상담 문의드립니다." class="flex flex-col items-center gap-0.5 py-1 px-2 hover:text-white transition touch-press">
-      <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
-      <span>문자상담</span>
-    </a>
-  </nav>
-
-  <!-- 11. Property Detail Bottom Sheet Modal -->
-  <div id="propDetailModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-end sm:items-center justify-center hidden">
-    <div class="bg-white w-full sm:max-w-md max-h-[85vh] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-slide-up">
-      <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 shrink-0">
-        <div class="flex items-center gap-2">
-          <span id="modalCategoryBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-brand-navy text-white"></span>
-          <span id="modalTransBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-200"></span>
-        </div>
-        <button onclick="closePropDetailModal()" class="p-1 rounded-full text-slate-400 hover:text-slate-700 cursor-pointer">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="p-4 overflow-y-auto space-y-4 text-xs">
-        <div id="modalImageWrap" class="rounded-xl overflow-hidden bg-slate-100 max-h-52 flex items-center justify-center">
-          <img id="modalImage" src="" alt="매물 이미지" class="w-full h-full object-cover">
+          <!-- 3대 신뢰 지표 카드 (위 설명글과의 간격을 이상적으로 좁히고 카드 패딩을 도톰하게 채움) -->
+          <div class="grid grid-cols-3 gap-2 sm:gap-4 text-xs pt-2">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 backdrop-blur-sm text-center transition hover:border-white/20">
+              <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">통계학 석사</div>
+              <div class="text-slate-300 text-[10px] sm:text-xs mt-1 sm:mt-1.5 whitespace-nowrap">정밀 데이터 분석</div>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 backdrop-blur-sm text-center transition hover:border-white/20">
+              <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">충무공동 한 자리</div>
+              <div class="text-slate-300 text-[10px] sm:text-xs mt-1 sm:mt-1.5 whitespace-nowrap">2017년부터 우직한 신뢰</div>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 backdrop-blur-sm text-center transition hover:border-white/20">
+              <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">100% 실매물</div>
+              <div class="text-slate-300 text-[10px] sm:text-xs mt-1 sm:mt-1.5 whitespace-nowrap">현장 검증 책임 중개</div>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <h3 id="modalTitle" class="text-base font-black text-slate-900 leading-snug"></h3>
-          <div id="modalPrice" class="text-xl font-black text-amber-900 mt-1"></div>
-        </div>
-
-        <div id="modalSpecsGrid" class="grid grid-cols-2 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-700">
-          <!-- Filled by JS -->
-        </div>
-
-        <div id="modalDescWrap" class="p-3 bg-amber-50/50 rounded-xl border border-amber-200/60 text-slate-800 leading-relaxed whitespace-pre-line">
-        </div>
-
-        <!-- Agent Information Box -->
-        <div class="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <img src="images/ceo-square.jpg" alt="황선숙 대표" class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border border-amber-400 object-cover shrink-0" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; object-fit: cover;">
+        <!-- 우측: 황선숙 대표 프로필 쇼케이스 카드 (좌측과 시작/끝 높이 100% 일치) -->
+        <div class="lg:col-span-4 flex flex-col mt-6 lg:mt-0 max-w-sm mx-auto w-full">
+          <div class="relative bg-gradient-to-b from-slate-800/90 to-slate-950/95 rounded-3xl p-5 sm:p-6 border border-brand-gold/30 shadow-2xl backdrop-blur-md h-full flex flex-col justify-between">
             <div>
-              <div class="font-bold text-xs text-white">진주퀸공인중개사 황선숙 대표</div>
-              <div class="text-[10px] text-amber-400 font-medium">010-4670-7248 · 055-761-7248</div>
+              <div class="relative w-full aspect-[4/3.8] rounded-2xl overflow-hidden border-2 border-brand-gold/50 shadow-lg mb-3">
+                <img src="images/ceo-square.jpg?v=15" alt="황선숙 대표공인중개사" class="w-full h-full object-cover">
+                <div class="absolute bottom-2 left-2 right-2 bg-slate-950/85 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-white/10 text-center">
+                  <span class="text-xs font-bold text-amber-300">대표 공인중개사 황선숙</span>
+                </div>
+              </div>
+              <div class="space-y-1 text-center text-xs">
+                <p class="text-slate-200 font-medium">진주시 에나로 146, 105호 (라온프라이빗시티)</p>
+                <p class="text-[11px] text-amber-400 font-semibold">2017년 2월 개업 이래 충무공동 한 자리 (통계학 석사)</p>
+              </div>
+            </div>
+            <!-- 사진 밑 푸른색 계열 전화번호 배너 버튼 (좌측 3대 지표 카드 바닥과 정확히 일치) -->
+            <div class="pt-3">
+              <a href="tel:010-4670-7248" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-950/50 hover:shadow-blue-600/40 transform hover:-translate-y-0.5 cursor-pointer">
+                <i data-lucide="phone-call" class="w-4 h-4 text-cyan-200"></i>
+                <span>010-4670-7248 직접 상담</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Action Buttons in Modal Bottom -->
-      <div class="p-3 bg-slate-50 border-t border-slate-200 grid grid-cols-2 gap-2 shrink-0">
-        <a id="modalCallBtn" href="tel:010-4670-7248" class="py-2.5 bg-gradient-to-r from-[#C29B38] to-[#997622] text-white font-black text-center rounded-xl flex items-center justify-center gap-1.5 shadow touch-press">
-          <i data-lucide="phone-call" class="w-4 h-4"></i>
-          <span>전화 상담</span>
-        </a>
-        <a id="modalSmsBtn" href="sms:010-4670-7248" class="py-2.5 bg-emerald-600 text-white font-black text-center rounded-xl flex items-center justify-center gap-1.5 shadow touch-press">
-          <i data-lucide="message-square" class="w-4 h-4"></i>
-          <span>문자 문의</span>
-        </a>
+      <!-- 본문과 동일한 와이드 전체 너비 (w-full max-w-7xl) 매물 검색 및 필터 박스 (모바일 화면 최적화) -->
+      <div class="w-full bg-white text-slate-900 rounded-2xl shadow-2xl p-3 sm:p-5 md:p-6 border border-slate-100">
+        <!-- Filter Rows Wrapper -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 md:gap-4 pb-3 md:pb-4 border-b border-slate-200 mb-3 md:mb-4">
+          <!-- Category Tabs: Mobile 5-Column Grid, Desktop Inline Flex -->
+          <div class="grid grid-cols-5 md:flex items-center gap-1 sm:gap-1.5 p-1 bg-slate-100/90 rounded-xl border border-slate-200/70 w-full md:w-auto" id="categoryTabGroup">
+            <button onclick="setCategoryFilter('ALL')" data-category="ALL" class="category-btn active px-1 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-bold transition text-center whitespace-nowrap">전체</button>
+            <button onclick="setCategoryFilter('아파트')" data-category="아파트" class="category-btn px-1 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-center whitespace-nowrap">아파트</button>
+            <button onclick="setCategoryFilter('오피스텔')" data-category="오피스텔" class="category-btn px-1 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-center whitespace-nowrap">오피스텔</button>
+            <button onclick="setCategoryFilter('상가')" data-category="상가" class="category-btn px-1 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-center whitespace-nowrap">상가</button>
+            <button onclick="setCategoryFilter('택지')" data-category="택지" class="category-btn px-1 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-center whitespace-nowrap">택지</button>
+          </div>
+
+          <!-- Transaction Type Pills (Left) + Status Filter Toggle (Right) -->
+          <div class="flex items-center justify-between md:justify-end gap-1.5 sm:gap-2 text-xs font-semibold w-full md:w-auto" id="transTypeGroup">
+            <!-- 4 Transaction Pills -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
+              <button onclick="setTransFilter('ALL')" data-trans="ALL" class="trans-btn active px-2.5 sm:px-3 py-1.5 rounded-lg transition font-bold text-center text-xs whitespace-nowrap">전체</button>
+              <button onclick="setTransFilter('매매')" data-trans="매매" class="trans-btn px-2.5 sm:px-3 py-1.5 rounded-lg transition font-semibold text-center text-xs whitespace-nowrap">매매</button>
+              <button onclick="setTransFilter('전세')" data-trans="전세" class="trans-btn px-2.5 sm:px-3 py-1.5 rounded-lg transition font-semibold text-center text-xs whitespace-nowrap">전세</button>
+              <button onclick="setTransFilter('월세')" data-trans="월세" class="trans-btn px-2.5 sm:px-3 py-1.5 rounded-lg transition font-semibold text-center text-xs whitespace-nowrap">월세</button>
+            </div>
+            
+            <span class="hidden md:inline text-slate-300 mx-1">|</span>
+            
+            <!-- Status Filter Toggle -->
+            <button id="statusFilterBtn" onclick="toggleStatusFilter()" class="px-2.5 sm:px-3 py-1.5 rounded-lg bg-amber-50/80 hover:bg-amber-100 text-amber-900 border border-amber-300/80 transition flex items-center gap-1.5 font-bold shadow-xs whitespace-nowrap text-[11px] sm:text-xs shrink-0">
+              <span id="statusDot" class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-500"></span>
+              <span id="statusFilterText">전체 매물 보기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Bar Input Row -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="searchInput" placeholder="아파트 단지명(대방, 중흥 등)이나 상가 키워드 검색..." 
+                   class="w-full pl-9 sm:pl-12 pr-4 py-2.5 sm:py-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-xs sm:text-sm bg-slate-50 focus:bg-white transition">
+          </div>
+          <button onclick="executeSearch()" class="bg-brand-navy hover:bg-slate-800 text-white font-bold px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-md shrink-0">
+            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-gold"></i>
+            <span>매물 검색하기</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="split-map-anchor"></div>
+
+  <!-- Editorial Split Screen Section: Properties List & Interactive Map -->
+  <section id="properties-section" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <!-- Section Header Removed on Mobile as requested -->
+
+      <!-- Controls: View toggle & Sort (모바일 화면 폭 맞춤) -->
+      <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full md:w-auto">
+        <!-- Sort Select -->
+        <div class="relative flex-1 sm:flex-initial">
+          <select id="sortSelect" onchange="applySorting(this.value)" class="w-full sm:w-auto text-xs sm:text-sm font-semibold bg-white border border-slate-300 rounded-xl px-2.5 sm:px-3 py-2 sm:py-2.5 pr-7 sm:pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-gold">
+            <option value="recommend">추천순 정렬</option>
+            <option value="priceAsc">가격 낮은순</option>
+            <option value="priceDesc">가격 높은순</option>
+            <option value="areaDesc">면적 넓은순</option>
+          </select>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        </div>
+
+        <!-- Split Map toggle for mobile/tablet -->
+        <div class="inline-flex p-1 bg-slate-200/80 rounded-xl text-xs font-bold shrink-0">
+          <button id="viewBtnSplit" onclick="switchViewMode('split')" class="hidden md:flex px-3 py-2 rounded-lg bg-white text-slate-900 shadow-sm transition items-center gap-1.5">
+            <i data-lucide="columns" class="w-3.5 h-3.5 text-brand-gold"></i>
+            <span>분할화면</span>
+          </button>
+          <button id="viewBtnList" onclick="switchViewMode('list')" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1">
+            <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+            <span>목록만</span>
+          </button>
+          <button id="viewBtnMap" onclick="switchViewMode('map')" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+            <span>지도만</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filter summary chips -->
+    <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+      <div class="flex items-center gap-2 text-xs text-slate-600">
+        <span class="font-bold text-slate-900">검색 결과 <span id="propertyCount" class="text-brand-gold font-extrabold text-sm">5</span>건</span>
+        <span class="text-slate-300">|</span>
+        <span id="activeFilterLabel" class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md font-medium">전체 매물</span>
+      </div>
+      <button onclick="resetAllFilters()" class="text-xs text-slate-500 hover:text-slate-900 font-medium flex items-center gap-1">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 필터 초기화
+      </button>
+    </div>
+
+    <!-- The Modern Split Container: Listings (Left) + Interactive Map (Right) -->
+    <div id="splitContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Column: Property Cards Grid -->
+      <div id="listColumn" class="lg:col-span-7 space-y-4">
+        <div id="propertyCardsContainer" class="space-y-4">
+          <!-- Dynamically populated via js/app.js -->
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Leaflet Map (Sticky on Desktop) -->
+      <div id="mapColumn" class="lg:col-span-5 sticky top-24">
+        <div class="bg-white rounded-2xl p-2 shadow-lg border border-slate-200 overflow-hidden">
+          <div class="flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 border-b border-slate-100 mb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              <span class="font-bold text-slate-900">Google 지도 · 충무공동 매물 위치</span>
+            </div>
+            <!-- Google Maps layer toggle: 일반 / 위성 (구글 위성 기본 활성화) -->
+            <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[10px]">
+              <button onclick="setMapLayer('roadmap')" id="btnLayerRoad" class="px-2 py-1 rounded-md text-slate-500 font-medium hover:text-slate-800 transition">구글 일반</button>
+              <button onclick="setMapLayer('satellite')" id="btnLayerSat" class="px-2 py-1 rounded-md bg-white text-slate-900 font-bold shadow-sm transition">구글 위성</button>
+            </div>
+          </div>
+
+          <!-- Map Element Container -->
+          <div id="propertyMap" class="w-full h-[340px] sm:h-[440px] lg:h-[520px] rounded-xl z-0"></div>
+
+          <!-- Map Footnote / Quick Action -->
+          <div class="pt-3 px-2 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1">
+              <i data-lucide="navigation" class="w-3.5 h-3.5 text-brand-gold"></i>
+              중심지 : 진주 혁신도시 에나로
+            </span>
+            <button onclick="centerMapOnOffice()" class="text-brand-navy hover:underline font-bold text-[11px]">
+              진주퀸 사무소 위치 보기
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Real Estate News & Local Trends Board Section -->
+  <section id="news-section" class="py-16 bg-slate-50/60 border-t border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header Removed on Mobile as requested -->
+
+        <!-- Write button shortcut & Category Filter Pills -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <a href="admin.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center gap-1.5 transition shadow-xs">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-600"></i>
+            <span>새 칼럼 작성</span>
+          </a>
+          <div class="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl overflow-x-auto no-scrollbar shadow-xs" id="newsCategoryFilter">
+            <button onclick="filterNews('ALL')" class="news-cat-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-xs transition whitespace-nowrap">전체</button>
+            <button onclick="filterNews('실거래가 & 시세 분석')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">실거래가 & 시세 분석</button>
+            <button onclick="filterNews('진주시 개발 & 정책')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">진주시 개발 & 정책</button>
+            <button onclick="filterNews('부동산 상식 & 세무')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">부동산 상식 & 세무</button>
+            <button onclick="filterNews('공지사항')" class="news-cat-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition whitespace-nowrap">공지사항</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real Estate Insight Reports List (Card format completely replaced by Editorial Feed List) -->
+      <div id="newsGrid" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm divide-y divide-slate-100 overflow-hidden">
+        <!-- Rendered by js/app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Real Estate Custom Inquiry Banner Section (매물 내놓기 & 매물 찾아주세요) -->
+  <section class="py-12 bg-amber-50/50 border-b border-amber-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-r from-brand-navy via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden border border-slate-800">
+        <div class="relative z-10 max-w-2xl">
+          <span class="inline-block bg-brand-gold text-slate-950 font-extrabold text-xs px-3.5 py-1 rounded-full mb-3 shadow-xs">
+            진주혁신도시 1:1 맞춤 부동산 의뢰
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2.5">
+            충무공동 매물을 내놓으시거나, 찾으시는 매물이 있으신가요?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+            진주퀸공인중개사사무소에 의뢰해 주세요. <strong class="text-amber-300 font-semibold">내놓으시는 소중한 매물</strong>은 최적의 가격 매칭과 신속한 거래를, <strong class="text-emerald-300 font-semibold">찾으시는 분</strong>께는 비공개 알짜 매물까지 안전하게 찾아드립니다.
+          </p>
+        </div>
+        <div class="relative z-10 flex flex-col sm:flex-row flex-wrap gap-3 w-full lg:w-auto shrink-0">
+          <button onclick="openListingModal('sell')" class="bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-extrabold px-5 py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-95">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            <span>매물 내놓기 (매도·임대)</span>
+          </button>
+          <button onclick="openListingModal('buy')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-95 border border-emerald-500">
+            <i data-lucide="search" class="w-4 h-4"></i>
+            <span>매물 찾아주세요 (매수·임차)</span>
+          </button>
+          <a href="tel:010-4670-7248" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-4 py-3.5 rounded-xl text-xs sm:text-sm transition text-center flex items-center justify-center gap-1.5 cursor-pointer">
+            <i data-lucide="phone" class="w-4 h-4 text-amber-300"></i>
+            <span>전화상담</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Office Introduction & CEO Profile Section -->
+  <section id="office-section" class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <!-- Section Header Removed on Mobile as requested -->
+
+      <!-- Main Profile Showcase Card (Editorial Layout) -->
+      <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+          
+          <!-- Column 1: CEO High-End Editorial Portrait -->
+          <div class="w-full relative bg-gradient-to-tr from-slate-950 via-brand-navy to-slate-900 flex flex-col items-center justify-center p-6 sm:p-10 overflow-hidden rounded-3xl">
+            <!-- Background Decorative Halo & Watermark -->
+            <div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#C29B38_1px,transparent_1px)] [background-size:20px_20px]"></div>
+            <div class="absolute -top-16 -left-16 w-52 h-52 rounded-full bg-brand-gold/20 filter blur-3xl"></div>
+            
+            <!-- Portrait Image Frame -->
+            <div class="relative w-full max-w-[280px] aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 group">
+              <img src="images/ceo-profile.jpg?v=12" alt="황선숙 대표공인중개사" 
+                   class="w-full h-full object-cover object-top filter brightness-105 contrast-105 group-hover:scale-102 transition duration-500">
+              
+              <!-- Bottom Name Overlay -->
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent p-4 text-white">
+                <div class="flex items-center gap-1.5 text-brand-gold text-xs font-bold mb-0.5">
+                  <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                  <span>개업공인중개사 · 대표 (통계학 석사)</span>
+                </div>
+                <div class="text-xl font-black tracking-tight text-white">황 선 숙</div>
+                <div class="text-[11px] text-slate-300">진주퀸공인중개사사무소 (2017.02 개업 · 한 자리 중개)</div>
+              </div>
+            </div>
+
+            <!-- Floating Stamp Seal Emblem -->
+            <div class="absolute top-6 right-6 w-14 h-14 rounded-2xl bg-brand-navy/90 border border-brand-gold/50 shadow-xl flex items-center justify-center p-2 backdrop-blur">
+              <img src="images/logo.png" alt="진주퀸 엠블럼" class="w-full h-full object-contain">
+            </div>
+
+            <!-- Direct Quick Call Badge Under Photo -->
+            <div class="mt-4 text-center">
+              <span class="inline-flex items-center gap-1.5 text-xs text-amber-300 font-semibold bg-white/10 px-3 py-1 rounded-full border border-white/15">
+                <i data-lucide="phone-call" class="w-3 h-3 text-amber-400"></i> 직통 : 010-4670-7248
+              </span>
+            </div>
+          </div>
+
+          <!-- Column 2 (인사말 & 중개철학 ~ 간편문자문의) Removed on Mobile as requested -->
+        </div>
+      </div>
+
+      <!-- Office Map & Directions Block -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Map (7 cols) -->
+          <div class="lg:col-span-7">
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 mb-3">
+              <i data-lucide="map-pin" class="w-5 h-5 text-brand-gold"></i>
+              <span>사무소 오시는 길</span>
+            </h3>
+            <div class="w-full h-64 sm:h-72 rounded-2xl bg-slate-100 overflow-hidden relative border border-slate-200">
+              <div id="officeMap" class="w-full h-full min-h-[256px] relative z-0" style="min-height: 256px; height: 100%;"></div>
+            </div>
+          </div>
+
+          <!-- Info & Actions (5 cols) -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="space-y-3 text-xs sm:text-sm text-slate-700">
+              <div class="flex items-start gap-2.5">
+                <i data-lucide="navigation-2" class="w-4 h-4 text-brand-navy mt-1 shrink-0"></i>
+                <div>
+                  <span class="font-bold text-slate-900">도로명 주소 : </span>
+                  <span>경상남도 진주시 에나로 146, 105호 (충무공동, 라온프라이빗시티)</span>
+                  <div class="text-xs text-slate-500 mt-0.5">LH 한국토지주택공사 본사 공원 맞은편 탑마트 주변 중심상가</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="clock" class="w-4 h-4 text-brand-navy shrink-0"></i>
+                <span>영업시간 : 월~토 09:30 ~ 19:30 (일요일 사전 예약 상담)</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="car" class="w-4 h-4 text-brand-navy shrink-0"></i>
+                <span class="text-slate-600">주차 안내 : 건물 지하 주차장 2시간 무료 주차권 지원</span>
+              </div>
+            </div>
+
+            <!-- External Navigation Buttons (Google + Naver + Kakao) -->
+            <div class="grid grid-cols-3 gap-2 pt-2">
+              <a href="https://maps.google.com/?q=35.176734,128.144606" target="_blank" class="py-2.5 px-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-xs text-center border border-blue-200 transition flex items-center justify-center gap-1 shadow-sm">
+                <span>Google 지도</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+              <a href="https://map.naver.com/v5/search/%EC%A7%84%EC%A3%BC%EC%8B%9C%20%EC%97%90%EB%82%98%EB%A1%9C%20146%20%EB%9D%BC%EC%98%A8%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%EC%8B%9C%ED%8B%B0" target="_blank" class="py-2.5 px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs text-center border border-emerald-200 transition flex items-center justify-center gap-1 shadow-sm">
+                <span>네이버 지도</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+              <a href="https://map.kakao.com/link/to/%EC%A7%84%EC%A3%BC%ED%80%B8%EA%B3%B5%EC%9D%B8%EC%A4%91%EA%B0%9C%EC%82%AC%EC%82%AC%EB%AC%B4%EC%86%8C,35.176734,128.144606" target="_blank" class="py-2.5 px-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs text-center border border-amber-200 transition flex items-center justify-center gap-1 shadow-sm">
+                <span>카카오 길찾기</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+            </div>
+
+            <!-- Social Links -->
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800">진주퀸 공식 채널 :</span>
+              <div class="flex items-center gap-2">
+                <a href="https://blog.naver.com/property70" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition">
+                  N 블로그
+                </a>
+                <a href="https://www.youtube.com/@jinju_queen" target="_blank" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-bold hover:bg-rose-700 transition">
+                  ▶ 유튜브
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Direct Call & SMS CTA Section (전화연결 & 문자전송) -->
+  <section id="cta-section" class="py-16 bg-gradient-to-br from-slate-900 via-brand-navy to-slate-900 text-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto text-center space-y-6">
+        <div class="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 px-4 py-1.5 rounded-full text-xs font-semibold border border-amber-400/30">
+          <i data-lucide="headphones" class="w-4 h-4"></i>
+          <span>실시간 1:1 직통 상담 창구</span>
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+          궁금하신 매물이나 시세,<br class="sm:hidden"> 지금 바로 황선숙 대표에게 물어보세요
+        </h2>
+
+        <p class="text-slate-300 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed text-center" style="text-align: center !important; text-justify: none !important; word-spacing: normal !important; letter-spacing: -0.02em;">
+          <span class="inline-block">스마트폰에서 클릭 한 번으로 전화 연결 또는 간편 문자(SMS)를 발송하실 수 있습니다.</span><br>
+          <span class="inline-block">성심성의껏 답변드리겠습니다.</span>
+        </p>
+
+        <!-- CTA Action Buttons Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-4 max-w-3xl mx-auto">
+          <!-- 1. Direct Phone Call -->
+          <a href="tel:010-4670-7248" class="bg-brand-gold hover:bg-brand-goldHover text-slate-950 rounded-2xl p-5 font-bold transition transform hover:-translate-y-1 shadow-xl flex flex-col items-center justify-center gap-2 group">
+            <div class="relative w-14 h-14 rounded-full overflow-hidden border-2 border-slate-900/40 shadow group-hover:scale-105 transition">
+              <img src="images/ceo-square.jpg?v=12" alt="황선숙 대표" class="w-full h-full object-cover">
+            </div>
+            <div class="text-base font-extrabold">황선숙 대표 직통 전화</div>
+            <div class="text-xs text-slate-900 font-extrabold bg-white/90 px-3 py-1 rounded-lg shadow-sm">010-4670-7248</div>
+          </a>
+
+          <!-- 2. Direct SMS Transmission -->
+          <a href="sms:010-4670-7248?body=안녕하세요.%20진주퀸공인중개사사무소%20홈페이지를%20보고%20연락드렸습니다.%20매물%20상담%20부탁드립니다." class="bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl p-5 font-bold transition transform hover:-translate-y-1 shadow-xl flex flex-col items-center justify-center gap-2 group">
+            <div class="w-14 h-14 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center group-hover:scale-105 transition shadow">
+              <i data-lucide="message-square" class="w-7 h-7 text-white"></i>
+            </div>
+            <div class="text-base font-extrabold">간편 문자(SMS) 문의</div>
+            <div class="text-xs text-emerald-950 font-extrabold bg-white/90 px-3 py-1 rounded-lg shadow-sm">내용 자동입력 즉시발송</div>
+          </a>
+
+          <!-- 3. Office Landline -->
+          <a href="tel:055-761-7248" class="sm:col-span-2 md:col-span-1 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl p-5 font-bold transition transform hover:-translate-y-1 shadow-xl flex flex-col items-center justify-center gap-2 group">
+            <div class="w-14 h-14 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center group-hover:scale-105 transition shadow">
+              <i data-lucide="phone" class="w-7 h-7 text-white"></i>
+            </div>
+            <div class="text-base font-extrabold">사무실 유선 연결</div>
+            <div class="text-xs text-blue-950 font-extrabold bg-white/90 px-3 py-1 rounded-lg shadow-sm">055-761-7248</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legal Mandatory Footer (공인중개사법 법정 5대 항목 필수 표시) -->
+  <footer class="bg-slate-950 text-slate-400 text-xs py-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      
+      <!-- Top info row -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-800/80">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-slate-900 border border-brand-gold/40 flex items-center justify-center p-1">
+            <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <div class="text-white font-bold text-base">진주퀸공인중개사사무소</div>
+            <div class="text-[11px] text-slate-500">진주 혁신도시 충무공동 아파트·오피스텔·상가·택지 전문 중개</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 text-xs">
+          <span class="text-slate-400">개업공인중개사 <strong class="text-white">황선숙</strong></span>
+          <span class="text-slate-700">|</span>
+          <a href="https://blog.naver.com/property70" target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1 font-semibold text-slate-300">
+            <span class="w-3.5 h-3.5 rounded bg-emerald-600 text-white flex items-center justify-center text-[9px] font-black">N</span> 네이버 블로그
+          </a>
+          <a href="https://www.youtube.com/@jinju_queen" target="_blank" class="hover:text-rose-400 transition flex items-center gap-1 font-semibold text-slate-300">
+            <span class="w-3.5 h-3.5 rounded bg-rose-600 text-white flex items-center justify-center text-[9px]">▶</span> 유튜브 채널
+          </a>
+        </div>
+      </div>
+
+      <!-- Mandatory 5 Items Grid (법정 표시사항) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-slate-400">
+        <div>
+          <div class="text-slate-300 font-bold mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-brand-gold"></i> 사무소 등록 정보
+          </div>
+          <p class="leading-relaxed">
+            중개사무소 명칭 : 진주퀸공인중개사사무소<br>
+            개업공인중개사 성명 : 황선숙<br>
+            중개등록번호 : <span class="text-slate-200 font-medium">48170-2017-00038</span>
+          </p>
+        </div>
+
+        <div>
+          <div class="text-slate-300 font-bold mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-gold"></i> 사무소 소재지
+          </div>
+          <p class="leading-relaxed">
+            경상남도 진주시 에나로 146, 105호(충무공동)<br>
+            (라온프라이빗시티, LH 한국토지주택공사 본사 공원 맞은편 탑마트 주변)
+          </p>
+        </div>
+
+        <div>
+          <div class="text-slate-300 font-bold mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="phone" class="w-3.5 h-3.5 text-brand-gold"></i> 대표 연락처
+          </div>
+          <p class="leading-relaxed">
+            사무실 유선전화 : 055-761-7248<br>
+            대표 휴대폰 : <span class="text-amber-400 font-semibold">010-4670-7248</span><br>
+            영업시간 : 09:30 ~ 19:30 (일요일 예약제)
+          </p>
+        </div>
+
+        <div>
+          <div class="text-slate-300 font-bold mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-brand-gold"></i> 부동산 허위매물 신고
+          </div>
+          <p class="leading-relaxed text-[11px] text-slate-500">
+            진주퀸공인중개사는 공인중개사법 제18조의2(인터넷 표시·광고) 규정을 준수하며 거래완료 매물은 즉시 비공개 전환합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Copyright & Admin Link -->
+      <div class="pt-6 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-2">
+        <div>© 2026 진주퀸공인중개사사무소. All rights reserved.</div>
+        <div class="flex items-center gap-4">
+          <button onclick="switchToPcMode()" class="text-amber-300 hover:text-amber-200 font-bold flex items-center gap-1 transition cursor-pointer">
+            <i data-lucide="monitor" class="w-3.5 h-3.5 text-amber-400"></i> PC 전체화면으로 보기
+          </button>
+          <span>|</span>
+          <a href="#" onclick="alert('본 웹사이트는 공인중개사법 및 개인정보보호법에 따라 고객님의 성명과 연락처를 상담 목적으로만 안전하게 취급합니다.'); return false;" class="hover:text-slate-400 underline">개인정보처리방침</a>
+          <span>|</span>
+          <a href="#" onclick="alert('진주퀸공인중개사사무소는 100% 현장 검증된 실매물만을 등록 게시합니다.'); return false;" class="hover:text-slate-400 underline">인터넷 표시·광고 준수 서약</a>
+          <span>|</span>
+          <a href="admin.html" target="_blank" class="text-amber-400/80 hover:text-amber-300 font-semibold flex items-center gap-1 transition">
+            <i data-lucide="lock" class="w-3 h-3"></i> 관리자 센터
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Fixed Bottom Floating Bar (모바일 필수 CTA) -->
+  <aside class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 mobile-bottom-bar border-t border-slate-200 px-3 py-2 shadow-2xl" aria-label="모바일 하단 빠른 문의">
+    <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-100 text-[10px]">
+      <span class="text-amber-800 font-bold flex items-center gap-1">
+        <i data-lucide="smartphone" class="w-3 h-3 text-amber-600"></i>
+        <span>진주퀸 모바일 간편상담</span>
+      </span>
+      <button onclick="switchToPcMode()" class="text-slate-600 hover:text-slate-900 font-bold flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded border border-slate-300 transition cursor-pointer">
+        <i data-lucide="monitor" class="w-3 h-3 text-slate-500"></i>
+        <span>PC 전체화면 전환 &rarr;</span>
+      </button>
+    </div>
+    <div class="grid grid-cols-3 gap-2">
+      <!-- 1. Call -->
+      <a href="tel:010-4670-7248" class="bg-brand-navy active:bg-slate-800 text-white py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow">
+        <i data-lucide="phone-call" class="w-4 h-4 text-brand-gold"></i>
+        <span>전화상담</span>
+      </a>
+
+      <!-- 2. SMS -->
+      <a href="sms:010-4670-7248?body=안녕하세요.%20진주퀸공인중개사사무소%20홈페이지를%20보고%20연락드립니다.%20매물%20상담%20부탁드립니다." class="bg-amber-50 active:bg-amber-100 text-amber-900 border border-amber-300 py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
+        <i data-lucide="message-square" class="w-4 h-4 text-amber-600"></i>
+        <span>문자문의</span>
+      </a>
+
+      <!-- 3. Listing Request Modal -->
+      <button onclick="openListingModal()" class="bg-slate-100 active:bg-slate-200 text-slate-800 py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
+        <i data-lucide="file-plus" class="w-4 h-4 text-slate-600"></i>
+        <span>매물의뢰</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       MODALS & DIALOGS
+       ======================================================== -->
+
+  <!-- 1. Property Detail Modal (PRD 법정 12항목 상세 표기) -->
+  <div id="propertyDetailModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="fixed inset-0 modal-backdrop" onclick="closePropertyModal()"></div>
+    <div class="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto m-4 z-10 p-0 border border-slate-200">
+      
+      <!-- Modal Header (Close button & share) -->
+      <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-slate-200 px-6 py-4 flex items-center justify-between z-20">
+        <div class="flex items-center gap-2">
+          <span id="detailBadge" class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full">추천매물</span>
+          <span id="detailCategory" class="text-xs text-slate-500 font-medium">아파트 · 매매</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="shareCurrentProperty()" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition" title="링크 복사">
+            <i data-lucide="share-2" class="w-5 h-5"></i>
+          </button>
+          <button onclick="closePropertyModal()" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition" title="닫기">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6">
+        <!-- Photo Gallery Carousel -->
+        <div class="relative rounded-xl overflow-hidden bg-slate-950 aspect-[16/9]">
+          <img id="detailMainImg" src="" alt="매물 사진" class="w-full h-full object-cover">
+          <div id="detailThumbnails" class="absolute bottom-3 left-3 right-3 flex gap-2 overflow-x-auto p-1 bg-black/40 backdrop-blur rounded-lg">
+            <!-- Thumbnail buttons -->
+          </div>
+        </div>
+
+        <!-- Title & Price Block -->
+        <div>
+          <h2 id="detailTitle" class="text-xl sm:text-2xl font-bold text-slate-900 leading-snug"></h2>
+          <div class="flex flex-wrap items-baseline gap-3 mt-2">
+            <span id="detailPrice" class="text-2xl sm:text-3xl font-extrabold text-amber-600"></span>
+            <span id="detailAreaPyeong" class="text-sm font-semibold text-slate-600"></span>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mt-1.5">
+            <div id="detailLocation" class="text-xs text-slate-500 flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span></span>
+            </div>
+            <a id="detailGoogleMapLink" href="#" target="_blank" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200 transition shadow-sm">
+              <span>Google 지도로 위치 보기</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div id="detailTags" class="flex flex-wrap gap-1.5"></div>
+
+        <!-- 12 Mandatory Legal Disclosures Table (공인중개사법 제18조의2 의무표시 12개) -->
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+          <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <i data-lucide="file-check" class="w-4 h-4 text-brand-gold"></i>
+            공인중개사법 법정 명시사항 (12개 의무항목)
+          </h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailTypeLabel" class="text-slate-400 block text-[11px]">중개대상물 종류</span>
+              <span id="detailTypeVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailTransLabel" class="text-slate-400 block text-[11px]">거래 형태</span>
+              <span id="detailTransVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailAddressLabel" class="text-slate-400 block text-[11px]">소재지</span>
+              <span id="detailAddressVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailAreaLabel" class="text-slate-400 block text-[11px]">전용 / 공급면적</span>
+              <span id="detailAreaVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailFloorLabel" class="text-slate-400 block text-[11px]">해당층 / 총 층수</span>
+              <span id="detailFloorVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailRoomsLabel" class="text-slate-400 block text-[11px]">방 수 / 욕실 수</span>
+              <span id="detailRoomsVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailDirLabel" class="text-slate-400 block text-[11px]">방향 (거실 기준)</span>
+              <span id="detailDirVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailApprovalLabel" class="text-slate-400 block text-[11px]">사용승인일</span>
+              <span id="detailApprovalVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100">
+              <span id="detailParkingLabel" class="text-slate-400 block text-[11px]">총 주차대수</span>
+              <span id="detailParkingVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100 col-span-2 sm:col-span-1">
+              <span id="detailMoveInLabel" class="text-slate-400 block text-[11px]">입주가능일</span>
+              <span id="detailMoveInVal" class="font-bold text-slate-800"></span>
+            </div>
+            <div class="p-2 bg-white rounded-lg border border-slate-100 col-span-2 sm:col-span-2">
+              <span id="detailMaintLabel" class="text-slate-400 block text-[11px]">관리비 총액 및 비목별 세부내역</span>
+              <span id="detailMaintTotalVal" class="font-bold text-amber-700 block mb-0.5"></span>
+              <span id="detailMaintDetailsVal" class="text-[11px] text-slate-600 block"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Description -->
+        <div>
+          <h4 class="text-sm font-bold text-slate-900 mb-2">중개사 매물 상세 설명</h4>
+          <p id="detailDesc" class="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200 whitespace-pre-line"></p>
+        </div>
+
+        <!-- Assigned Agent Card & Direct CTA -->
+        <div class="bg-gradient-to-r from-brand-navy to-slate-900 text-white rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="relative w-14 h-14 rounded-full border-2 border-brand-gold overflow-hidden shadow-md shrink-0 bg-slate-100">
+              <img src="images/ceo-square.jpg?v=12" alt="황선숙 대표공인중개사" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <div class="font-bold text-base">황선숙 대표공인중개사</div>
+              <div class="text-xs text-amber-300">진주퀸공인중개사사무소 · 48170-2017-00038</div>
+              <div class="text-xs text-slate-300 mt-0.5">직통 010-4670-7248 / 사무실 055-761-7248</div>
+            </div>
+          </div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <a id="detailCallBtn" href="tel:010-4670-7248" class="flex-1 sm:flex-none bg-brand-gold hover:bg-brand-goldHover text-slate-950 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow">
+              <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+              <span>전화문의</span>
+            </a>
+            <a id="detailSmsBtn" href="sms:010-4670-7248" class="flex-1 sm:flex-none bg-white/20 hover:bg-white/30 text-white px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+              <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+              <span>문자문의</span>
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- 12. News Reader Modal -->
-  <div id="boardModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-end sm:items-center justify-center hidden">
-    <div class="bg-white w-full sm:max-w-md max-h-[80vh] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col">
-      <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 shrink-0">
-        <span id="boardModalCategory" class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md"></span>
-        <button onclick="closeBoardModal()" class="p-1 rounded-full text-slate-400 hover:text-slate-700 cursor-pointer">
-          <i data-lucide="x" class="w-5 h-5"></i>
+  <!-- 2. News Article Reader Modal (AI 마크다운 칼럼 뷰어) -->
+  <div id="newsModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" role="dialog" aria-modal="true" aria-labelledby="newsModalTitle">
+    <div class="fixed inset-0 modal-backdrop" onclick="closeNewsModal()"></div>
+    <div class="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[88vh] overflow-y-auto m-4 z-10 p-6 sm:p-10 border border-slate-200">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+        <span id="newsModalCategory" class="text-xs font-extrabold bg-amber-100 text-amber-900 px-3.5 py-1 rounded-full"></span>
+        <button onclick="closeNewsModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
-      <div class="p-4 overflow-y-auto space-y-3">
-        <h3 id="boardModalTitle" class="text-base font-black text-slate-900 leading-snug"></h3>
-        <div id="boardModalDate" class="text-[11px] text-slate-400"></div>
-        <div id="boardModalContent" class="text-xs text-slate-700 leading-relaxed whitespace-pre-line border-t border-slate-100 pt-3"></div>
+      <h2 id="newsModalTitle" class="text-xl sm:text-2xl font-black text-slate-900 leading-snug mb-3"></h2>
+      <div class="flex items-center gap-3 text-xs text-slate-400 mb-6">
+        <span id="newsModalDate"></span>
+        <span>•</span>
+        <span id="newsModalAuthor"></span>
       </div>
-      <div class="p-3 bg-slate-50 border-t border-slate-200 text-center">
-        <button onclick="closeBoardModal()" class="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl text-xs">
+      
+      <!-- AI 칼럼 마크다운 본문 (Claude, Gemini, ChatGPT 생성 양식 완벽 렌더링) -->
+      <div id="newsModalBody" class="markdown-body border-t border-slate-100 pt-5"></div>
+
+      <!-- 칼럼 하단 대표 공인중개사 직통 상담 배너 -->
+      <div class="mt-8 pt-6 border-t border-slate-200 bg-slate-50/80 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <img src="images/ceo-square.jpg?v=12" alt="황선숙 대표" class="w-12 h-12 rounded-full object-cover border-2 border-brand-gold shadow-sm shrink-0">
+          <div>
+            <div class="text-[11px] font-bold text-amber-800">진주퀸공인중개사사무소 공식 칼럼</div>
+            <div class="text-sm font-extrabold text-slate-900">황선숙 대표 공인중개사</div>
+            <div class="text-[11px] text-slate-500">본 칼럼 및 충무공동 부동산 시세 관련 맞춤 상담</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <a href="tel:010-4670-7248" class="flex-1 sm:flex-initial px-4 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5">
+            <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+            <span>전화 문의</span>
+          </a>
+          <a href="sms:010-4670-7248?body=안녕하세요.%20진주퀸%20부동산%20칼럼을%20보고%20상담%20문의드립니다." class="flex-1 sm:flex-initial px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5">
+            <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-300"></i>
+            <span>문자 문의</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button onclick="closeNewsModal()" class="px-5 py-2.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl hover:bg-slate-300 transition">
           닫기
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 13. Mobile Listing Request Modal (모바일 맞춤 매물 접수 모달) -->
-  <div id="mobileListingModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-end sm:items-center justify-center hidden">
-    <div class="bg-white w-full sm:max-w-md max-h-[92vh] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-slide-up">
+  <!-- 3. All Client Property Inquiry Modal (매물 내놓기 & 매물 찾아주세요 2-in-1 모달) -->
+  <div id="listingModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" role="dialog" aria-modal="true" aria-labelledby="listingModalTitle">
+    <div class="fixed inset-0 modal-backdrop" onclick="closeListingModal()"></div>
+    <div class="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto m-4 z-10 p-6 sm:p-8 border border-slate-200">
+      
       <!-- Modal Header -->
-      <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 shrink-0">
+      <div class="flex items-start justify-between pb-4 border-b border-slate-200 mb-4">
         <div>
-          <h3 id="mobileListingModalTitle" class="text-base font-black text-slate-900">간편 매물 의뢰 접수</h3>
-          <p id="mobileListingModalSub" class="text-[11px] text-slate-500 mt-0.5">황선숙 대표가 직접 확인 후 신속히 연락드립니다.</p>
+          <h2 id="listingModalTitle" class="text-lg font-extrabold text-slate-900">간편 매물 의뢰</h2>
+          <p id="listingModalSubtitle" class="text-xs text-slate-500 mt-1 leading-snug">소유주님의 소중한 매물을 최적의 가격으로 신속 매칭해 드립니다.</p>
         </div>
-        <button onclick="closeMobileListingModal()" class="p-1.5 rounded-full text-slate-400 hover:text-slate-700 cursor-pointer">
+        <button onclick="closeListingModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Mode Selector Tabs (내놓기 vs 찾기) -->
-      <div class="p-3 bg-slate-50/70 border-b border-slate-200 shrink-0">
-        <div class="grid grid-cols-2 p-1 bg-slate-200/80 rounded-xl text-xs font-bold gap-1">
-          <button type="button" id="mobileTabSell" onclick="switchMobileListingMode('sell')" class="py-2 rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-xs border border-slate-200">
-            <i data-lucide="home" class="w-3.5 h-3.5 text-amber-500"></i>
-            <span>집주인 매물 내놓기</span>
-          </button>
-          <button type="button" id="mobileTabBuy" onclick="switchMobileListingMode('buy')" class="py-2 rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900">
-            <i data-lucide="search" class="w-3.5 h-3.5"></i>
-            <span>매물 찾아주세요</span>
-          </button>
-        </div>
+      <!-- Mode Selector Tabs (매물 내놓기 vs 매물 찾아주세요) -->
+      <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-5 border border-slate-200">
+        <button type="button" id="tabReqSell" onclick="switchListingMode('sell')" class="py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm cursor-pointer border border-slate-200">
+          <i data-lucide="home" class="w-4 h-4 text-brand-gold"></i>
+          <span>매물 내놓기 (매도·임대)</span>
+        </button>
+        <button type="button" id="tabReqBuy" onclick="switchListingMode('buy')" class="py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer">
+          <i data-lucide="search" class="w-4 h-4 text-emerald-600"></i>
+          <span>매물 찾아주세요 (매수·임차)</span>
+        </button>
       </div>
 
-      <!-- Form Body -->
-      <form id="mobileListingForm" onsubmit="handleMobileListingSubmit(event)" class="p-4 overflow-y-auto space-y-3 text-xs flex-1">
-        <div class="grid grid-cols-2 gap-2">
+      <form id="listingForm" onsubmit="handleListingSubmit(event)" class="space-y-4 text-xs sm:text-sm">
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">매물 유형</label>
-            <select id="mReqPropType" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-slate-50 text-slate-900 font-medium outline-none focus:ring-2 focus:ring-amber-500">
+            <label class="block font-bold text-slate-700 mb-1" for="reqPropType">매물 종류</label>
+            <select id="reqPropType" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white focus:ring-2 focus:ring-brand-gold outline-none font-semibold">
               <option value="아파트">아파트</option>
               <option value="오피스텔">오피스텔</option>
-              <option value="상가/점포">상가·점포</option>
-              <option value="토지/택지">토지·택지</option>
-              <option value="원룸/투룸">원룸·투룸</option>
-              <option value="기타">기타 매물</option>
+              <option value="상가">상가 / 사무실</option>
+              <option value="택지">택지 (토지)</option>
+              <option value="단독·다가구">단독 · 다가구</option>
             </select>
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">거래 유형</label>
-            <select id="mReqTransType" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-slate-50 text-slate-900 font-medium outline-none focus:ring-2 focus:ring-amber-500">
-              <option value="매매">매매</option>
+            <label class="block font-bold text-slate-700 mb-1" for="reqTransType">희망 거래형태</label>
+            <select id="reqTransType" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white focus:ring-2 focus:ring-brand-gold outline-none font-semibold">
+              <option value="매매(구입)">매매 (구입)</option>
               <option value="전세">전세</option>
               <option value="월세">월세</option>
             </select>
@@ -548,516 +961,195 @@
         </div>
 
         <div>
-          <label id="mLabelLocation" class="block font-bold text-slate-700 mb-1">소재지 / 단지명</label>
-          <input type="text" id="mReqLocation" placeholder="예: 충무공동 대방노블랜드, 라온프라이빗 등" required class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-amber-500 font-medium">
+          <label id="labelReqAddress" class="block font-bold text-slate-700 mb-1" for="reqAddress">매물 소재지 (단지명 / 주소)</label>
+          <input type="text" id="reqAddress" placeholder="예: 혁신LH8단지 803동 또는 라온프라이빗 24평" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
         </div>
 
         <div>
-          <label id="mLabelPrice" class="block font-bold text-slate-700 mb-1">희망 가격 (매매가 / 보증금·월세)</label>
-          <input type="text" id="mReqPrice" placeholder="예: 매매 4억 5천 / 보증금 3000에 70 등" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-amber-500 font-medium">
+          <label id="labelReqPrice" class="block font-bold text-slate-700 mb-1" for="reqPrice">희망 금액 (매매가 또는 보증금/월세)</label>
+          <input type="text" id="reqPrice" placeholder="예: 매매 5억 2,000 또는 보증금 3000 / 월 80" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">의뢰인 성함</label>
-            <input type="text" id="mReqName" placeholder="성함" required class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-amber-500 font-medium">
+            <label class="block font-bold text-slate-700 mb-1" for="reqName">의뢰인 성함</label>
+            <input type="text" id="reqName" placeholder="홍길동" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">연락처</label>
-            <input type="tel" id="mReqPhone" placeholder="010-0000-0000" required class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-amber-500 font-medium">
+            <label class="block font-bold text-slate-700 mb-1" for="reqPhone">연락처</label>
+            <input type="tel" id="reqPhone" placeholder="010-0000-0000" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">추가 요청사항 (선택)</label>
-          <textarea id="mReqNotes" rows="2" placeholder="입주 희망시기, 층수, 특별한 조건 등을 편하게 적어주세요." class="w-full border border-slate-300 rounded-xl p-2.5 bg-slate-50 outline-none focus:ring-2 focus:ring-amber-500 font-medium resize-none"></textarea>
+          <label id="labelReqNotes" class="block font-bold text-slate-700 mb-1" for="reqNotes">입주가능시기 및 특이사항 (선택)</label>
+          <textarea id="reqNotes" rows="2" placeholder="예: 정상 입주 가능, 전세 안고 매매, 인테리어 수리 완료 등" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium resize-none"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 active:from-amber-600 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-md transition touch-press cursor-pointer flex items-center justify-center gap-1.5 mt-1">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          <span>간편 매물의뢰 접수하기</span>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-500 space-y-1">
+          <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+            <input type="checkbox" required checked class="rounded text-brand-gold focus:ring-brand-gold">
+            <span>[필수] 개인정보 수집 및 중개 상담 이용 동의</span>
+          </label>
+          <p>수집항목 : 성명, 연락처, 매물정보 | 보유기간 : 상담 및 중개 완료 시까지</p>
+        </div>
+
+        <button type="submit" id="listingSubmitBtn" class="w-full bg-brand-navy hover:bg-slate-800 text-white font-extrabold py-3.5 rounded-xl transition shadow flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="send" class="w-4 h-4 text-brand-gold"></i>
+          <span id="listingSubmitBtnText">황선숙 대표에게 매물 내놓기 접수하기</span>
         </button>
       </form>
+    </div>
+  </div>
 
-      <!-- Quick Alternative Direct Inquiry Buttons -->
-      <div class="p-3 bg-slate-50 border-t border-slate-200 grid grid-cols-2 gap-2 shrink-0 text-xs font-bold">
-        <a href="tel:010-4670-7248" class="py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center rounded-xl flex items-center justify-center gap-1.5 shadow-sm touch-press">
-          <i data-lucide="phone-call" class="w-3.5 h-3.5 text-amber-300"></i>
-          <span>전화로 바로 의뢰</span>
-        </a>
-        <button type="button" onclick="sendMobileListingSms()" class="py-2.5 bg-emerald-600 text-white text-center rounded-xl flex items-center justify-center gap-1.5 shadow-sm touch-press cursor-pointer">
-          <i data-lucide="message-square" class="w-3.5 h-3.5 text-white"></i>
-          <span>문자로 바로 전송</span>
+  <!-- 4. Favorites (최근 본 / 찜한 매물) Modal -->
+  <div id="favoritesModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" role="dialog" aria-modal="true" aria-labelledby="favModalTitle">
+    <div class="fixed inset-0 modal-backdrop" onclick="closeFavoritesModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto m-4 z-10 p-6 border border-slate-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+        <div class="flex items-center gap-2">
+          <i data-lucide="heart" class="w-5 h-5 text-rose-500 fill-rose-500"></i>
+          <h2 id="favModalTitle" class="text-base font-bold text-slate-900">내가 찜한 관심 매물</h2>
+        </div>
+        <button onclick="closeFavoritesModal()" class="p-1 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
+      </div>
+
+      <div id="favoritesListContainer" class="space-y-3">
+        <!-- Rendered by js/app.js -->
       </div>
     </div>
   </div>
 
-  <!-- Fallback Data -->
-  <script src="js/data.js"></script>
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-20 md:bottom-8 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 pointer-events-none opacity-0 translate-y-4">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastMessage">알림 메시지</span>
+  </div>
 
-  <!-- Mobile App Logic Script -->
-  <script>
-    var currentCategory = 'ALL';
-    var currentTrans = 'ALL';
-    var loadedProperties = [];
-    var loadedBoardPosts = [];
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/marked.min.js"></script>
+  <script src="js/data.js?v=20261106_6"></script>
+  <script src="js/app.js?v=20261106_6"></script>
 
-    // Instant Mobile Toast
-    function showMobileToast(msg) {
-      var t = document.getElementById('mobileToast');
-      if (!t) {
-        t = document.createElement('div');
-        t.id = 'mobileToast';
-        t.className = 'fixed top-16 inset-x-4 z-50 p-3.5 bg-slate-900/95 text-white rounded-2xl shadow-2xl border border-amber-500/50 text-center text-xs font-bold transition-all transform duration-300 pointer-events-none opacity-0 -translate-y-2';
-        document.body.appendChild(t);
-      }
-      t.innerHTML = msg;
-      t.classList.remove('opacity-0', '-translate-y-2');
-      t.classList.add('opacity-100', 'translate-y-0');
-      setTimeout(function() {
-        t.classList.remove('opacity-100', 'translate-y-0');
-        t.classList.add('opacity-0', '-translate-y-2');
-      }, 2800);
-    }
+  <!-- Sold Property Alert Modal (거래완료 안내 모달) -->
+  <div id="soldNoticeModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="w-16 h-16 rounded-full bg-rose-50 border-2 border-rose-500/30 flex items-center justify-center mx-auto mb-4 shadow-inner">
+        <i data-lucide="check-check" class="w-8 h-8 text-rose-600"></i>
+      </div>
+      <div class="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-extrabold mb-2 tracking-wide">
+        계약 체결 완료 (거래완료)
+      </div>
+      <h3 id="soldModalTitle" class="text-lg font-bold text-slate-900 leading-snug mb-2">매물 제목</h3>
+      <p class="text-xs text-slate-500 leading-relaxed mb-6">
+        본 매물은 고객님의 성원에 힘입어 <strong class="text-slate-800">성공적으로 계약이 체결</strong>되었습니다.<br>
+        공인중개사법에 따라 거래 완료된 매물의 세부 정보 열람은 제한됩니다.
+      </p>
 
-    // Call Handler (Instant Dial on Smartphone, Quick Copy on PC)
-    function handleMobileCall(e, phone) {
-      var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-      if (!isTouch && navigator.clipboard) {
-        navigator.clipboard.writeText(phone);
-        showMobileToast('📞 <strong>' + phone + '</strong> 복사 완료!<br><span class="text-amber-400 text-[11px] font-normal">스마트폰에서는 터치 시 즉시 전화가 걸립니다.</span>');
-      }
-    }
+      <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200 text-left mb-6 space-y-2">
+        <div class="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-600"></i>
+          <span>유사한 추천 실매물을 찾으시나요?</span>
+        </div>
+        <p class="text-[11px] text-amber-900/80 leading-relaxed">
+          동일 단지 및 충무공동 혁신도시 내 아직 광고에 나오지 않은 <strong>비공개 신규 매물</strong>을 황선숙 대표가 1:1 맞춤으로 직접 찾아드립니다.
+        </p>
+      </div>
 
-    // SMS Handler (Instant SMS on Smartphone, Quick Copy on PC)
-    function handleMobileSms(e, phone) {
-      var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-      if (!isTouch && navigator.clipboard) {
-        navigator.clipboard.writeText(phone);
-        showMobileToast('💬 문자 상담 <strong>' + phone + '</strong> 복사 완료!<br><span class="text-emerald-400 text-[11px] font-normal">스마트폰에서는 터치 시 문자창이 즉시 열립니다.</span>');
-      }
-    }
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="closeSoldNoticeModal()" class="py-3 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-bold transition">
+          닫기
+        </button>
+        <a href="tel:010-4670-7248" class="py-3 rounded-xl bg-brand-navy hover:bg-slate-800 text-white text-xs font-bold transition shadow flex items-center justify-center gap-1.5">
+          <i data-lucide="phone-call" class="w-3.5 h-3.5 text-brand-gold"></i>
+          <span>유사 매물 문의</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
-    // Initialize Mobile Page
-    document.addEventListener('DOMContentLoaded', function() {
-      lucide.createIcons();
-      loadMobileProperties();
-      loadMobileBoard();
-    });
+  <!-- PC Contact Guide Modal (PC에서 전화/문자 클릭 시 연결 앱 선택창 대신 바로 번호 복사 및 QR 안내) -->
+  <div id="pcContactModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 modal-backdrop" onclick="closePcContactModal()"></div>
+    <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm sm:max-w-md w-full m-4 z-10 p-6 sm:p-7 border border-slate-200 text-center animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Close Button -->
+      <button onclick="closePcContactModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
 
-    // Fetch and render properties
-    function loadMobileProperties() {
-      fetch('data/properties.json?v=' + Date.now())
-        .then(function(res) {
-          if (!res.ok) throw new Error('Network error');
-          return res.json();
-        })
-        .then(function(data) {
-          if (Array.isArray(data) && data.length > 0) {
-            loadedProperties = data;
-          } else if (typeof DEFAULT_PROPERTIES !== 'undefined') {
-            loadedProperties = DEFAULT_PROPERTIES;
-          }
-          renderMobileProperties();
-        })
-        .catch(function(err) {
-          console.warn('Using fallback data:', err);
-          if (typeof DEFAULT_PROPERTIES !== 'undefined') {
-            loadedProperties = DEFAULT_PROPERTIES;
-          }
-          renderMobileProperties();
-        });
-    }
+      <!-- CEO Profile Icon Badge -->
+      <div class="relative w-16 h-16 rounded-full border-2 border-brand-gold overflow-hidden shadow-md mx-auto mb-3 bg-slate-100">
+        <img src="images/ceo-square.jpg?v=12" alt="황선숙 대표공인중개사" class="w-full h-full object-cover">
+      </div>
 
-    // Filter handlers
-    function setCategoryFilter(cat, btn) {
-      currentCategory = cat;
-      document.querySelectorAll('.category-chip').forEach(function(el) {
-        el.className = 'category-chip px-3 py-2 rounded-xl shrink-0 transition bg-white text-slate-700 border border-slate-300';
-      });
-      btn.className = 'category-chip px-3 py-2 rounded-xl shrink-0 transition bg-brand-navy text-white shadow-xs border border-brand-navy';
-      renderMobileProperties();
-    }
+      <h3 id="pcContactModalTitle" class="text-base font-extrabold text-slate-900 mb-1">황선숙 대표 직통 상담 안내</h3>
+      <p id="pcContactModalSubtitle" class="text-xs text-slate-500 mb-4">
+        PC 환경에서는 대표님 연락처가 <span class="text-emerald-600 font-bold">클립보드에 자동 복사</span>되었습니다.
+      </p>
 
-    function setTransFilter(trans, btn) {
-      currentTrans = trans;
-      document.querySelectorAll('.trans-chip').forEach(function(el) {
-        el.className = 'trans-chip flex-1 py-1 rounded-lg transition bg-white text-slate-600 border border-slate-200 text-center';
-      });
-      btn.className = 'trans-chip flex-1 py-1 rounded-lg transition bg-slate-900 text-white text-center';
-      renderMobileProperties();
-    }
+      <!-- Primary Phone Card -->
+      <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 mb-4 text-center">
+        <span class="text-[11px] font-bold text-amber-800 block mb-1">대표 직통 휴대전화</span>
+        <div class="text-2xl font-black text-slate-900 tracking-wider flex items-center justify-center gap-2 mb-2">
+          <i data-lucide="phone-call" class="w-5 h-5 text-brand-gold"></i>
+          <span id="pcContactPhone">010-4670-7248</span>
+        </div>
+        <div class="flex items-center justify-center gap-2">
+          <button id="pcCopyPhoneBtn" onclick="copyContactToClipboard(document.getElementById('pcContactPhone').textContent, this)" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs rounded-lg transition shadow-xs flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>전화번호 복사</span>
+          </button>
+          <span class="text-xs text-slate-400">|</span>
+          <span class="text-xs text-slate-600 font-semibold">사무실 055-761-7248</span>
+        </div>
+      </div>
 
-    // Render Properties List
-    function renderMobileProperties() {
-      var container = document.getElementById('propertyCardList');
-      var badge = document.getElementById('propCountBadge');
-      if (!container) return;
+      <!-- SMS Message Preview Box (Only displayed when clicking SMS) -->
+      <div id="pcContactSmsBox" class="hidden mb-4 text-left bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
+            <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-600"></i> 문의 문자 내용
+          </span>
+          <button onclick="copyContactToClipboard(document.getElementById('pcContactSmsText').textContent, this)" class="text-[11px] text-brand-navy hover:underline font-bold flex items-center gap-1 cursor-pointer">
+            <i data-lucide="copy" class="w-3 h-3"></i> 내용 복사
+          </button>
+        </div>
+        <p id="pcContactSmsText" class="text-xs text-slate-800 font-medium whitespace-pre-wrap leading-relaxed bg-white p-2.5 rounded-lg border border-slate-100"></p>
+        <p class="text-[10px] text-slate-400 mt-1.5">💡 복사하신 후 카카오톡 PC버전이나 웹메신저에 붙여넣어 문의하실 수 있습니다.</p>
+      </div>
 
-      // Filter properties
-      var list = loadedProperties.filter(function(p) {
-        // Exclude private / hidden
-        if (p.isPrivate === true || p.hidden === true) return false;
-        
-        // Category match
-        if (currentCategory !== 'ALL') {
-          if (currentCategory === '상가') {
-            if (p.category !== '상가' && p.category !== '상가·사무실') return false;
-          } else if (currentCategory === '택지') {
-            if (p.category !== '택지' && p.category !== '토지' && p.category !== '토지·택지') return false;
-          } else {
-            if (p.category !== currentCategory) return false;
-          }
-        }
+      <!-- QR Code Quick Connect -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 mb-4 flex items-center gap-3 text-left">
+        <div class="w-20 h-20 bg-white p-1 rounded-xl border border-slate-200 shrink-0 shadow-xs flex items-center justify-center overflow-hidden">
+          <img id="pcContactQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=tel:010-4670-7248" alt="스마트폰 연결 QR코드" class="w-full h-full object-contain">
+        </div>
+        <div class="text-xs">
+          <span class="font-bold text-slate-900 block mb-0.5 flex items-center gap-1">
+            <i data-lucide="qr-code" class="w-3.5 h-3.5 text-brand-gold"></i>
+            스마트폰 카메라로 스캔
+          </span>
+          <p class="text-[11px] text-slate-500 leading-snug">
+            스마트폰 기본 카메라로 좌측 QR코드를 비추시면 <strong class="text-slate-800">번호 입력 없이 즉시 연결</strong>됩니다.
+          </p>
+        </div>
+      </div>
 
-        // Transaction match
-        if (currentTrans !== 'ALL' && p.transactionType !== currentTrans) {
-          return false;
-        }
+      <!-- Footer Buttons -->
+      <div class="flex flex-col gap-2">
+        <button onclick="closePcContactModal()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow cursor-pointer">
+          확인
+        </button>
+        <a id="pcContactDirectAppBtn" href="tel:010-4670-7248" class="text-[11px] text-slate-400 hover:text-slate-600 transition underline py-1">
+          PC 연동 프로그램(휴대폰과 연결/Skype)으로 직접 열기
+        </a>
+      </div>
 
-        return true;
-      });
+    </div>
+  </div>
 
-      if (badge) badge.textContent = list.length + '건';
-
-      if (list.length === 0) {
-        container.innerHTML = 
-          '<div class="p-8 bg-white rounded-2xl border border-slate-200 text-center text-slate-400">' +
-          '  <i data-lucide="info" class="w-8 h-8 mx-auto text-slate-300 mb-2"></i>' +
-          '  <p class="font-bold text-sm text-slate-700">해당 조건의 매물이 없습니다.</p>' +
-          '  <p class="text-xs text-slate-400 mt-1">다른 유형이나 거래 방식을 선택해 보세요.</p>' +
-          '</div>';
-        lucide.createIcons();
-        return;
-      }
-
-      var html = '';
-      list.forEach(function(p) {
-        var imgSrc = (p.images && p.images.length > 0) ? p.images[0] : 'images/ceo-square.jpg';
-        var priceText = p.priceFormatted || (p.transactionType + ' ' + (p.price ? p.price + '만원' : '상담협의'));
-        var areaText = p.exclusiveArea ? (p.exclusiveArea + '㎡ (' + (p.exclusiveAreaPyeong || Math.round(p.exclusiveArea / 3.3057)) + '평)') : (p.supplyArea ? p.supplyArea + '㎡' : '');
-        var floorText = p.floor || '';
-        var specs = [];
-        if (areaText) specs.push(areaText);
-        if (floorText) specs.push(floorText);
-        if (p.direction) specs.push(p.direction);
-
-        var smsMsg = encodeURIComponent('[진주퀸부동산 모바일 문의]\n안녕하세요, ' + p.title + ' (' + priceText + ') 매물 보고 문의드립니다.');
-
-        html += 
-          '<div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden hover:shadow-md transition">' +
-          '  <!-- Image & Badges -->' +
-          '  <div class="relative h-44 bg-slate-100 overflow-hidden cursor-pointer" onclick="openPropDetailModal(\'' + p.id + '\')">' +
-          '    <img src="' + imgSrc + '" alt="' + p.title + '" class="w-full h-full object-cover">' +
-          '    <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">' +
-          '      <span class="px-2 py-0.5 rounded-md bg-brand-navy/90 backdrop-blur-xs text-white font-bold text-[10px]">' + p.category + '</span>' +
-          '      <span class="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-black text-[10px]">' + p.transactionType + '</span>' +
-          '    </div>' +
-          '    <div class="absolute bottom-2.5 right-2.5 bg-slate-950/80 backdrop-blur-xs text-white px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1">' +
-          '      <i data-lucide="eye" class="w-3 h-3 text-amber-400"></i> 상세보기' +
-          '    </div>' +
-          '  </div>' +
-          '  <!-- Card Content -->' +
-          '  <div class="p-3.5">' +
-          '    <div class="cursor-pointer" onclick="openPropDetailModal(\'' + p.id + '\')">' +
-          '      <h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-1">' + p.title + '</h3>' +
-          '      <div class="text-base font-black text-amber-900 mt-0.5">' + priceText + '</div>' +
-          (specs.length > 0 ? '      <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1.5 flex-wrap"><i data-lucide="layers" class="w-3 h-3 text-slate-400"></i> ' + specs.join(' · ') + '</div>' : '') +
-          (p.location ? '      <div class="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 truncate"><i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i> ' + p.location + '</div>' : '') +
-          '    </div>' +
-          '    <!-- Bottom Action Buttons -->' +
-          '    <div class="grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-slate-100">' +
-          '      <a href="tel:010-4670-7248" class="py-2 bg-gradient-to-r from-[#C29B38] to-[#997622] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1 shadow-xs touch-press">' +
-          '        <i data-lucide="phone" class="w-3.5 h-3.5"></i>' +
-          '        <span>전화 문의</span>' +
-          '      </a>' +
-          '      <a href="sms:010-4670-7248?body=' + smsMsg + '" class="py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1 shadow-xs touch-press">' +
-          '        <i data-lucide="message-square" class="w-3.5 h-3.5"></i>' +
-          '        <span>문자 문의</span>' +
-          '      </a>' +
-          '    </div>' +
-          '  </div>' +
-          '</div>';
-      });
-
-      container.innerHTML = html;
-      lucide.createIcons();
-    }
-
-    // Open Property Detail Modal
-    function openPropDetailModal(id) {
-      var p = loadedProperties.find(function(item) { return item.id === id; });
-      if (!p) return;
-
-      document.getElementById('modalCategoryBadge').textContent = p.category;
-      document.getElementById('modalTransBadge').textContent = p.transactionType;
-      document.getElementById('modalTitle').textContent = p.title;
-      document.getElementById('modalPrice').textContent = p.priceFormatted || (p.transactionType + ' ' + (p.price ? p.price + '만원' : '상담협의'));
-
-      var img = document.getElementById('modalImage');
-      img.src = (p.images && p.images.length > 0) ? p.images[0] : 'images/ceo-square.jpg';
-
-      // Specs
-      var grid = document.getElementById('modalSpecsGrid');
-      var specsHtml = '';
-      if (p.exclusiveArea) specsHtml += '<div><span class="text-slate-400 block text-[10px]">전용면적</span><span class="font-bold">' + p.exclusiveArea + '㎡ (' + (p.exclusiveAreaPyeong || Math.round(p.exclusiveArea / 3.3057)) + '평)</span></div>';
-      if (p.supplyArea) specsHtml += '<div><span class="text-slate-400 block text-[10px]">공급면적</span><span class="font-bold">' + p.supplyArea + '㎡ (' + (p.supplyAreaPyeong || Math.round(p.supplyArea / 3.3057)) + '평)</span></div>';
-      if (p.floor) specsHtml += '<div><span class="text-slate-400 block text-[10px]">해당층/총층</span><span class="font-bold">' + p.floor + '</span></div>';
-      if (p.direction) specsHtml += '<div><span class="text-slate-400 block text-[10px]">방향</span><span class="font-bold">' + p.direction + '</span></div>';
-      if (p.rooms) specsHtml += '<div><span class="text-slate-400 block text-[10px]">방/욕실</span><span class="font-bold">방 ' + p.rooms + ' / 욕실 ' + (p.bathrooms || 1) + '</span></div>';
-      if (p.moveInDate) specsHtml += '<div><span class="text-slate-400 block text-[10px]">입주가능일</span><span class="font-bold">' + p.moveInDate + '</span></div>';
-      if (p.parking) specsHtml += '<div><span class="text-slate-400 block text-[10px]">주차대수</span><span class="font-bold">' + p.parking + '</span></div>';
-      if (p.approvalDate) specsHtml += '<div><span class="text-slate-400 block text-[10px]">사용승인일</span><span class="font-bold">' + p.approvalDate + '</span></div>';
-      if (p.maintenanceFee) specsHtml += '<div class="col-span-2"><span class="text-slate-400 block text-[10px]">관리비</span><span class="font-bold text-emerald-700">' + p.maintenanceFee + '</span>' + (p.maintenanceDetails ? '<span class="text-[10px] text-slate-500 block">' + p.maintenanceDetails + '</span>' : '') + '</div>';
-
-      grid.innerHTML = specsHtml || '<div class="col-span-2 text-slate-400">세부 정보는 전화 문의 시 친절히 안내해 드립니다.</div>';
-
-      // Description
-      var descWrap = document.getElementById('modalDescWrap');
-      if (p.description) {
-        descWrap.textContent = p.description;
-        descWrap.classList.remove('hidden');
-      } else {
-        descWrap.classList.add('hidden');
-      }
-
-      // Buttons
-      var smsBody = encodeURIComponent('[진주퀸부동산 모바일 상세문의]\n매물명: ' + p.title + '\n금액: ' + (p.priceFormatted || p.price) + '\n상담 부탁드립니다.');
-      document.getElementById('modalSmsBtn').href = 'sms:010-4670-7248?body=' + smsBody;
-
-      document.getElementById('propDetailModal').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function closePropDetailModal() {
-      document.getElementById('propDetailModal').classList.add('hidden');
-    }
-
-    // Load Board News (4대 카테고리 지원)
-    var currentMobileBoardCategory = 'ALL';
-
-    function filterMobileBoard(category, btnEl) {
-      currentMobileBoardCategory = category;
-      document.querySelectorAll('#mobileBoardCategoryFilter .mobile-board-cat').forEach(function(btn) {
-        var isCur = (btn === btnEl);
-        btn.classList.toggle('active', isCur);
-        btn.classList.toggle('bg-slate-900', isCur);
-        btn.classList.toggle('text-white', isCur);
-        btn.classList.toggle('border-slate-900', isCur);
-        btn.classList.toggle('bg-white', !isCur);
-        btn.classList.toggle('text-slate-600', !isCur);
-        btn.classList.toggle('border-slate-300', !isCur);
-      });
-      renderMobileBoard();
-    }
-
-    function getMobileCategoryBadge(cat) {
-      switch (cat) {
-        case '실거래가 & 시세 분석':
-          return { bg: 'bg-indigo-50 text-indigo-900 border-indigo-200', icon: 'bar-chart-2' };
-        case '진주시 개발 & 정책':
-          return { bg: 'bg-blue-50 text-blue-900 border-blue-200', icon: 'building' };
-        case '부동산 상식 & 세무':
-          return { bg: 'bg-emerald-50 text-emerald-900 border-emerald-200', icon: 'book-open' };
-        case '공지사항':
-          return { bg: 'bg-slate-100 text-slate-800 border-slate-300', icon: 'bell' };
-        default:
-          return { bg: 'bg-amber-50 text-amber-900 border-amber-200', icon: 'file-text' };
-      }
-    }
-
-    function loadMobileBoard() {
-      fetch('data/board.json?v=' + Date.now())
-        .then(function(res) {
-          if (!res.ok) throw new Error('Board fetch failed');
-          return res.json();
-        })
-        .then(function(data) {
-          if (Array.isArray(data) && data.length > 0) {
-            loadedBoardPosts = data;
-          } else if (typeof DEFAULT_BOARD_POSTS !== 'undefined') {
-            loadedBoardPosts = DEFAULT_BOARD_POSTS;
-          }
-          renderMobileBoard();
-        })
-        .catch(function(err) {
-          console.warn('Using default board posts:', err);
-          if (typeof DEFAULT_BOARD_POSTS !== 'undefined') {
-            loadedBoardPosts = DEFAULT_BOARD_POSTS;
-          }
-          renderMobileBoard();
-        });
-    }
-
-    function renderMobileBoard() {
-      var container = document.getElementById('mobileBoardList');
-      if (!container) return;
-
-      var filtered = loadedBoardPosts.filter(function(p) {
-        return currentMobileBoardCategory === 'ALL' || p.category === currentMobileBoardCategory;
-      });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<div class="p-6 bg-white rounded-2xl text-center text-xs text-slate-400 border border-slate-200">해당 카테고리에 등록된 게시글이 없습니다.</div>';
-        return;
-      }
-
-      var html = '';
-      filtered.forEach(function(post) {
-        var badge = getMobileCategoryBadge(post.category);
-        var cleanSummary = (post.summary || '').replace(/[#*`_~>\[\]]/g, '').trim();
-        html += 
-          '<div onclick="openBoardModal(\'' + post.id + '\')" class="p-3.5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:border-amber-400 transition cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99]">' +
-          '  <div class="flex-1 min-w-0">' +
-          '    <div class="flex items-center gap-1.5 mb-1 flex-wrap">' +
-          '      <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ' + badge.bg + ' flex items-center gap-1">' +
-          '        <i data-lucide="' + badge.icon + '" class="w-3 h-3"></i>' +
-          '        <span>' + (post.category || '칼럼') + '</span>' +
-          '      </span>' +
-          '      <span class="text-[10px] text-slate-400">' + (post.date || '') + '</span>' +
-          '    </div>' +
-          '    <h4 class="text-xs sm:text-sm font-bold text-slate-900 truncate leading-snug">' + post.title + '</h4>' +
-          (cleanSummary ? '    <p class="text-[11px] text-slate-500 truncate mt-0.5 leading-relaxed">' + cleanSummary + '</p>' : '') +
-          '  </div>' +
-          '  <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i>' +
-          '</div>';
-      });
-
-      container.innerHTML = html;
-      lucide.createIcons();
-    }
-
-    function openBoardModal(id) {
-      var post = loadedBoardPosts.find(function(p) { return p.id === id; });
-      if (!post) return;
-
-      var badge = getMobileCategoryBadge(post.category);
-      var catEl = document.getElementById('boardModalCategory');
-      catEl.textContent = post.category || '부동산 정보';
-      catEl.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full border ' + badge.bg;
-
-      document.getElementById('boardModalTitle').textContent = post.title;
-      document.getElementById('boardModalDate').textContent = (post.date || '') + ' · 작성자: ' + (post.author || '황선숙 대표') + ' · 조회수 ' + (post.views || 0);
-      document.getElementById('boardModalContent').textContent = post.content || post.summary || '내용이 없습니다.';
-
-      document.getElementById('boardModal').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function closeBoardModal() {
-      document.getElementById('boardModal').classList.add('hidden');
-    }
-
-    // ==========================================
-    // MOBILE CLIENT LISTING INQUIRY SYSTEM (매물 접수)
-    // ==========================================
-    var currentMobileListingMode = 'sell';
-
-    function openMobileListingModal(mode) {
-      currentMobileListingMode = mode || 'sell';
-      switchMobileListingMode(currentMobileListingMode);
-      document.getElementById('mobileListingModal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      if (window.lucide) lucide.createIcons();
-    }
-
-    function closeMobileListingModal() {
-      document.getElementById('mobileListingModal').classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    function switchMobileListingMode(mode) {
-      currentMobileListingMode = mode;
-      var tabSell = document.getElementById('mobileTabSell');
-      var tabBuy = document.getElementById('mobileTabBuy');
-      var title = document.getElementById('mobileListingModalTitle');
-      var sub = document.getElementById('mobileListingModalSub');
-      var labelLoc = document.getElementById('mLabelLocation');
-      var inputLoc = document.getElementById('mReqLocation');
-
-      if (mode === 'buy') {
-        tabBuy.className = 'py-2 rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-xs border border-slate-200';
-        tabSell.className = 'py-2 rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900';
-        title.textContent = '매물 찾아주세요 (매수·임차 의뢰)';
-        sub.textContent = '원하시는 조건의 매물을 비공개 알짜 매물까지 안전하게 찾아드립니다.';
-        labelLoc.textContent = '희망 지역 / 선호 단지';
-        inputLoc.placeholder = '예: 충무공동 84㎡ 아파트, 상가 1층 등';
-      } else {
-        tabSell.className = 'py-2 rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-xs border border-slate-200';
-        tabBuy.className = 'py-2 rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900';
-        title.textContent = '집주인 매물 내놓기 (매도·임대 접수)';
-        sub.textContent = '소중한 매물을 최적의 가격 매칭과 신속하고 안전한 거래로 연결해 드립니다.';
-        labelLoc.textContent = '소재지 / 단지명';
-        inputLoc.placeholder = '예: 충무공동 대방노블랜드, 라온프라이빗시티 등';
-      }
-      if (window.lucide) lucide.createIcons();
-    }
-
-    function handleMobileListingSubmit(e) {
-      e.preventDefault();
-      var propType = document.getElementById('mReqPropType').value;
-      var transType = document.getElementById('mReqTransType').value;
-      var location = document.getElementById('mReqLocation').value.trim();
-      var price = document.getElementById('mReqPrice').value.trim();
-      var name = document.getElementById('mReqName').value.trim();
-      var phone = document.getElementById('mReqPhone').value.trim();
-      var notes = document.getElementById('mReqNotes').value.trim();
-
-      var modeText = currentMobileListingMode === 'buy' ? '매물 구하기' : '매물 내놓기';
-      var payload = {
-        mode: currentMobileListingMode,
-        modeName: modeText,
-        propType: propType,
-        transType: transType,
-        location: location,
-        price: price,
-        name: name,
-        phone: phone,
-        notes: notes,
-        createdAt: new Date().toISOString()
-      };
-
-      // 1. Save to local storage
-      try {
-        var list = JSON.parse(localStorage.getItem('jinjuqueen_client_inquiries') || '[]');
-        list.unshift(payload);
-        localStorage.setItem('jinjuqueen_client_inquiries', JSON.stringify(list));
-      } catch (err) {}
-
-      // 2. Post to server
-      fetch('/api/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(function() {});
-
-      closeMobileListingModal();
-      showMobileToast('🎉 <strong>' + name + '</strong> 고객님의 ' + modeText + ' 접수가 완료되었습니다!<br><span class="text-amber-300 font-normal">황선숙 대표가 신속하게 확인 후 연락드리겠습니다.</span>');
-      e.target.reset();
-    }
-
-    function sendMobileListingSms() {
-      var propType = document.getElementById('mReqPropType').value;
-      var transType = document.getElementById('mReqTransType').value;
-      var location = document.getElementById('mReqLocation').value.trim();
-      var price = document.getElementById('mReqPrice').value.trim();
-      var name = document.getElementById('mReqName').value.trim();
-      var phone = document.getElementById('mReqPhone').value.trim();
-      var notes = document.getElementById('mReqNotes').value.trim();
-
-      var modeText = currentMobileListingMode === 'buy' ? '매물 찾아주세요' : '매물 내놓기';
-      var body = '[진주퀸 모바일 ' + modeText + ' 의뢰]\n'
-        + '• 의뢰유형: ' + modeText + '\n'
-        + '• 매물/거래: ' + propType + ' / ' + transType + '\n'
-        + (location ? '• 소재지/단지: ' + location + '\n' : '')
-        + (price ? '• 희망금액: ' + price + '\n' : '')
-        + (name ? '• 의뢰인: ' + name + (phone ? ' (' + phone + ')' : '') + '\n' : '')
-        + (notes ? '• 메모: ' + notes + '\n' : '')
-        + '상담 부탁드립니다.';
-
-      window.location.href = 'sms:010-4670-7248?body=' + encodeURIComponent(body);
-    }
-  </script>
 </body>
 </html>
