@@ -156,9 +156,9 @@ function initMap() {
     scrollWheelZoom: true
   });
 
-  // Default: Google Roadmap with clean Korean labels
-  currentPropertyTileLayer = L.tileLayer(GOOGLE_ROADMAP_URL, {
-    attribution: '&copy; Google Maps',
+  // Default: Google Satellite (Hybrid with clear Korean labels)
+  currentPropertyTileLayer = L.tileLayer(GOOGLE_SATELLITE_URL, {
+    attribution: '&copy; Google Maps Satellite',
     maxZoom: 20
   }).addTo(map);
 
@@ -216,9 +216,9 @@ function initOfficeMap() {
       dragging: true
     });
 
-    // Google Maps Roadmap for Office
-    L.tileLayer(GOOGLE_ROADMAP_URL, {
-      attribution: '&copy; Google Maps',
+    // Default: Google Maps Satellite for Office
+    L.tileLayer(GOOGLE_SATELLITE_URL, {
+      attribution: '&copy; Google Maps Satellite',
       maxZoom: 20
     }).addTo(officeMap);
 
