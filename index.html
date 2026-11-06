@@ -241,66 +241,72 @@
     <div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#C29B38_1px,transparent_1px)] [background-size:24px_24px]"></div>
     
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- 본문 내용과 100% 일치하는 와이드 12열 에디토리얼 타이틀 섹션 -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-10">
-        <!-- 좌측: 와이드 메인 타이틀 및 소개 (8열) -->
-        <div class="lg:col-span-8">
-          <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-3.5 sm:mb-5">
-            <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-white/10 backdrop-blur-md border border-white/15 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-medium text-amber-300">
-              <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>통계학 석사의 정밀 데이터 분석 · 2017년 개업 한 자리</span>
+      <!-- 본문 내용과 100% 일치하는 와이드 12열 에디토리얼 타이틀 섹션 (시작과 끝 전체 높이 칼정렬) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-10">
+        <!-- 좌측: 와이드 메인 타이틀 및 소개 (8열, flex-col로 우측 카드와 시작/끝 완벽 일치) -->
+        <div class="lg:col-span-8 flex flex-col justify-between">
+          <div>
+            <!-- 상단 뱃지 (에메랄드 민트 & 앰버 골드 고유 색상 및 정돈된 문구) -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-3.5 sm:mb-4">
+              <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-950/80 border border-emerald-500/60 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-300 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>통계학 석사의 정밀 데이터 분석 · 2017년부터 충무공동 한 자리</span>
+              </div>
+              <div class="inline-flex items-center gap-1.5 bg-amber-950/80 border border-amber-400/60 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-amber-300 shadow-sm">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>등록 48170-2017-00038</span>
+              </div>
             </div>
-            <div class="inline-flex items-center gap-1 bg-amber-950/70 border border-amber-500/40 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs text-amber-300 shadow-sm">
-              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
-              <span>등록 48170-2017-00038</span>
-            </div>
+
+            <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight leading-tight sm:leading-[1.28] lg:leading-[1.3] text-white mb-3 sm:mb-3.5">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 font-black">통계학 석사의 정밀 데이터 분석,</span><br class="hidden sm:inline">
+              <span class="inline-block mt-1 sm:mt-1.5 text-white">2017년부터 충무공동 한 자리를 지켜온 <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 font-black underline decoration-amber-400/50 decoration-2 underline-offset-4 sm:underline-offset-8">진주퀸공인중개사</span>입니다.</span>
+            </h1>
+
+            <p class="text-xs sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed mb-4 sm:mb-6 text-left break-keep">
+              실거래가 빅데이터와 정밀 권리분석을 바탕으로,<br class="hidden sm:inline">
+              100% 현장 검증 실매물로 고객님의 소중한 자산을 안전하게 중개합니다.
+            </p>
           </div>
 
-          <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight leading-tight sm:leading-[1.28] lg:leading-[1.3] text-white mb-3.5 sm:mb-4">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 font-black">통계학 석사의 정밀 데이터 분석,</span><br class="hidden sm:inline">
-            <span class="inline-block mt-1 sm:mt-1.5 text-white">2017년부터 충무공동 한 자리를 지켜온 <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 font-black underline decoration-amber-400/50 decoration-2 underline-offset-4 sm:underline-offset-8">진주퀸공인중개사</span>입니다.</span>
-          </h1>
-
-          <p class="text-xs sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed mb-5 sm:mb-8 text-left break-keep">
-            실거래가 빅데이터와 정밀 권리분석을 바탕으로,<br class="hidden sm:inline">
-            100% 현장 검증 실매물로 고객님의 소중한 자산을 안전하게 중개합니다.
-          </p>
-
-          <!-- 3대 신뢰 지표 카드 (하단 대표 소개 3대 가치와 100% 완벽 통일) -->
-          <div class="grid grid-cols-3 gap-1.5 sm:gap-3.5 text-xs">
-            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2 sm:p-4 backdrop-blur-sm text-center">
+          <!-- 3대 신뢰 지표 카드 (바닥 라인이 우측 파란색 전화 버튼 바닥선과 1:1 완벽 일치) -->
+          <div class="grid grid-cols-3 gap-1.5 sm:gap-3.5 text-xs pt-2">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 backdrop-blur-sm text-center">
               <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">통계학 석사</div>
               <div class="text-slate-300 text-[10px] sm:text-xs mt-0.5 sm:mt-1 whitespace-nowrap">정밀 데이터 분석</div>
             </div>
-            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2 sm:p-4 backdrop-blur-sm text-center">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 backdrop-blur-sm text-center">
               <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">충무공동 한 자리</div>
               <div class="text-slate-300 text-[10px] sm:text-xs mt-0.5 sm:mt-1 whitespace-nowrap">2017년부터 우직한 신뢰</div>
             </div>
-            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2 sm:p-4 backdrop-blur-sm text-center">
+            <div class="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 backdrop-blur-sm text-center">
               <div class="text-amber-400 font-bold text-xs sm:text-base md:text-lg whitespace-nowrap">100% 실매물</div>
               <div class="text-slate-300 text-[10px] sm:text-xs mt-0.5 sm:mt-1 whitespace-nowrap">현장 검증 책임 중개</div>
             </div>
           </div>
         </div>
 
-        <!-- 우측: 황선숙 대표 프로필 및 사무소 안내 쇼케이스 카드 (4열) -->
-        <div class="lg:col-span-4 hidden lg:block">
-          <div class="relative bg-gradient-to-b from-slate-800/90 to-slate-950/95 rounded-3xl p-6 border border-brand-gold/30 shadow-2xl backdrop-blur-md">
-            <div class="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-brand-gold/50 shadow-lg mb-4">
-              <img src="images/ceo-square.jpg?v=15" alt="황선숙 대표공인중개사" class="w-full h-full object-cover">
-              <div class="absolute bottom-2 left-2 right-2 bg-slate-950/85 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-white/10 text-center">
-                <span class="text-xs font-bold text-amber-300">대표 공인중개사 황선숙</span>
+        <!-- 우측: 황선숙 대표 프로필 쇼케이스 카드 (좌측과 시작/끝 높이 100% 일치) -->
+        <div class="lg:col-span-4 hidden lg:flex flex-col">
+          <div class="relative bg-gradient-to-b from-slate-800/90 to-slate-950/95 rounded-3xl p-5 sm:p-6 border border-brand-gold/30 shadow-2xl backdrop-blur-md h-full flex flex-col justify-between">
+            <div>
+              <div class="relative w-full aspect-[4/3.8] rounded-2xl overflow-hidden border-2 border-brand-gold/50 shadow-lg mb-3">
+                <img src="images/ceo-square.jpg?v=15" alt="황선숙 대표공인중개사" class="w-full h-full object-cover">
+                <div class="absolute bottom-2 left-2 right-2 bg-slate-950/85 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-white/10 text-center">
+                  <span class="text-xs font-bold text-amber-300">대표 공인중개사 황선숙</span>
+                </div>
+              </div>
+              <div class="space-y-1 text-center text-xs">
+                <p class="text-slate-200 font-medium">진주시 에나로 146, 105호 (라온프라이빗시티)</p>
+                <p class="text-[11px] text-amber-400 font-semibold">2017년 2월 개업 이래 충무공동 한 자리 (통계학 석사)</p>
               </div>
             </div>
-            <div class="space-y-1 text-center text-xs">
-              <p class="text-slate-200 font-medium">진주시 에나로 146, 105호 (라온프라이빗시티)</p>
-              <p class="text-[11px] text-amber-400 font-semibold">2017년 2월 개업 이래 충무공동 한 자리 (통계학 석사)</p>
-              <div class="pt-2 flex justify-center gap-2">
-                <a href="tel:010-4670-7248" class="px-5 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-extrabold rounded-xl text-xs transition flex items-center gap-1.5 shadow-md">
-                  <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
-                  <span>010-4670-7248 직접 상담</span>
-                </a>
-              </div>
+            <!-- 사진 밑 푸른색 계열 전화번호 배너 버튼 (좌측 3대 지표 카드 바닥과 정확히 일치) -->
+            <div class="pt-3">
+              <a href="tel:010-4670-7248" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-950/50 hover:shadow-blue-600/40 transform hover:-translate-y-0.5 cursor-pointer">
+                <i data-lucide="phone-call" class="w-4 h-4 text-cyan-200"></i>
+                <span>010-4670-7248 직접 상담</span>
+              </a>
             </div>
           </div>
         </div>
