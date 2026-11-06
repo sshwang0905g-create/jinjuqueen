@@ -41,11 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (err) {
     console.error('Initial renderNews error:', err);
   }
-  try {
-    renderMediaSection();
-  } catch (err) {
-    console.error('Initial renderMediaSection error:', err);
-  }
 
   // 2. Safe map initialization
   try {
