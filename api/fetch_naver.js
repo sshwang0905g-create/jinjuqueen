@@ -117,7 +117,7 @@ module.exports = async (req, res) => {
       }
     }
 
-    const allPhotos = [...roomPhotos, ...complexPhotos];
+    let allPhotos = [...roomPhotos, ...complexPhotos];
 
     // 4. Parse Title
     let title = '';
@@ -319,18 +319,18 @@ module.exports = async (req, res) => {
       finalDescription = `네이버부동산 등록 검증 실매물(매물번호: ${atclNo})입니다.`;
     }
 
-    // 토지/택지 매물인데 실사진이 전혀 없는 경우 토지 전용 클린 타이틀 카드 매핑
-    if (category === '택지' && allPhotos.length === 0) {
-      allPhotos = ['images/complex_cards/토지_클린카드.jpg'];
+    // 실사진(방/내부 현장사진)이 없는 경우 화사한 클린 타이틀 카드 자동 배정
+    if (category === '택지' && (allPhotos.length === 0 || roomPhotos.length === 0)) {
+      const landCover = 'images/complex_cards/토지_클린카드.jpg';
+      allPhotos = [landCover, ...allPhotos.filter(p => p !== landCover)];
     }
 
-    // 상가 매물인데 실사진이 전혀 없는 경우 상가 전용 클린 타이틀 카드 매핑
-    if (category === '상가' && allPhotos.length === 0) {
-      allPhotos = ['images/complex_cards/일반상가_클린카드.jpg'];
+    if (category === '상가' && (allPhotos.length === 0 || roomPhotos.length === 0)) {
+      const commCover = 'images/complex_cards/일반상가_클린카드.jpg';
+      allPhotos = [commCover, ...allPhotos.filter(p => p !== commCover)];
     }
 
-    // 아파트 매물인데 실사진이 전혀 없는 경우 깨끗한 아파트 이름 타이틀 카드 매핑
-    if (category === '아파트' && allPhotos.length === 0) {
+    if (category === '아파트' && (allPhotos.length === 0 || roomPhotos.length === 0)) {
       let complexCover = 'images/complex_cards/기본_아파트_클린카드.jpg';
       if (title.includes('더힐')) complexCover = 'images/complex_cards/더힐_505동_클린카드.jpg';
       else if (title.includes('라온')) complexCover = 'images/complex_cards/라온프라이빗_204동_클린카드.jpg';
@@ -339,7 +339,7 @@ module.exports = async (req, res) => {
       else if (title.includes('더퍼스트')) complexCover = 'images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg';
       else if (title.includes('중흥')) complexCover = 'images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg';
       else if (title.includes('한림')) complexCover = 'images/complex_cards/한림풀에버_클린카드.jpg';
-      allPhotos = [complexCover];
+      allPhotos = [complexCover, ...allPhotos.filter(p => p !== complexCover)];
     }
 
     return res.status(200).json({
