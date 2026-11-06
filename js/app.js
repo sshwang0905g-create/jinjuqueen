@@ -1185,12 +1185,13 @@ function closeNewsModal() {
 // ----------------------------------------------------
 // ALL-CLIENT REAL ESTATE INQUIRY FORM (매물 내놓기 & 매물 찾아주세요 2-in-1)
 // ----------------------------------------------------
-let currentListingMode = 'sell'; // 'sell' (내놓기) or 'buy' (구하기)
+let currentListingMode = 'sell'; // 'sell' (매도·임대) or 'buy' (매수·임차)
 
 function switchListingMode(mode) {
   currentListingMode = mode;
   const tabSell = document.getElementById('tabReqSell');
   const tabBuy = document.getElementById('tabReqBuy');
+  const bannerEl = document.getElementById('listingModeBanner');
   const titleEl = document.getElementById('listingModalTitle');
   const subEl = document.getElementById('listingModalSubtitle');
   const addressLabel = document.getElementById('labelReqAddress');
@@ -1200,55 +1201,94 @@ function switchListingMode(mode) {
   const notesLabel = document.getElementById('labelReqNotes');
   const notesInput = document.getElementById('reqNotes');
   const submitBtnText = document.getElementById('listingSubmitBtnText');
+  const transSelect = document.getElementById('reqTransType');
 
   if (mode === 'buy') {
-    // 1. 매물 찾아주세요 (매수 · 임차)
+    // ----------------------------------------------------
+    // 1. 매수 · 임차 (맞춤 매물 찾기 / 사거나 세얻기)
+    // ----------------------------------------------------
     if (tabBuy) {
-      tabBuy.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm cursor-pointer';
+      tabBuy.className = 'py-3 px-2 rounded-xl text-xs font-black transition flex flex-col items-center justify-center gap-1 cursor-pointer bg-emerald-600 text-white shadow-md';
+      tabBuy.innerHTML = `
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="search" class="w-4 h-4 text-white stroke-[2.5]"></i>
+          <span class="text-xs sm:text-sm font-black">매수 · 임차</span>
+        </div>
+        <span class="text-[10px] font-bold text-emerald-100">(맞춤 매물 찾기)</span>
+      `;
     }
     if (tabSell) {
-      tabSell.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900 cursor-pointer';
+      tabSell.className = 'py-3 px-2 rounded-xl text-xs font-black transition flex flex-col items-center justify-center gap-1 cursor-pointer bg-white text-slate-600 hover:text-slate-900';
+      tabSell.innerHTML = `
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4 stroke-[2.5]"></i>
+          <span class="text-xs sm:text-sm font-black">매도 · 임대</span>
+        </div>
+        <span class="text-[10px] font-semibold text-slate-500">(집·상가 내놓기)</span>
+      `;
+    }
+    if (bannerEl) {
+      bannerEl.className = 'p-3 bg-emerald-50 border border-emerald-200 rounded-xl mb-4 text-xs text-emerald-950 leading-relaxed font-medium';
+      bannerEl.innerHTML = '🔍 <strong>[고객 맞춤 매물 찾기]</strong> 원하시는 조건(단지, 면적, 예산 등)을 남겨주시면, 아직 포털에 나오지 않은 비공개 알짜 매물까지 황선숙 대표가 1:1로 직접 찾아 연락드립니다.';
     }
     if (titleEl) titleEl.textContent = '맞춤 매물 찾기 의뢰 (매수 · 임차)';
-    if (subEl) subEl.textContent = '원하시는 조건을 남겨주시면, 아직 광고 전인 비공개 알짜 매물까지 신속하게 찾아 연락드립니다.';
-    if (addressLabel) addressLabel.textContent = '희망 지역 / 선호 단지';
-    if (addressInput) addressInput.placeholder = '예: LH8단지 34평, 대방노블랜드 또는 혁신도시 1층 상가';
-    if (priceLabel) priceLabel.textContent = '예산 범위 (희망 금액)';
-    if (priceInput) priceInput.placeholder = '예: 매매 4억 이하 또는 전세 2억 5천 선, 보증금 3000/70 선';
-    if (notesLabel) notesLabel.textContent = '희망 입주시점 및 추가 요구조건 (선택)';
+    if (subEl) subEl.textContent = '원하시는 희망 아파트 단지나 상가 위치, 예산 조건을 남겨주시면 최적의 매물을 매칭해 드립니다.';
+    if (addressLabel) addressLabel.innerHTML = '희망 지역 / 선호 단지 <span class="text-rose-500">*</span>';
+    if (addressInput) addressInput.placeholder = '예: 혁신 8단지 34평, 대방노블랜드, 중흥S클래스 또는 1층 상가';
+    if (priceLabel) priceLabel.innerHTML = '예산 범위 (희망 금액) <span class="text-rose-500">*</span>';
+    if (priceInput) priceInput.placeholder = '예: 매매 4억~4억 5천 선 또는 전세 2억 5천 선, 보증금 3000/70 선';
+    if (notesLabel) notesLabel.textContent = '입주 희망 시기 및 선호 조건 (선택)';
     if (notesInput) notesInput.placeholder = '예: 3개월 이내 입주 희망, 로열층 남향 선호, 즉시 입주 등';
-    if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 맞춤 매물 찾기 의뢰하기';
-    const transSelect = document.getElementById('reqTransType');
+    if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 맞춤 매물 찾기(매수·임차) 접수하기';
     if (transSelect) {
       transSelect.innerHTML = `
-        <option value="매매(구입)">매매 (구입)</option>
-        <option value="전세">전세</option>
-        <option value="월세">월세</option>
+        <option value="매매(구입)">매매 (구입·사기)</option>
+        <option value="전세(구하기)">전세 (구하기·임차)</option>
+        <option value="월세(구하기)">월세 (구하기·임차)</option>
       `;
     }
   } else {
-    // 2. 매물 내놓기 (매도 · 임대)
+    // ----------------------------------------------------
+    // 2. 매도 · 임대 (매물 내놓기 / 팔거나 세놓기)
+    // ----------------------------------------------------
     if (tabSell) {
-      tabSell.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm cursor-pointer border border-slate-200';
+      tabSell.className = 'py-3 px-2 rounded-xl text-xs font-black transition flex flex-col items-center justify-center gap-1 cursor-pointer bg-amber-500 text-slate-950 shadow-md';
+      tabSell.innerHTML = `
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4 stroke-[2.5]"></i>
+          <span class="text-xs sm:text-sm font-black">매도 · 임대</span>
+        </div>
+        <span class="text-[10px] font-bold text-slate-900 opacity-90">(집·상가 내놓기)</span>
+      `;
     }
     if (tabBuy) {
-      tabBuy.className = 'py-2.5 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900 cursor-pointer';
+      tabBuy.className = 'py-3 px-2 rounded-xl text-xs font-black transition flex flex-col items-center justify-center gap-1 cursor-pointer bg-white text-slate-600 hover:text-slate-900';
+      tabBuy.innerHTML = `
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="search" class="w-4 h-4 text-emerald-600 stroke-[2.5]"></i>
+          <span class="text-xs sm:text-sm font-black">매수 · 임차</span>
+        </div>
+        <span class="text-[10px] font-semibold text-slate-500">(맞춤 매물 찾기)</span>
+      `;
+    }
+    if (bannerEl) {
+      bannerEl.className = 'p-3 bg-amber-50 border border-amber-200 rounded-xl mb-4 text-xs text-amber-950 leading-relaxed font-medium';
+      bannerEl.innerHTML = '🏠 <strong>[소유주·집주인 매물 내놓기]</strong> 실거래가 빅데이터와 정밀 권리분석을 바탕으로 최적의 가격에 신속 매칭해 드립니다. (상세 동·호수 철저 비공개 보장)';
     }
     if (titleEl) titleEl.textContent = '간편 매물 내놓기 (매도 · 임대)';
     if (subEl) subEl.textContent = '소유주님의 소중한 매물을 최적의 가격으로 신속 매칭해 드립니다. (상세동호수 비공개 보장)';
-    if (addressLabel) addressLabel.textContent = '매물 소재지 (단지명 / 주소)';
+    if (addressLabel) addressLabel.innerHTML = '매물 소재지 (단지명 / 주소) <span class="text-rose-500">*</span>';
     if (addressInput) addressInput.placeholder = '예: 혁신LH8단지 803동 또는 라온프라이빗 24평';
-    if (priceLabel) priceLabel.textContent = '희망 금액 (매매가 또는 보증금/월세)';
+    if (priceLabel) priceLabel.innerHTML = '희망 금액 (매매가 또는 보증금/월세) <span class="text-rose-500">*</span>';
     if (priceInput) priceInput.placeholder = '예: 매매 5억 2,000 또는 보증금 3000 / 월 80';
     if (notesLabel) notesLabel.textContent = '입주가능시기 및 특이사항 (선택)';
     if (notesInput) notesInput.placeholder = '예: 정상 입주 가능, 전세 안고 매매, 인테리어 수리 완료 등';
-    if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 매물 내놓기 접수하기';
-    const transSelect = document.getElementById('reqTransType');
+    if (submitBtnText) submitBtnText.textContent = '황선숙 대표에게 매물 내놓기(매도·임대) 접수하기';
     if (transSelect) {
       transSelect.innerHTML = `
-        <option value="매매(매도)">매매 (매도·팔기)</option>
-        <option value="전세(임대)">전세 (세놓기)</option>
-        <option value="월세(임대)">월세 (세놓기)</option>
+        <option value="매매(매도)">매매 (팔기·매도)</option>
+        <option value="전세(임대)">전세 (세놓기·임대)</option>
+        <option value="월세(임대)">월세 (세놓기·임대)</option>
       `;
     }
   }
@@ -1283,7 +1323,7 @@ async function handleListingSubmit(e) {
   const phone = document.getElementById('reqPhone').value.trim();
   const notes = document.getElementById('reqNotes') ? document.getElementById('reqNotes').value.trim() : '';
 
-  const modeName = currentListingMode === 'buy' ? '매물 구하기' : '매물 내놓기';
+  const modeName = currentListingMode === 'buy' ? '매수 · 임차 (맞춤 매물 찾기)' : '매도 · 임대 (매물 내놓기)';
   const inquiryData = {
     mode: currentListingMode,
     modeName,
@@ -1314,8 +1354,62 @@ async function handleListingSubmit(e) {
   } catch (err) {}
 
   closeListingModal();
-  showToast(`[접수완료] ${name} 고객님의 ${modeName} 의뢰가 안전하게 접수되었습니다. 황선숙 대표가 신속히 연락드리겠습니다.`);
+
+  // 3. 접수 완료 상세 모달 띄우기
+  const successModal = document.getElementById('inquirySuccessModal');
+  const cardEl = document.getElementById('inquirySuccessCard');
+  const smsBtn = document.getElementById('inquirySmsBtn');
+
+  if (cardEl) {
+    const isBuy = currentListingMode === 'buy';
+    cardEl.innerHTML = `
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <span class="text-slate-500">의뢰 구분</span>
+        <span class="font-extrabold ${isBuy ? 'text-emerald-700 bg-emerald-100' : 'text-amber-800 bg-amber-100'} px-2 py-0.5 rounded-full">${modeName}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">매물 종류/형태</span>
+        <span class="font-bold text-slate-900">${propType} · ${transType}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">${isBuy ? '희망 지역/단지' : '매물 소재지'}</span>
+        <span class="font-bold text-slate-900">${address}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">${isBuy ? '희망 예산' : '희망 금액'}</span>
+        <span class="font-bold text-brand-gold font-mono">${price}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">의뢰인</span>
+        <span class="font-bold text-slate-900">${name} (${phone})</span>
+      </div>
+      ${notes ? `<div class="pt-1.5 border-t border-slate-200 text-slate-600"><strong>요청사항:</strong> ${notes}</div>` : ''}
+    `;
+  }
+
+  // SMS Body prefill
+  if (smsBtn) {
+    const smsText = `[진주퀸 ${modeName} 접수]\n의뢰인: ${name} (${phone})\n구분: ${propType} / ${transType}\n위치: ${address}\n금액: ${price}${notes ? '\n요청: ' + notes : ''}`;
+    smsBtn.href = `sms:010-4670-7248?body=${encodeURIComponent(smsText)}`;
+  }
+
+  if (successModal) {
+    successModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    if (window.lucide) lucide.createIcons();
+  } else {
+    showToast(`[접수완료] ${name} 고객님의 ${modeName} 의뢰가 안전하게 접수되었습니다.`);
+  }
+
   e.target.reset();
+}
+
+function closeInquirySuccessModal() {
+  const modal = document.getElementById('inquirySuccessModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
 }
 
 // ----------------------------------------------------

@@ -6,6 +6,10 @@
       "destination": "/mobile.html"
     },
     {
+      "source": "/api/inquiry",
+      "destination": "/api/inquiry.js"
+    },
+    {
       "source": "/api/fetch_naver",
       "destination": "/api/fetch_naver.js"
     },
