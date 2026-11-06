@@ -83,33 +83,33 @@
 <body class="bg-slate-100 text-slate-800 antialiased pb-24 select-none">
 
   <!-- 1. Top Minimal Header -->
-  <header class="sticky top-0 z-40 glass-header text-white px-3.5 py-2.5 shadow-md border-b border-slate-800 flex items-center justify-between">
-    <a href="mobile.html" class="flex items-center gap-2.5">
-      <div class="w-8 h-8 rounded-xl bg-slate-900 border border-amber-500/40 flex items-center justify-center p-1 shadow">
-        <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain">
+  <header class="sticky top-0 z-40 glass-header text-white px-3 sm:px-3.5 py-2.5 shadow-md border-b border-slate-800 flex items-center justify-between gap-2">
+    <a href="mobile.html" class="flex items-center gap-2 min-w-0 flex-1">
+      <div class="w-8 h-8 min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px] rounded-xl bg-slate-900 border border-amber-500/40 flex items-center justify-center p-1 shadow shrink-0" style="width: 32px; height: 32px; min-width: 32px; min-height: 32px;">
+        <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain block" style="width: 24px; height: 24px; object-fit: contain;">
       </div>
-      <div>
-        <div class="flex items-center gap-1.5">
-          <span class="text-base font-black tracking-tight text-white">진주퀸공인중개사</span>
-          <span class="text-[9px] font-bold bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded font-mono">모바일</span>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-1.5 flex-nowrap">
+          <span class="text-sm sm:text-base font-black tracking-tight text-white truncate">진주퀸공인중개사</span>
+          <span class="text-[9px] font-bold bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded font-mono shrink-0">모바일</span>
         </div>
-        <p class="text-[10px] text-amber-300 font-medium leading-none mt-0.5">황선숙 대표 · 충무공동 한 자리</p>
+        <p class="text-[10px] text-amber-300 font-medium leading-none mt-0.5 truncate">황선숙 대표 · 충무공동 한 자리</p>
       </div>
     </a>
 
     <!-- Header Action Buttons -->
-    <div class="flex items-center gap-1.5">
+    <div class="flex items-center gap-1.5 shrink-0">
       <!-- Quick Listing Request Button in Header -->
-      <button onclick="openMobileListingModal('sell')" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 text-slate-950 font-black text-xs flex items-center gap-1 transition touch-press shadow-sm cursor-pointer" title="매물 내놓기/구하기">
-        <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-950"></i>
+      <button onclick="openMobileListingModal('sell')" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 text-slate-950 font-black text-xs flex items-center gap-1 transition touch-press shadow-sm cursor-pointer shrink-0" title="매물 내놓기/구하기">
+        <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-950 shrink-0"></i>
         <span>매물의뢰</span>
       </button>
       <!-- Direct Call Button -->
-      <a href="tel:010-4670-7248" class="p-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm transition touch-press" title="황선숙 대표 직통전화">
-        <i data-lucide="phone-call" class="w-4 h-4"></i>
+      <a href="tel:010-4670-7248" class="p-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm transition touch-press shrink-0" title="황선숙 대표 직통전화">
+        <i data-lucide="phone-call" class="w-4 h-4 shrink-0"></i>
       </a>
       <!-- PC Mode Switch Button in Header -->
-      <button onclick="switchToPcMode()" class="px-2 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-bold transition touch-press cursor-pointer" title="PC 전체 화면으로 보기">
+      <button onclick="switchToPcMode()" class="px-2 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-bold transition touch-press cursor-pointer shrink-0" title="PC 전체 화면으로 보기">
         <span>PC</span>
       </button>
     </div>
@@ -119,8 +119,8 @@
   <section class="bg-gradient-to-b from-[#0B132B] via-slate-900 to-slate-800 text-white px-4 pt-4 pb-4.5 rounded-b-3xl shadow-lg border-b border-slate-700/80">
     <!-- Clean Representative Header -->
     <div class="flex items-center gap-3 mb-3">
-      <div class="relative w-13 h-13 rounded-2xl overflow-hidden border-2 border-amber-400 shrink-0 shadow-md bg-slate-950">
-        <img src="images/ceo-square.jpg" alt="황선숙 대표" class="w-full h-full object-cover">
+      <div class="relative w-14 h-14 min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] rounded-2xl overflow-hidden border-2 border-amber-400 shrink-0 shadow-md bg-slate-950" style="width: 56px; height: 56px; min-width: 56px; min-height: 56px; max-width: 56px; max-height: 56px;">
+        <img src="images/ceo-square.jpg" alt="황선숙 대표" class="w-full h-full object-cover block" style="width: 56px; height: 56px; object-fit: cover;">
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-1.5 flex-wrap">
@@ -359,8 +359,8 @@
   <footer class="bg-slate-900 text-slate-400 text-[11px] px-4 pt-6 pb-20 border-t border-slate-800 space-y-3">
     <div class="flex items-center justify-between pb-3 border-b border-slate-800">
       <div class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-md bg-slate-800 border border-amber-400/30 flex items-center justify-center p-0.5">
-          <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain">
+        <div class="w-6 h-6 min-w-[24px] min-h-[24px] rounded-md bg-slate-800 border border-amber-400/30 flex items-center justify-center p-0.5 shrink-0" style="width: 24px; height: 24px;">
+          <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain block" style="width: 20px; height: 20px;">
         </div>
         <span class="font-bold text-white text-xs">진주퀸공인중개사사무소</span>
       </div>
@@ -450,7 +450,7 @@
         <!-- Agent Information Box -->
         <div class="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <img src="images/ceo-square.jpg" alt="황선숙 대표" class="w-10 h-10 rounded-full border border-amber-400 object-cover">
+            <img src="images/ceo-square.jpg" alt="황선숙 대표" class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border border-amber-400 object-cover shrink-0" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; object-fit: cover;">
             <div>
               <div class="font-bold text-xs text-white">진주퀸공인중개사 황선숙 대표</div>
               <div class="text-[10px] text-amber-400 font-medium">010-4670-7248 · 055-761-7248</div>
