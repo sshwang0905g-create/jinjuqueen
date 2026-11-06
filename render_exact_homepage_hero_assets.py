@@ -29,11 +29,14 @@ SLATE_400 = (148, 163, 184)
 def create_naver_blog_banner():
     """
     Naver Blog Title Banner (966 x 500)
-    - ULTRA-CLEAN & MINIMALIST: All small crowded text completely removed per user request
-    - Natural phrasing: "충무공동 한 자리를 지켜온 진주퀸공인중개사입니다."
-    - Integrated, elegant contact bar: Clunky white block replaced with sophisticated deep navy glass pill
-    - STRICT height alignment: Left content and Right photo card both start at Y=85 and end at Y=415 (330px)
-    - Luxurious negative space, perfectly balanced and centered
+    Based on User's Exact Choice (media_1793953742088_5b044225.jpg):
+    - Top Badge: ✨ LEADERSHIP & BROKER IDENTITY • 2017년부터 충무공동 한 자리 대표 공인중개사 ('9년차' 수정)
+    - Headline Line 1: 통계학 석사의 정밀 데이터 분석과 (Radiant Gold)
+    - Headline Line 2: 충무공동 한 자리를 지켜온 우직한 신뢰 (Pure White)
+    - Golden Diamond Divider: ── ◆ ──
+    - Body paragraph: 2017년 2월 개업 이래 충무공동 라온프라이빗시티 한 자리에서 묵묵히 쌓아온...
+    - Contact Action Bar: [대표 직통] 010-4670-7248 | 사무실 055-761-7248
+    - Right Photo Card: Exactly height-aligned (Y: 70 to 430 = 360px)
     """
     W, H = 966, 500
     banner = Image.new('RGB', (W, H), BG_NAVY_TOP)
@@ -52,18 +55,18 @@ def create_naver_blog_banner():
         for y in range(16, H, 26):
             draw.point((x, y), fill=(26, 42, 68))
 
-    # STRICT VERTICAL SPAN: Y_START = 85, Y_END = 415 (Height = 330px, centered in 500px)
-    Y_START = 85
-    Y_END = 415
-    SPAN_H = Y_END - Y_START  # Exactly 330px
+    # STRICT VERTICAL SPAN: Y_START = 70, Y_END = 430 (Height = 360px)
+    Y_START = 70
+    Y_END = 430
+    SPAN_H = Y_END - Y_START  # Exactly 360px
 
     # ==========================================
-    # RIGHT: Photo Card (Y: 85 to 415, Height: 330px)
+    # RIGHT: Photo Card (Y: 70 to 430, Height: 360px)
     # ==========================================
-    photo_card_w = 250
+    photo_card_w = 255
     photo_card_h = SPAN_H
-    photo_card_x = W - photo_card_w - 55  # 661
-    photo_card_y = Y_START  # 85
+    photo_card_x = W - photo_card_w - 50  # 661
+    photo_card_y = Y_START  # 70
 
     # Photo Card Body
     draw.rounded_rectangle(
@@ -73,7 +76,7 @@ def create_naver_blog_banner():
     )
 
     # Photo inside card
-    img_h = 250
+    img_h = 280
     img_w = photo_card_w - 14
     img_x = photo_card_x + 7
     img_y = photo_card_y + 7
@@ -88,7 +91,7 @@ def create_naver_blog_banner():
         banner.paste(ceo_r, (img_x, img_y), pmask)
 
         # Name plate overlay at bottom of photo
-        f_pname = ImageFont.truetype(FONT_BD, 13)
+        f_pname = ImageFont.truetype(FONT_BD, 14)
         tag_w = img_w - 24
         tag_h = 28
         tag_x = img_x + 12
@@ -96,64 +99,68 @@ def create_naver_blog_banner():
         draw.rounded_rectangle([tag_x, tag_y, tag_x + tag_w, tag_y + tag_h], radius=10, fill=(10, 17, 36))
         draw.text((tag_x + 18, tag_y + 5), "대표 공인중개사 황선숙", font=f_pname, fill=GOLD_BRIGHT)
 
-    # Clean text below photo inside card
+    # Info below photo inside card
     f_c1 = ImageFont.truetype(FONT_REG, 11)
     f_c2 = ImageFont.truetype(FONT_BD, 11)
-    draw.text((photo_card_x + 20, photo_card_y + img_h + 16), "진주시 에나로 146, 105호 (라온프라이빗시티)", font=f_c1, fill=SLATE_300)
-    draw.text((photo_card_x + 16, photo_card_y + img_h + 38), "2017년부터 충무공동 한 자리 (통계학 석사)", font=f_c2, fill=GOLD_BRIGHT)
+    draw.text((photo_card_x + 22, photo_card_y + img_h + 16), "진주시 에나로 146, 105호 (라온프라이빗시티)", font=f_c1, fill=SLATE_300)
+    draw.text((photo_card_x + 18, photo_card_y + img_h + 38), "2017년부터 충무공동 한 자리 (통계학 석사)", font=f_c2, fill=GOLD_BRIGHT)
 
     # ==========================================
-    # LEFT: Text Content (Y: 85 to 415, Height: 330px)
+    # LEFT: Text Content (Y: 70 to 430, Height: 360px)
     # ==========================================
-    lx = 55
+    lx = 50
 
-    # 1. Top Badges (Y = 85 ~ 115) - Single unified elegant pill, NO repetition!
-    f_b1 = ImageFont.truetype(FONT_BD, 12)
-    b1_text = "🏛️  2017년부터 충무공동 한 자리 · 등록 48170-2017-00038"
-    b1_w = int(f_b1.getlength(b1_text)) + 26
+    # 1. Top Badge: LEADERSHIP & BROKER IDENTITY • 2017년부터 충무공동 한 자리 대표 공인중개사 ('9년차' 깔끔 수정)
+    f_b1 = ImageFont.truetype(FONT_BD, 11)
+    b1_text = "✨  LEADERSHIP & BROKER IDENTITY  •  2017년부터 충무공동 한 자리 대표 공인중개사"
+    b1_w = int(f_b1.getlength(b1_text)) + 28
     b1_h = 28
     draw.rounded_rectangle([lx, Y_START, lx + b1_w, Y_START + b1_h], radius=14, fill=GOLD_BG)
-    draw.text((lx + 13, Y_START + 5), b1_text, font=f_b1, fill=GOLD_BRIGHT)
+    draw.text((lx + 14, Y_START + 5), b1_text, font=f_b1, fill=GOLD_BRIGHT)
 
-    # 2. Main Headline H1 (Spacious, prominent, dignified)
-    # Line 1: 통계학 석사의 정밀 데이터 분석,
-    # Line 2: 충무공동 한 자리를 지켜온 진주퀸공인중개사입니다.
+    # 2. Main Headline H1 (User's Exact Phrasing)
+    # Line 1: 통계학 석사의 정밀 데이터 분석과 (Radiant Gold)
+    # Line 2: 충무공동 한 자리를 지켜온 우직한 신뢰 (Pure White)
     f_h1 = ImageFont.truetype(FONT_BD, 28)
-    f_h2 = ImageFont.truetype(FONT_BD, 22)
-    f_name = ImageFont.truetype(FONT_BD, 25)
+    f_h2 = ImageFont.truetype(FONT_BD, 26)
 
-    y_h1 = Y_START + 50  # 135
-    draw.text((lx, y_h1), "통계학 석사의 정밀 데이터 분석,", font=f_h1, fill=WHITE)
+    y_h1 = Y_START + 46  # 116
+    draw.text((lx, y_h1), "통계학 석사의 정밀 데이터 분석과", font=f_h1, fill=GOLD_BRIGHT)
 
-    y_h2 = y_h1 + 45     # 180
-    str_pre = "충무공동 한 자리를 지켜온 "
-    draw.text((lx, y_h2), str_pre, font=f_h2, fill=WHITE)
-    w_pre = int(f_h2.getlength(str_pre)) + 4
+    y_h2 = y_h1 + 42     # 158
+    draw.text((lx, y_h2), "충무공동 한 자리를 지켜온 우직한 신뢰", font=f_h2, fill=WHITE)
 
-    str_brand = "진주퀸공인중개사"
-    draw.text((lx + w_pre, y_h2 - 2), str_brand, font=f_name, fill=GOLD_BRIGHT)
-    w_brand = int(f_name.getlength(str_brand)) + 4
+    # 3. Elegant Golden Diamond Divider (── ◆ ──)
+    y_div = y_h2 + 48    # 206
+    draw.line([(lx, y_div), (lx + 50, y_div)], fill=GOLD_RICH, width=1)
+    # Diamond: 8x8 rotated square
+    draw.polygon([
+        (lx + 60, y_div - 5),
+        (lx + 66, y_div),
+        (lx + 60, y_div + 5),
+        (lx + 54, y_div)
+    ], fill=GOLD_BRIGHT)
+    draw.line([(lx + 70, y_div), (lx + 120, y_div)], fill=GOLD_RICH, width=1)
 
-    draw.text((lx + w_pre + w_brand, y_h2), "입니다.", font=f_h2, fill=WHITE)
+    # 4. Body Paragraph (User's Exact Phrasing)
+    f_body = ImageFont.truetype(FONT_REG, 12)
+    y_body = y_div + 20  # 226
+    draw.text((lx, y_body), "2017년 2월 개업 이래 충무공동 라온프라이빗시티 한 자리에서 묵묵히 쌓아온", font=f_body, fill=SLATE_300)
+    draw.text((lx, y_body + 22), "객관적 실거래가 빅데이터와 철저한 권리분석으로 고객님의 소중한 자산을 지킵니다.", font=f_body, fill=SLATE_300)
 
-    # 3. Clean 1-Line Key Value Tag (Instead of 3 lines of small crowded text!)
-    f_sub = ImageFont.truetype(FONT_REG, 13)
-    y_sub = y_h2 + 56    # 236
-    draw.text((lx, y_sub), "빅데이터 실거래가 정밀 분석  |  100% 현장 검증 실매물  |  책임 성실 중개", font=f_sub, fill=SLATE_300)
-
-    # 4. Direct Call Action Strip (Starts Y = 345, Ends EXACTLY at Y_END = 415!)
-    # Height = 415 - 345 = 70px
-    y_btn = 345
+    # 5. Direct Call Action Strip (Starts Y = 360, Ends EXACTLY at Y_END = 430!)
+    # Height = 430 - 360 = 70px
+    y_btn = 360
     btn_w = 545
 
     draw.rounded_rectangle([lx, y_btn, lx + btn_w, Y_END], radius=18, fill=GOLD_BTN)
 
-    # Sophisticated Deep Navy Glass Pill for "대표 직통" (Replaces the clunky white rectangle!)
+    # Deep Navy Glass Pill for "대표 직통"
     f_btn_lbl = ImageFont.truetype(FONT_BD, 13)
     draw.rounded_rectangle([lx + 12, y_btn + 12, lx + 104, Y_END - 12], radius=12, fill=(12, 22, 48))
     draw.text((lx + 24, y_btn + 20), "대표 직통", font=f_btn_lbl, fill=GOLD_BRIGHT)
 
-    # Large, crisp phone number
+    # Phone Number
     f_btn_phone = ImageFont.truetype(FONT_BD, 24)
     draw.text((lx + 118, y_btn + 15), "010-4670-7248", font=f_btn_phone, fill=WHITE)
 
@@ -166,15 +173,15 @@ def create_naver_blog_banner():
     banner.save(out_path, "JPEG", quality=98)
     banner.save(os.path.join(ARTIFACT_DIR, "naver-blog-title-966.jpg"), "JPEG", quality=98)
     banner.save(os.path.join(DESKTOP_DIR, "진주퀸_네이버블로그_타이틀배너.jpg"), "JPEG", quality=98)
-    print("Naver Blog Banner perfectly generated! Height alignment strictly verified: 85 to 415")
+    print("Naver Blog Banner perfectly generated! Height alignment strictly verified: 70 to 430")
 
 
 def create_youtube_banner():
     """
     YouTube Channel Art (2560 x 1440)
-    - ULTRA-CLEAN & MINIMALIST: Small crowded text removed per user request
+    Based on User's Exact Choice (media_1793953742088_5b044225.jpg):
     - Safe zone: 1546 x 423 (Center: 507 to 2053, Y: 508 to 931)
-    - STRICT height alignment inside safe zone (Y: 555 to 885 = 330px)
+    - STRICT height alignment inside safe zone (Y: 540 to 900 = 360px)
     """
     W, H = 2560, 1440
     safe_w, safe_h = 1546, 423
@@ -198,17 +205,17 @@ def create_youtube_banner():
         for y in range(16, H, 28):
             draw.point((x, y), fill=(26, 42, 68))
 
-    # STRICT VERTICAL SPAN: Y_START = 555, Y_END = 885 (Height = 330px)
-    Y_START = safe_y1 + 47  # 555
-    Y_END = safe_y2 - 46    # 885
-    SPAN_H = Y_END - Y_START  # 330px
+    # STRICT VERTICAL SPAN: Y_START = 540, Y_END = 900 (Height = 360px)
+    Y_START = safe_y1 + 32  # 540
+    Y_END = safe_y2 - 31    # 900
+    SPAN_H = Y_END - Y_START  # 360px
 
     # ==========================================
-    # RIGHT: Photo Card (Y: 555 to 885, Height: 330px)
+    # RIGHT: Photo Card (Y: 540 to 900, Height: 360px)
     # ==========================================
-    photo_card_w = 255
+    photo_card_w = 260
     photo_card_h = SPAN_H
-    photo_card_x = safe_x2 - photo_card_w - 55
+    photo_card_x = safe_x2 - photo_card_w - 50
     photo_card_y = Y_START
 
     draw.rounded_rectangle(
@@ -217,7 +224,7 @@ def create_youtube_banner():
         fill=(14, 23, 44)
     )
 
-    img_h = 250
+    img_h = 280
     img_w = photo_card_w - 14
     img_x = photo_card_x + 7
     img_y = photo_card_y + 7
@@ -232,7 +239,7 @@ def create_youtube_banner():
         banner.paste(ceo_r, (img_x, img_y), pmask)
 
         # Name plate overlay at bottom of photo
-        f_pname = ImageFont.truetype(FONT_BD, 13)
+        f_pname = ImageFont.truetype(FONT_BD, 14)
         tag_w = img_w - 24
         tag_h = 28
         tag_x = img_x + 12
@@ -242,48 +249,51 @@ def create_youtube_banner():
 
     f_c1 = ImageFont.truetype(FONT_REG, 11)
     f_c2 = ImageFont.truetype(FONT_BD, 11)
-    draw.text((photo_card_x + 20, photo_card_y + img_h + 16), "진주시 에나로 146, 105호 (라온프라이빗시티)", font=f_c1, fill=SLATE_300)
-    draw.text((photo_card_x + 16, photo_card_y + img_h + 38), "2017년부터 충무공동 한 자리 (통계학 석사)", font=f_c2, fill=GOLD_BRIGHT)
+    draw.text((photo_card_x + 22, photo_card_y + img_h + 16), "진주시 에나로 146, 105호 (라온프라이빗시티)", font=f_c1, fill=SLATE_300)
+    draw.text((photo_card_x + 18, photo_card_y + img_h + 38), "2017년부터 충무공동 한 자리 (통계학 석사)", font=f_c2, fill=GOLD_BRIGHT)
 
     # ==========================================
-    # LEFT: Text Content (Y: 555 to 885, Height: 330px)
+    # LEFT: Text Content (Y: 540 to 900, Height: 360px)
     # ==========================================
-    lx = safe_x1 + 55
+    lx = safe_x1 + 50
 
-    # 1. Top Badges (Y = 555)
+    # 1. Top Badge: LEADERSHIP & BROKER IDENTITY • 2017년부터 충무공동 한 자리 대표 공인중개사
     f_b1 = ImageFont.truetype(FONT_BD, 13)
-    b1_text = "🏛️  2017년부터 충무공동 한 자리 · 등록 48170-2017-00038"
-    b1_w = int(f_b1.getlength(b1_text)) + 28
+    b1_text = "✨  LEADERSHIP & BROKER IDENTITY  •  2017년부터 충무공동 한 자리 대표 공인중개사"
+    b1_w = int(f_b1.getlength(b1_text)) + 30
     b1_h = 30
     draw.rounded_rectangle([lx, Y_START, lx + b1_w, Y_START + b1_h], radius=15, fill=GOLD_BG)
-    draw.text((lx + 14, Y_START + 5), b1_text, font=f_b1, fill=GOLD_BRIGHT)
+    draw.text((lx + 15, Y_START + 5), b1_text, font=f_b1, fill=GOLD_BRIGHT)
 
-    # 2. Headline H1
+    # 2. Main Headline H1
     f_h1 = ImageFont.truetype(FONT_BD, 36)
-    f_h2 = ImageFont.truetype(FONT_BD, 28)
-    f_name = ImageFont.truetype(FONT_BD, 31)
+    f_h2 = ImageFont.truetype(FONT_BD, 34)
 
-    y_h1 = Y_START + 52  # 607
-    draw.text((lx, y_h1), "통계학 석사의 정밀 데이터 분석,", font=f_h1, fill=WHITE)
+    y_h1 = Y_START + 48  # 588
+    draw.text((lx, y_h1), "통계학 석사의 정밀 데이터 분석과", font=f_h1, fill=GOLD_BRIGHT)
 
-    y_h2 = y_h1 + 48     # 655
-    str_pre = "충무공동 한 자리를 지켜온 "
-    draw.text((lx, y_h2), str_pre, font=f_h2, fill=WHITE)
-    w_pre = int(f_h2.getlength(str_pre)) + 5
+    y_h2 = y_h1 + 46     # 634
+    draw.text((lx, y_h2), "충무공동 한 자리를 지켜온 우직한 신뢰", font=f_h2, fill=WHITE)
 
-    str_brand = "진주퀸공인중개사"
-    draw.text((lx + w_pre, y_h2 - 2), str_brand, font=f_name, fill=GOLD_BRIGHT)
-    w_brand = int(f_name.getlength(str_brand)) + 5
+    # 3. Golden Diamond Divider (── ◆ ──)
+    y_div = y_h2 + 54    # 688
+    draw.line([(lx, y_div), (lx + 65, y_div)], fill=GOLD_RICH, width=1)
+    draw.polygon([
+        (lx + 77, y_div - 6),
+        (lx + 84, y_div),
+        (lx + 77, y_div + 6),
+        (lx + 70, y_div)
+    ], fill=GOLD_BRIGHT)
+    draw.line([(lx + 90, y_div), (lx + 155, y_div)], fill=GOLD_RICH, width=1)
 
-    draw.text((lx + w_pre + w_brand, y_h2), "입니다.", font=f_h2, fill=WHITE)
+    # 4. Body Paragraph
+    f_body = ImageFont.truetype(FONT_REG, 15)
+    y_body = y_div + 22  # 710
+    draw.text((lx, y_body), "2017년 2월 개업 이래 충무공동 라온프라이빗시티 한 자리에서 묵묵히 쌓아온", font=f_body, fill=SLATE_300)
+    draw.text((lx, y_body + 26), "객관적 실거래가 빅데이터와 철저한 권리분석으로 고객님의 소중한 자산을 지킵니다.", font=f_body, fill=SLATE_300)
 
-    # 3. Clean 1-Line Key Value Tag
-    f_sub = ImageFont.truetype(FONT_REG, 16)
-    y_sub = y_h2 + 60    # 715
-    draw.text((lx, y_sub), "빅데이터 실거래가 정밀 분석  |  100% 현장 검증 실매물  |  책임 성실 중개", font=f_sub, fill=SLATE_300)
-
-    # 4. Direct Call Strip (Ends at Y_END = 885!)
-    y_btn = 815
+    # 5. Direct Call Action Strip (Ends at Y_END = 900!)
+    y_btn = 830
     btn_w = 812
 
     draw.rounded_rectangle([lx, y_btn, lx + btn_w, Y_END], radius=18, fill=GOLD_BTN)
@@ -302,7 +312,7 @@ def create_youtube_banner():
     banner.save(out_path, "JPEG", quality=98)
     banner.save(os.path.join(ARTIFACT_DIR, "youtube-channel-banner-2560.jpg"), "JPEG", quality=98)
     banner.save(os.path.join(DESKTOP_DIR, "진주퀸_유튜브_채널아트배너.jpg"), "JPEG", quality=98)
-    print("YouTube Banner perfectly generated! Height alignment strictly verified: 555 to 885")
+    print("YouTube Banner perfectly generated! Height alignment strictly verified: 540 to 900")
 
 
 def create_naver_blog_skin():
