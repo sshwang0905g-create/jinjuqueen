@@ -52,7 +52,7 @@ const BLOG_POSTS = [
     desc: "대방노블랜드, 중흥S클래스, 한림풀에버 단지별 최근 거래가와 학군 선호도 집중 해부",
     date: "2026.11.03",
     category: "부동산 시장분석",
-    url: "https://blog.naver.com"
+    url: "https://blog.naver.com/property70"
   },
   {
     id: "blog-02",
@@ -60,7 +60,7 @@ const BLOG_POSTS = [
     desc: "학부모님들이 가장 만족하시는 통학 안전과 단지 내 조경 및 주차 환경 총정리",
     date: "2026.10.29",
     category: "단지별 심층리포트",
-    url: "https://blog.naver.com"
+    url: "https://blog.naver.com/property70"
   },
   {
     id: "blog-03",
@@ -68,7 +68,7 @@ const BLOG_POSTS = [
     desc: "개업공인중개사 황선숙 대표가 쉽게 알려드리는 부동산 거래 시 필수 세금 절약 팁",
     date: "2026.10.20",
     category: "세무/법률 상식",
-    url: "https://blog.naver.com"
+    url: "https://blog.naver.com/property70"
   }
 ];
 

@@ -1142,11 +1142,14 @@ function renderNews() {
   if (window.lucide) lucide.createIcons();
 }
 
+let currentOpenNewsId = null;
+
 function openNewsModal(newsId) {
   const dataset = liveNewsData || (typeof NEWS_DATA !== 'undefined' ? NEWS_DATA : []);
   const item = dataset.find(n => n.id === newsId);
   if (!item) return;
 
+  currentOpenNewsId = newsId;
   const modal = document.getElementById('newsModal');
   if (!modal) return;
 
@@ -1180,6 +1183,28 @@ function closeNewsModal() {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
   }
+}
+
+function shareCurrentNewsToNaverBlog() {
+  if (!currentOpenNewsId) return;
+  const dataset = liveNewsData || (typeof NEWS_DATA !== 'undefined' ? NEWS_DATA : []);
+  const item = dataset.find(n => n.id === currentOpenNewsId);
+  if (!item) return;
+
+  const cleanBody = (item.content || item.summary || '')
+    .replace(/^#\s+(.*)$/gm, '■ $1\n')
+    .replace(/^##\s+(.*)$/gm, '▶ $1\n')
+    .replace(/^###\s+(.*)$/gm, '• $1\n')
+    .replace(/\*\*(.*?)\*\*/g, '$1');
+
+  const clipText = `${item.title}\n\n${cleanBody}\n\n---\n진주퀸공인중개사사무소 (대표 황선숙)\n등록번호: 48170-2017-00038\n소재지: 진주시 에나로 146, 105호\n상담 문의: 010-4670-7248\n원문: https://uqueen.vercel.app`;
+
+  navigator.clipboard.writeText(clipText).then(() => {
+    alert(`✅ [칼럼 제목 및 본문 복사 완료!]\n\n제목: "${item.title}"\n\n'확인'을 누르면 대표님의 네이버 블로그(property70) 글쓰기 창이 열립니다.\n에디터에서 [Ctrl + V] 로 붙여넣으신 후 우측 상단 [발행]을 누르시면 됩니다.`);
+    window.open('https://blog.naver.com/property70/postwrite', '_blank');
+  }).catch(() => {
+    window.open('https://blog.naver.com/property70/postwrite', '_blank');
+  });
 }
 
 // ----------------------------------------------------

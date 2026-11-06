@@ -2458,6 +2458,9 @@ let fetchedNaverPhotos = [];
           <td class="px-6 py-4 text-slate-600">${post.author || '황선숙 대표'}</td>
           <td class="px-6 py-4 text-slate-400">${post.date}</td>
           <td class="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+            <button onclick="exportToNaverBlog('${post.id}')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-lg transition border border-emerald-300 inline-flex items-center gap-1" title="네이버 블로그(property70)로 원클릭 발행">
+              <span class="text-xs">N 블로그로 발행</span>
+            </button>
             <button onclick="openEditModal('${post.id}')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold rounded-lg transition border border-amber-300/50">
               수정
             </button>
@@ -2473,6 +2476,26 @@ let fetchedNaverPhotos = [];
 
     function filterAdminPosts() {
       renderAdminPosts();
+    }
+
+    function exportToNaverBlog(postId) {
+      const post = boardPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      const cleanBody = (post.content || post.summary || '')
+        .replace(/^#\s+(.*)$/gm, '■ $1\n')
+        .replace(/^##\s+(.*)$/gm, '▶ $1\n')
+        .replace(/^###\s+(.*)$/gm, '• $1\n')
+        .replace(/\*\*(.*?)\*\*/g, '$1');
+
+      const clipText = `${post.title}\n\n${cleanBody}\n\n---\n진주퀸공인중개사사무소 (대표 황선숙)\n등록번호: 48170-2017-00038\n소재지: 진주시 에나로 146, 105호\n상담 문의: 010-4670-7248\n홈페이지: https://uqueen.vercel.app`;
+
+      navigator.clipboard.writeText(clipText).then(() => {
+        alert(`✅ [게시글 제목 및 본문 복사 완료!]\n\n제목: "${post.title}"\n\n'확인'을 누르면 대표님의 네이버 블로그(property70) 글쓰기 창이 열립니다.\n에디터에서 [Ctrl + V] 로 붙여넣으신 후 우측 상단 [발행]을 누르시면 됩니다.`);
+        window.open('https://blog.naver.com/property70/postwrite', '_blank');
+      }).catch(() => {
+        window.open('https://blog.naver.com/property70/postwrite', '_blank');
+      });
     }
 
 
