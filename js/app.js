@@ -1027,14 +1027,22 @@ async function loadLiveNews() {
 
 function getNewsCategoryBadge(cat) {
   switch (cat) {
+    case '실거래가 & 시세 분석':
+      return { bg: 'bg-indigo-50 text-indigo-900 border-indigo-200', icon: 'bar-chart-2' };
+    case '진주시 개발 & 정책':
+      return { bg: 'bg-blue-50 text-blue-900 border-blue-200', icon: 'building' };
+    case '부동산 상식 & 세무':
+      return { bg: 'bg-emerald-50 text-emerald-900 border-emerald-200', icon: 'book-open' };
+    case '공지사항':
+      return { bg: 'bg-slate-100 text-slate-800 border-slate-300', icon: 'bell' };
+    // Backwards compatibility fallbacks
     case '부동산 투자 분석':
-      return { bg: 'bg-amber-50 text-amber-900 border-amber-200', icon: 'trending-up' };
     case '주간 시세 리포트':
-      return { bg: 'bg-emerald-50 text-emerald-900 border-emerald-200', icon: 'bar-chart-2' };
+      return { bg: 'bg-indigo-50 text-indigo-900 border-indigo-200', icon: 'bar-chart-2' };
     case '혁신도시 소식':
       return { bg: 'bg-blue-50 text-blue-900 border-blue-200', icon: 'building' };
     case '부동산 세무/상식':
-      return { bg: 'bg-purple-50 text-purple-900 border-purple-200', icon: 'book-open' };
+      return { bg: 'bg-emerald-50 text-emerald-900 border-emerald-200', icon: 'book-open' };
     case '사무소 공지':
       return { bg: 'bg-slate-100 text-slate-800 border-slate-300', icon: 'bell' };
     default:
@@ -1045,7 +1053,8 @@ function getNewsCategoryBadge(cat) {
 function filterNews(cat) {
   currentNewsCategory = cat;
   document.querySelectorAll('#newsCategoryFilter .news-cat-btn').forEach(btn => {
-    const isCur = btn.textContent.trim() === (cat === 'ALL' ? '전체' : cat);
+    const text = btn.textContent.trim();
+    const isCur = (cat === 'ALL' && text === '전체') || (text === cat);
     btn.classList.toggle('active', isCur);
     btn.classList.toggle('bg-slate-900', isCur);
     btn.classList.toggle('text-white', isCur);

@@ -194,11 +194,10 @@
         <div class="flex flex-wrap items-center gap-2.5">
           <select id="adminCategoryFilter" onchange="filterAdminPosts()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
             <option value="ALL">전체 카테고리</option>
-            <option value="혁신도시 소식">혁신도시 소식</option>
-            <option value="주간 시세 리포트">주간 시세 리포트</option>
-            <option value="부동산 세무/상식">부동산 세무/상식</option>
-            <option value="부동산 투자 분석">부동산 투자 분석</option>
-            <option value="사무소 공지">사무소 공지</option>
+            <option value="실거래가 & 시세 분석">실거래가 & 시세 분석</option>
+            <option value="진주시 개발 & 정책">진주시 개발 & 정책</option>
+            <option value="부동산 상식 & 세무">부동산 상식 & 세무</option>
+            <option value="공지사항">공지사항</option>
           </select>
           <button onclick="openWriteModal()" class="px-4 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-extrabold rounded-xl transition shadow flex items-center gap-1.5">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
@@ -2439,10 +2438,18 @@ let fetchedNaverPhotos = [];
         return;
       }
 
-      tbody.innerHTML = filtered.map(post => `
+      tbody.innerHTML = filtered.map(post => {
+        const catBadges = {
+          '실거래가 & 시세 분석': 'bg-indigo-50 text-indigo-700 border border-indigo-200',
+          '진주시 개발 & 정책': 'bg-blue-50 text-blue-700 border border-blue-200',
+          '부동산 상식 & 세무': 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+          '공지사항': 'bg-slate-100 text-slate-700 border border-slate-200'
+        };
+        const badgeClass = catBadges[post.category] || 'bg-amber-100 text-amber-800';
+        return `
         <tr class="hover:bg-slate-50/80 transition">
-          <td class="px-6 py-4 font-bold text-amber-800">
-            <span class="bg-amber-100 px-2 py-0.5 rounded text-[11px]">${post.category}</span>
+          <td class="px-6 py-4 font-bold">
+            <span class="${badgeClass} px-2 py-0.5 rounded text-[11px] font-semibold">${post.category}</span>
           </td>
           <td class="px-6 py-4 font-semibold text-slate-900 max-w-md truncate">
             ${post.title}
@@ -2458,8 +2465,8 @@ let fetchedNaverPhotos = [];
               삭제
             </button>
           </td>
-        </tr>
-      `).join('');
+        </tr>`;
+      }).join('');
 
       if (window.lucide) lucide.createIcons();
     }
@@ -2494,7 +2501,7 @@ let fetchedNaverPhotos = [];
       const post = boardPosts.find(p => p.id === postId);
       if (!post) return;
       document.getElementById('postEditId').value = post.id;
-      document.getElementById('postCategory').value = post.category || '혁신도시 소식';
+      document.getElementById('postCategory').value = post.category || '실거래가 & 시세 분석';
       document.getElementById('postAuthor').value = post.author || '황선숙 대표';
       document.getElementById('postDate').value = post.date || getTodayDateStr();
       document.getElementById('postTitle').value = post.title || '';
@@ -2578,16 +2585,16 @@ let fetchedNaverPhotos = [];
 
       // Detect category
       const fullText = raw.toLowerCase();
-      if (fullText.includes('시세') || fullText.includes('실거래가') || fullText.includes('전세가') || fullText.includes('매매가')) {
-        extractedCategory = '주간 시세 리포트';
-      } else if (fullText.includes('투자') || fullText.includes('수익률') || fullText.includes('상가분석') || fullText.includes('전망')) {
-        extractedCategory = '부동산 투자 분석';
-      } else if (fullText.includes('세금') || fullText.includes('양도세') || fullText.includes('취득세') || fullText.includes('세무') || fullText.includes('상식') || fullText.includes('공인중개사법')) {
-        extractedCategory = '부동산 세무/상식';
-      } else if (fullText.includes('공지') || fullText.includes('사무소') || fullText.includes('휴무') || fullText.includes('개편')) {
-        extractedCategory = '사무소 공지';
+      if (fullText.includes('시세') || fullText.includes('실거래가') || fullText.includes('전세가') || fullText.includes('매매가') || fullText.includes('통계') || fullText.includes('거래량') || fullText.includes('빅데이터')) {
+        extractedCategory = '실거래가 & 시세 분석';
+      } else if (fullText.includes('개발') || fullText.includes('정책') || fullText.includes('토지이음') || fullText.includes('진주시') || fullText.includes('시청') || fullText.includes('고시') || fullText.includes('지구단위') || fullText.includes('공공기관')) {
+        extractedCategory = '진주시 개발 & 정책';
+      } else if (fullText.includes('세금') || fullText.includes('양도세') || fullText.includes('취득세') || fullText.includes('세무') || fullText.includes('상식') || fullText.includes('공인중개사법') || fullText.includes('임대차') || fullText.includes('계약') || fullText.includes('대출')) {
+        extractedCategory = '부동산 상식 & 세무';
+      } else if (fullText.includes('공지') || fullText.includes('사무소') || fullText.includes('휴무') || fullText.includes('개편') || fullText.includes('영업')) {
+        extractedCategory = '공지사항';
       } else {
-        extractedCategory = '혁신도시 소식';
+        extractedCategory = '실거래가 & 시세 분석';
       }
 
       // Detect summary
@@ -2763,11 +2770,10 @@ let fetchedNaverPhotos = [];
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="postCategory">카테고리</label>
             <select id="postCategory" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-medium">
-              <option value="혁신도시 소식">혁신도시 소식</option>
-              <option value="주간 시세 리포트">주간 시세 리포트</option>
-              <option value="부동산 투자 분석">부동산 투자 분석</option>
-              <option value="부동산 세무/상식">부동산 세무/상식</option>
-              <option value="사무소 공지">사무소 공지</option>
+              <option value="실거래가 & 시세 분석">실거래가 & 시세 분석</option>
+              <option value="진주시 개발 & 정책">진주시 개발 & 정책</option>
+              <option value="부동산 상식 & 세무">부동산 상식 & 세무</option>
+              <option value="공지사항">공지사항</option>
             </select>
           </div>
           <div>
