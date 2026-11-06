@@ -205,6 +205,94 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
             return
 
+        if parsed.path == '/api/check_naver_status':
+            atcl_no = payload.get('articleNo', '')
+            sync_all = payload.get('syncAll', False)
+
+            if atcl_no:
+                try:
+                    res = client.check_article_live_status(str(atcl_no))
+                except Exception as e:
+                    res = {"success": False, "is_live": True, "message": str(e)}
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
+                return
+
+            elif sync_all:
+                results = []
+                auto_privated = []
+                if os.path.exists(PROPERTIES_FILE):
+                    with open(PROPERTIES_FILE, 'r', encoding='utf-8') as f:
+                        props = json.load(f)
+                else:
+                    props = []
+
+                updated = False
+                for p in props:
+                    no = p.get('naverArticleNo')
+                    if no:
+                        try:
+                            st = client.check_article_live_status(str(no))
+                            is_live = st.get('is_live', True)
+                            results.append({
+                                "id": p.get('id'),
+                                "title": p.get('title'),
+                                "articleNo": no,
+                                "is_live": is_live,
+                                "status_code": st.get('status_code')
+                            })
+                            if not is_live:
+                                # 네이버에서 내려간 경우 홈페이지 자동 비공개 전환
+                                if not (p.get('isPrivate') or p.get('status') == 'PRIVATE' or p.get('hidden')):
+                                    p['isPrivate'] = True
+                                    p['hidden'] = True
+                                    p['naverStatus'] = 'EXPIRED'
+                                    auto_privated.append({
+                                        "id": p.get('id'),
+                                        "title": p.get('title'),
+                                        "articleNo": no
+                                    })
+                                    updated = True
+                        except Exception as err:
+                            results.append({"id": p.get('id'), "articleNo": no, "is_live": True, "error": str(err)})
+
+                if updated:
+                    with open(PROPERTIES_FILE, 'w', encoding='utf-8') as f:
+                        json.dump(props, f, ensure_ascii=False, indent=2)
+                    js_data_path = os.path.join(BASE_DIR, 'js', 'data.js')
+                    if os.path.exists(js_data_path):
+                        try:
+                            with open(js_data_path, 'r', encoding='utf-8') as jf:
+                                js_content = jf.read()
+                            start_i = js_content.find('let PROPERTIES_DATA = [')
+                            if start_i != -1:
+                                end_i = js_content.find('];', start_i)
+                                if end_i != -1:
+                                    formatted_json = json.dumps(props, ensure_ascii=False, indent=2)
+                                    new_js = js_content[:start_i] + 'let PROPERTIES_DATA = ' + formatted_json + js_content[end_i+1:]
+                                    with open(js_data_path, 'w', encoding='utf-8') as jf:
+                                        jf.write(new_js)
+                        except Exception as e:
+                            print('Error updating js/data.js in check_naver_status:', e)
+
+                resp_data = {
+                    "success": True,
+                    "results": results,
+                    "auto_privated": auto_privated,
+                    "auto_privated_count": len(auto_privated),
+                    "properties": props,
+                    "message": f"네이버 매물 동기화 완료: 총 {len(results)}건 점검, 내려간 매물 {len(auto_privated)}건 자동 비공개 전환"
+                }
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps(resp_data, ensure_ascii=False).encode('utf-8'))
+                return
+
         if parsed.path == '/api/upload_image':
             data_urls = payload.get('images', [])
             saved_paths = []

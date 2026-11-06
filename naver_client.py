@@ -94,6 +94,38 @@ class NaverRealEstateClient:
             logger.error(f"[Cookie Refresh 오류] {e}")
             return False
 
+    def check_article_live_status(self, article_id: str) -> Dict[str, Any]:
+        """
+        네이버 부동산에 해당 매물번호가 현재 정상 게시 중인지 확인합니다.
+        네이버에서 내려갔거나(종료/삭제) 존재하지 않으면 is_live=False 반환.
+        """
+        clean_match = re.search(r'\d{8,12}', str(article_id))
+        if not clean_match:
+            return {"success": False, "is_live": False, "message": "유효한 8~10자리 매물번호가 아닙니다."}
+        
+        atcl_no = clean_match.group(0)
+        if not self.prop_test_key or not self.prop_test_id or (time.time() - self.last_cookie_refresh_time > 600):
+            self.refresh_cookies()
+
+        try:
+            url = f"https://m.land.naver.com/article/info/{atcl_no}"
+            resp = self.client.get(url, headers=self.mobile_headers, cookies=self.session_cookies)
+            
+            final_url = str(resp.url)
+            is_live = (resp.status_code == 200) and (not final_url.endswith('/expired')) and (f"/articles/{atcl_no}" in final_url)
+            
+            return {
+                "success": True,
+                "article_no": atcl_no,
+                "is_live": is_live,
+                "status_code": resp.status_code,
+                "final_url": final_url,
+                "message": "네이버 정상 게시 중" if is_live else "네이버에서 내려간 매물(노출종료 또는 거래완료)"
+            }
+        except Exception as e:
+            logger.error(f"[네이버 상태 점검 오류] {e}")
+            return {"success": False, "is_live": True, "message": f"네이버 점검 일시 지연: {e}"}
+
     def fetch_article_detail(self, article_id: str, retry_count: int = 2) -> Dict[str, Any]:
         """
         네이버 매물번호를 받아 메모리에 저장된 쿠키와 브라우저 헤더를 동봉하여 호출.
