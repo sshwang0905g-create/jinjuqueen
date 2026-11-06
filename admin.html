@@ -137,7 +137,8 @@
         <div class="flex flex-wrap items-center gap-2.5">
           <select id="adminPropFilter" onchange="renderAdminProperties()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
             <option value="ALL">전체 매물 보기</option>
-            <option value="ACTIVE">진행중 매물만</option>
+            <option value="ACTIVE">진행중(공개) 매물만</option>
+            <option value="PRIVATE">🔒 비공개(숨김) 매물만</option>
             <option value="SOLD">거래완료 매물만</option>
             <option value="NAVER">네이버 확인 매물</option>
             <option value="HOMEPAGE">홈페이지 단독 매물</option>
@@ -166,7 +167,7 @@
               <th class="px-6 py-3.5">유형/채널</th>
               <th class="px-6 py-3.5">매물명 및 위치</th>
               <th class="px-6 py-3.5">거래금액</th>
-              <th class="px-6 py-3.5 text-center">매물 관리 (수정·복사·완료·삭제)</th>
+              <th class="px-6 py-3.5 text-center">매물 관리 (수정·복사·비공개·완료·삭제)</th>
             </tr>
           </thead>
           <tbody id="adminPropertiesTableBody" class="divide-y divide-slate-100">
@@ -505,6 +506,21 @@
           </p>
         </div>
 
+        <!-- 비공개 매물 설정 스위치 (홈페이지 메인 및 지도에서 노출 차단) -->
+        <div class="p-3.5 bg-purple-50/70 rounded-2xl border border-purple-200 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="eye-off" class="w-4 h-4 text-purple-700"></i>
+            <div>
+              <div class="text-xs sm:text-sm font-bold text-purple-950">비공개 매물 설정 (홈페이지 화면 숨김)</div>
+              <div class="text-[11px] text-purple-700">체크하시면 홈페이지 메인 화면 및 지도에서 완전히 숨겨집니다.</div>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="newPropIsPrivate" class="sr-only peer">
+            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+          </label>
+        </div>
+
         <!-- 매물 사진 첨부 및 관리 섹션 (최대 6장) -->
         <div class="p-4 bg-slate-50/95 rounded-2xl border border-slate-200">
           <div class="flex items-center justify-between mb-2">
@@ -768,7 +784,9 @@
       if (!tbody) return;
 
       const filtered = adminProperties.filter(p => {
-        if (filter === 'ACTIVE') return p.status !== 'SOLD';
+        const isPriv = Boolean(p.isPrivate || p.status === 'PRIVATE' || p.hidden);
+        if (filter === 'ACTIVE') return p.status !== 'SOLD' && !isPriv;
+        if (filter === 'PRIVATE') return isPriv;
         if (filter === 'SOLD') return p.status === 'SOLD';
         if (filter === 'NAVER') return p.sourceType === 'NAVER';
         if (filter === 'HOMEPAGE') return p.sourceType === 'HOMEPAGE';
@@ -782,20 +800,24 @@
 
       tbody.innerHTML = filtered.map(prop => {
         const isSold = prop.status === 'SOLD';
+        const isPrivate = Boolean(prop.isPrivate || prop.status === 'PRIVATE' || prop.hidden);
         const sourceBadge = prop.sourceType === 'NAVER' 
           ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold px-2 py-0.5 rounded text-[10px]">네이버</span>`
           : `<span class="bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2 py-0.5 rounded text-[10px]">진주퀸단독</span>`;
 
         return `
-          <tr class="hover:bg-slate-50/80 transition ${isSold ? 'bg-slate-50/60' : ''}">
+          <tr class="hover:bg-slate-50/80 transition ${isSold ? 'bg-slate-50/60' : (isPrivate ? 'bg-purple-50/20' : '')}">
             <td class="px-6 py-4">
               <div class="relative w-16 h-12 rounded-lg overflow-hidden border border-slate-200">
                 <img src="${prop.images[0]}" class="w-full h-full object-cover">
-                ${isSold ? '<div class="absolute inset-0 bg-slate-900/70 flex items-center justify-center text-white text-[10px] font-black">완료</div>' : ''}
+                ${isSold ? '<div class="absolute inset-0 bg-slate-900/70 flex items-center justify-center text-white text-[10px] font-black">완료</div>' : (isPrivate ? '<div class="absolute inset-0 bg-purple-950/75 flex items-center justify-center text-purple-200 text-[10px] font-black tracking-wider">🔒 비공개</div>' : '')}
               </div>
             </td>
             <td class="px-6 py-4 space-y-1">
-              <div class="font-bold text-slate-900">${prop.category} · ${prop.transactionType}</div>
+              <div class="font-bold text-slate-900 flex items-center gap-1.5 flex-wrap">
+                <span>${prop.category} · ${prop.transactionType}</span>
+                ${isPrivate ? '<span class="bg-purple-100 text-purple-900 border border-purple-300 font-extrabold px-1.5 py-0.5 rounded text-[10px] inline-flex items-center gap-0.5 shadow-xs"><i data-lucide="eye-off" class="w-2.5 h-2.5"></i>비공개</span>' : ''}
+              </div>
               <div>${sourceBadge}</div>
             </td>
             <td class="px-6 py-4 max-w-sm">
@@ -831,6 +853,11 @@
                   <i data-lucide="copy" class="w-3.5 h-3.5 text-sky-600"></i>
                   <span>복사</span>
                 </button>
+                <button onclick="handleTogglePrivate('${prop.id}')" 
+                        class="px-2.5 py-1.5 rounded-lg font-bold text-xs transition shadow-xs flex items-center gap-1 cursor-pointer ${isPrivate ? 'bg-purple-600 hover:bg-purple-700 text-white border border-purple-500' : 'bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-300'}" title="${isPrivate ? '현재 비공개 상태입니다. 클릭 시 홈페이지에 다시 공개합니다.' : '클릭 시 홈페이지 화면에서 비공개로 숨깁니다.'}">
+                  <i data-lucide="${isPrivate ? 'eye' : 'eye-off'}" class="w-3.5 h-3.5"></i>
+                  <span>${isPrivate ? '공개전환' : '비공개'}</span>
+                </button>
                 <button onclick="handleTogglePropStatus('${prop.id}')" 
                         class="px-2.5 py-1.5 rounded-lg font-black text-xs transition shadow-xs flex items-center gap-1 cursor-pointer ${isSold ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-slate-800 hover:bg-slate-900 text-amber-300'}" title="${isSold ? '진행중으로 복구' : '거래완료 설정'}">
                   <i data-lucide="${isSold ? 'rotate-ccw' : 'check-circle'}" class="w-3.5 h-3.5"></i>
@@ -849,7 +876,6 @@
 
       if (window.lucide) lucide.createIcons();
     }
-
 
     function handleDeleteFromModal() {
       const editInput = document.getElementById('editPropId');
@@ -1051,7 +1077,74 @@
       }
     }
 
-    let fetchedNaverPhotos = [];
+        async function handleTogglePrivate(propId) {
+      const prop = adminProperties.find(p => p.id === propId);
+      if (!prop) return;
+
+      const currentPrivate = Boolean(prop.isPrivate || prop.status === 'PRIVATE' || prop.hidden);
+      const willBePrivate = !currentPrivate;
+
+      const confirmMsg = willBePrivate
+        ? `[${prop.title}]\n\n이 매물을 '비공개'로 전환하시겠습니까?\n\n※ 비공개로 설정하면 홈페이지 메인 화면 및 지도에서 즉시 숨겨지며, 관리자 모드에서만 조회 및 관리하실 수 있습니다.`
+        : `[${prop.title}]\n\n이 매물을 다시 '공개'로 전환하시겠습니까?\n\n※ 홈페이지 메인 화면 및 지도에 정상 노출됩니다.`;
+
+      if (!confirm(confirmMsg)) return;
+
+      prop.isPrivate = willBePrivate;
+      prop.hidden = willBePrivate;
+      if (willBePrivate) {
+        prop.status = prop.status || 'ACTIVE';
+      }
+
+      // 1. 브라우저 로컬 저장소 즉시 보존
+      try {
+        localStorage.setItem('jinjuqueen_saved_properties', JSON.stringify(adminProperties));
+      } catch (e) {}
+
+      renderAdminProperties();
+
+      // 2. 서버 및 깃허브 저장소 동기화
+      try {
+        let res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({
+            action: 'toggle_private',
+            property: { id: propId, isPrivate: willBePrivate, hidden: willBePrivate }
+          })
+        });
+
+        if (!res.ok) {
+          res = await fetch('http://localhost:8080/api/properties', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${adminToken}`
+            },
+            body: JSON.stringify({
+              action: 'toggle_private',
+              property: { id: propId, isPrivate: willBePrivate, hidden: willBePrivate }
+            })
+          });
+        }
+
+        if (res.ok) {
+          const result = await res.json();
+          if (result && result.properties) {
+            adminProperties = result.properties;
+            renderAdminProperties();
+          }
+        }
+        showAdminToast(willBePrivate ? '🔒 매물이 비공개(화면 숨김)로 전환되었습니다.' : '🌐 매물이 다시 공개되었습니다.');
+      } catch (e) {
+        showAdminToast(willBePrivate ? '🔒 매물이 비공개(화면 숨김) 처리되었습니다.' : '🌐 매물이 공개 처리되었습니다.');
+      }
+    }
+
+let fetchedNaverPhotos = [];
     let currentPropertyPhotos = [];
 
     function matchApartmentCard(title, category = '') {
@@ -1289,6 +1382,7 @@
       document.getElementById('newPropLocation').value = '경남 진주시 충무공동';
       if (document.getElementById('naverQuickInput')) document.getElementById('naverQuickInput').value = '';
       if (document.getElementById('newPropAdminMemo')) document.getElementById('newPropAdminMemo').value = '';
+      const privInput = document.getElementById('newPropIsPrivate'); if (privInput) privInput.checked = false;
       fetchedNaverPhotos = [];
       currentPropertyPhotos = [];
       renderPropPhotoGallery();
@@ -1561,6 +1655,7 @@
       const desc = document.getElementById('newPropDesc').value.trim();
       const naverNo = document.getElementById('naverQuickInput') ? document.getElementById('naverQuickInput').value.trim() : '';
       const adminMemo = (document.getElementById('newPropAdminMemo') ? document.getElementById('newPropAdminMemo').value.trim() : '');
+    const isPrivate = Boolean(document.getElementById('newPropIsPrivate') && document.getElementById('newPropIsPrivate').checked);
 
       // Parse Category-Specific Values
       let exArea = 84.89, spArea = 114.7, exPyeong = 25.7, spPyeong = 34.7;
@@ -1639,6 +1734,8 @@
           location,
           description: desc,
           adminMemo: adminMemo,
+        isPrivate: isPrivate,
+        hidden: isPrivate,
           images: finalImages,
           exclusiveArea: exArea,
           exclusiveAreaPyeong: exPyeong,
@@ -1760,6 +1857,8 @@
         location,
         addressMasked: location + ' 일원',
         adminMemo: adminMemo,
+        isPrivate: isPrivate,
+        hidden: isPrivate,
         lat: Number(jitterLat.toFixed(4)),
         lng: Number(jitterLng.toFixed(4)),
         exclusiveArea: exArea,

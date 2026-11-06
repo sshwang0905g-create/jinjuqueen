@@ -151,6 +151,16 @@ module.exports = async (req, res) => {
       }
     } else if (action === 'delete' && property && property.id) {
       finalProps = finalProps.filter(p => p.id !== property.id);
+    } else if (action === 'toggle_private' && property) {
+      const targetId = property.id;
+      for (const p of finalProps) {
+        if (p.id === targetId) {
+          const newPriv = property.isPrivate !== undefined ? property.isPrivate : !Boolean(p.isPrivate || p.status === 'PRIVATE' || p.hidden);
+          p.isPrivate = newPriv;
+          p.hidden = newPriv;
+          break;
+        }
+      }
     }
 
     const jsonString = JSON.stringify(finalProps, null, 2);

@@ -285,6 +285,11 @@ function centerMapOnOffice() {
 // ----------------------------------------------------
 function getFilteredProperties() {
   return PROPERTIES_DATA.filter(item => {
+    // 0. Exclude Private (비공개) properties from public view
+    if (item.isPrivate || item.status === 'PRIVATE' || item.hidden) {
+      return false;
+    }
+
     // Category filter
     if (state.category !== 'ALL' && item.category !== state.category) {
       return false;

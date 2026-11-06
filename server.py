@@ -335,6 +335,14 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                     props.insert(0, prop)
             elif action == 'delete' and prop:
                 props = [p for p in props if p.get('id') != prop.get('id')]
+            elif action == 'toggle_private' and prop:
+                target_id = prop.get('id')
+                for p in props:
+                    if p.get('id') == target_id:
+                        new_priv = prop.get('isPrivate', not bool(p.get('isPrivate') or p.get('status') == 'PRIVATE' or p.get('hidden')))
+                        p['isPrivate'] = new_priv
+                        p['hidden'] = new_priv
+                        break
 
             with open(PROPERTIES_FILE, 'w', encoding='utf-8') as f:
                 json.dump(props, f, ensure_ascii=False, indent=2)
