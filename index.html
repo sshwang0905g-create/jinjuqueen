@@ -84,6 +84,31 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Mobile Device Detection & Routing -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var mode = params.get('mode');
+        if (mode === 'pc') {
+          sessionStorage.setItem('preferredView', 'pc');
+        } else if (mode === 'mobile') {
+          sessionStorage.setItem('preferredView', 'mobile');
+        }
+
+        var preferred = sessionStorage.getItem('preferredView');
+        if (preferred !== 'pc') {
+          var isMobileUA = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          if (isMobileUA) {
+            window.location.replace('mobile.html');
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  </script>
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css?v=2">
 </head>
@@ -107,6 +132,10 @@
         </a>
         <a href="https://www.youtube.com/@jinju_queen" target="_blank" rel="noopener noreferrer" class="hover:text-rose-400 transition flex items-center gap-1 font-semibold text-[11px] bg-rose-950/80 text-rose-300 border border-rose-800/80 px-2 py-0.5 rounded">
           <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> ▶ 유튜브
+        </a>
+        <!-- Mobile View Link -->
+        <a href="mobile.html?mode=mobile" onclick="sessionStorage.setItem('preferredView','mobile')" class="hover:text-amber-200 transition flex items-center gap-1 font-bold text-[11px] bg-slate-800 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded shadow-sm">
+          <i data-lucide="smartphone" class="w-3 h-3 text-amber-400"></i> 📱 모바일모드
         </a>
         <a href="admin.html" target="_blank" class="hover:text-amber-200 transition flex items-center gap-1 font-bold text-[11px] bg-amber-900/60 text-amber-300 border border-amber-600/60 px-2.5 py-0.5 rounded shadow-sm">
           <i data-lucide="lock" class="w-3 h-3"></i> 관리자모드
@@ -193,7 +222,11 @@
           집주인 매물 내놓기
         </button>
       </div>
-      <div class="pt-2 border-t border-slate-100">
+      <div class="pt-2 border-t border-slate-100 space-y-2">
+        <a href="mobile.html?mode=mobile" onclick="sessionStorage.setItem('preferredView','mobile')" class="w-full bg-slate-900 text-amber-300 border border-amber-500/40 py-2.5 rounded-lg font-bold text-center text-xs flex items-center justify-center gap-1.5 shadow">
+          <i data-lucide="smartphone" class="w-4 h-4 text-amber-400"></i>
+          <span>📱 스마트폰 모바일 간편화면으로 보기</span>
+        </a>
         <a href="admin.html" target="_blank" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 py-2.5 rounded-lg font-bold text-center text-xs flex items-center justify-center gap-1.5 transition">
           <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-700"></i>
           <span>대표 관리자 모드 (매물/블로그 관리)</span>
@@ -835,6 +868,10 @@
       <div class="pt-6 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-2">
         <div>© 2026 진주퀸공인중개사사무소. All rights reserved.</div>
         <div class="flex items-center gap-4">
+          <a href="mobile.html?mode=mobile" onclick="sessionStorage.setItem('preferredView','mobile')" class="text-amber-300 hover:text-amber-200 font-bold flex items-center gap-1 transition">
+            <i data-lucide="smartphone" class="w-3.5 h-3.5 text-amber-400"></i> 모바일 간편화면
+          </a>
+          <span>|</span>
           <a href="#" onclick="alert('본 웹사이트는 공인중개사법 및 개인정보보호법에 따라 고객님의 성명과 연락처를 상담 목적으로만 안전하게 취급합니다.'); return false;" class="hover:text-slate-400 underline">개인정보처리방침</a>
           <span>|</span>
           <a href="#" onclick="alert('진주퀸공인중개사사무소는 100% 현장 검증된 실매물만을 등록 게시합니다.'); return false;" class="hover:text-slate-400 underline">인터넷 표시·광고 준수 서약</a>
@@ -848,7 +885,14 @@
   </footer>
 
   <!-- Mobile Fixed Bottom Floating Bar (모바일 필수 CTA) -->
-  <aside class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 mobile-bottom-bar border-t border-slate-200 px-3 py-2.5" aria-label="모바일 하단 빠른 문의">
+  <aside class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 mobile-bottom-bar border-t border-slate-200 px-3 py-2" aria-label="모바일 하단 빠른 문의">
+    <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-100 text-[10px]">
+      <span class="text-slate-500 font-medium">현재: PC 전체화면 모드</span>
+      <a href="mobile.html?mode=mobile" onclick="sessionStorage.setItem('preferredView','mobile')" class="text-amber-800 font-bold flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+        <i data-lucide="smartphone" class="w-3 h-3 text-amber-600"></i>
+        <span>모바일 간편화면으로 전환 &rarr;</span>
+      </a>
+    </div>
     <div class="grid grid-cols-3 gap-2">
       <!-- 1. Call -->
       <a href="tel:010-4670-7248" class="bg-brand-navy active:bg-slate-800 text-white py-2.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow">

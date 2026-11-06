@@ -2,6 +2,10 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/m",
+      "destination": "/mobile.html"
+    },
+    {
       "source": "/api/fetch_naver",
       "destination": "/api/fetch_naver.js"
     },
