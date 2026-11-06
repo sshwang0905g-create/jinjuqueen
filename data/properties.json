@@ -1,5 +1,59 @@
 [
   {
+    "id": "prop-1793934055121",
+    "category": "아파트",
+    "transactionType": "매매",
+    "status": "ACTIVE",
+    "sourceType": "NAVER",
+    "naverArticleNo": "2659608022",
+    "title": "진주혁신코오롱하늘채 401동",
+    "price": 60000,
+    "priceFormatted": "매매 6억만원",
+    "deposit": 60000,
+    "monthlyRent": 0,
+    "location": "진주시 충무공동 (혁신도시)",
+    "addressMasked": "진주시 충무공동 (혁신도시) 일원",
+    "adminMemo": "",
+    "isPrivate": false,
+    "hidden": false,
+    "lat": 35.1776,
+    "lng": 128.1438,
+    "exclusiveArea": 84.95,
+    "exclusiveAreaPyeong": 25.7,
+    "supplyArea": 110.86,
+    "supplyAreaPyeong": 33.5,
+    "floor": "중 / 총 20",
+    "direction": "남향(거실기준)",
+    "rooms": 3,
+    "bathrooms": 2,
+    "approvalDate": "2014년 2월 13일",
+    "moveInDate": "즉시입주 가능",
+    "parking": "세대당 1.21대 (총 1260대)",
+    "maintenanceFee": "약 10~13만원 (실비정산)",
+    "maintenanceDetails": "공용관리비 실비 정산, 유선/인터넷 별도",
+    "badge": "네이버확인",
+    "isRecommended": true,
+    "tags": [
+      "아파트",
+      "매매",
+      "실매물확인"
+    ],
+    "images": [
+      "https://landthumb-phinf.pstatic.net/20201205_51/land_naver_1607120909920LSsjk_JPEG/1070033202010141939527871881205072829741000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20201205_147/land_naver_1607120668510aT1Nt_JPEG/1070033202010141939525616021205072428359000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20130820_142/hscp_img_1376982484948aGRmC_JPEG/photoinfra_1376982484528.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20201204_89/land_naver_1607077565255d4FnL_JPEG/1070033202010141939533123861204192605103000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20201204_137/land_naver_16070775645743T3RF_JPEG/1070033202010141939530807851204192604421000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20130820_260/hscp_img_1376982494668U0ESn_JPEG/photoinfra_1376982494238.jpg?type=m1024"
+    ],
+    "agent": {
+      "name": "황선숙 대표공인중개사",
+      "phone": "010-4670-7248",
+      "role": "개업공인중개사"
+    },
+    "description": "📌 매물특징\n\n✔ 중문,줄눈,화이트씽크대 집상태뷰 아주 좋은집"
+  },
+  {
     "id": "prop-1793890528090",
     "category": "택지",
     "transactionType": "매매",
@@ -37,7 +91,7 @@
       "매매"
     ],
     "images": [
-      "images/complex_cards/토지_클린카드.jpg?v=pastel"
+      "images/complex_cards/pastel_9ff84759fc.jpg"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",

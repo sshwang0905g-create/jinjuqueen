@@ -186,6 +186,25 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
             return
 
+        if parsed.path == '/api/generate_card':
+            title = payload.get('title', '진주혁신도시 추천매물')
+            category = payload.get('category', '아파트')
+            detail = payload.get('detail', '')
+            atcl_no = payload.get('articleNo', '')
+            try:
+                from generate_pastel_card import generate_pastel_card
+                card_path = generate_pastel_card(title, category, detail, atcl_no)
+                res = {"success": True, "path": card_path}
+            except Exception as e:
+                res = {"success": False, "message": str(e), "path": "images/complex_cards/기본_아파트_클린카드.jpg"}
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
+            return
+
         if parsed.path == '/api/upload_image':
             data_urls = payload.get('images', [])
             saved_paths = []

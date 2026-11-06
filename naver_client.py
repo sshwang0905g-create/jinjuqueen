@@ -426,35 +426,31 @@ class NaverRealEstateClient:
             else:
                 final_description = f"네이버부동산 등록 검증 실매물(매물번호: {atcl_no})입니다."
 
-            # 토지/택지 매물인데 실사진이 전혀 없는 경우 토지 전용 클린 타이틀 카드 매핑
-            if category == "택지" and len(photos) == 0:
-                photos = ["images/complex_cards/토지_클린카드.jpg"]
-                logger.info(f"[토지 클린 타이틀 카드 매핑] images/complex_cards/토지_클린카드.jpg")
+            # 사진이 전혀 없는 경우 화사하고 밝은 파스텔(Pastel) 컬러 타이틀 카드 동적 자동생성
+            if len(photos) == 0:
+                detail_str = ""
+                if category == "택지":
+                    detail_str = f"{land_pyeong}평 · {usage_district or '제1종일반주거'}"
+                elif floor_parsed:
+                    detail_str = f"{floor_parsed} · 전용 {exclusive_pyeong}평"
+                elif exclusive_pyeong:
+                    detail_str = f"전용 {exclusive_pyeong}평"
 
-            # 상가 매물인데 실사진이 전혀 없는 경우 상가 전용 클린 타이틀 카드 매핑
-            if category == "상가" and len(photos) == 0:
-                photos = ["images/complex_cards/일반상가_클린카드.jpg"]
-                logger.info(f"[상가 클린 타이틀 카드 매핑] images/complex_cards/일반상가_클린카드.jpg")
-
-            # 아파트 매물인데 실사진이 전혀 없는 경우 깨끗한 아파트 이름 타이틀 카드 매핑
-            if category == "아파트" and len(photos) == 0:
-                complex_cover = "images/complex_cards/기본_아파트_클린카드.jpg"
-                if "더힐" in title:
-                    complex_cover = "images/complex_cards/더힐_505동_클린카드.jpg"
-                elif "라온" in title:
-                    complex_cover = "images/complex_cards/라온프라이빗_204동_클린카드.jpg"
-                elif "LH8" in title or "8단지" in title:
-                    complex_cover = "images/complex_cards/LH8단지_803동_클린카드.jpg"
-                elif "대방" in title:
-                    complex_cover = "images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg"
-                elif "더퍼스트" in title:
-                    complex_cover = "images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg"
-                elif "중흥" in title:
-                    complex_cover = "images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg"
-                elif "한림" in title:
-                    complex_cover = "images/complex_cards/한림풀에버_클린카드.jpg"
-                photos = [complex_cover]
-                logger.info(f"[아파트 클린 타이틀 카드 매핑] {complex_cover}")
+                try:
+                    from generate_pastel_card import generate_pastel_card
+                    card_path = generate_pastel_card(title, category, detail_str, atcl_no)
+                    photos = [card_path]
+                    logger.info(f"[화사한 파스텔 타이틀 카드 동적 생성 완료] {card_path}")
+                except Exception as card_err:
+                    logger.error(f"[파스텔 카드 생성 예외 Fallback] {card_err}")
+                    if category == "택지":
+                        photos = ["images/complex_cards/토지_클린카드.jpg"]
+                    elif category == "상가":
+                        photos = ["images/complex_cards/일반상가_클린카드.jpg"]
+                    elif category == "오피스텔":
+                        photos = ["images/complex_cards/pastel_ea18771ace.jpg"]
+                    else:
+                        photos = ["images/complex_cards/기본_아파트_클린카드.jpg"]
 
             logger.info(f"[매물 파싱 완료] {atcl_no} | {title} | {price_formatted} | 사진 {len(photos)}장")
 

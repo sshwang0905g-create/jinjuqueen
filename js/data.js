@@ -1,78 +1,58 @@
-// 진주퀸공인중개사사무소 매물 및 뉴스 데이터베이스 (PRD 법정 12개 필수 항목 및 관리비 세부비목 완벽 반영)
-
-const OFFICE_INFO = {
-  name: "진주퀸공인중개사사무소",
-  representative: "황선숙",
-  regNumber: "48170-2017-00038",
-  address: "경상남도 진주시 에나로 146, 105호 (충무공동, 라온프라이빗시티)",
-  detailedLocation: "LH 한국토지주택공사 본사 공원 맞은편 / 탑마트 주변 중심상가",
-  phoneLandline: "055-761-7248",
-  phoneMobile: "010-4670-7248",
-  hours: "월~토 09:30 ~ 19:30 (일요일 사전 예약 상담 가능)",
-  naverBlogUrl: "https://blog.naver.com/property70", // 황선숙 대표 공식 네이버 블로그
-  youtubeUrl: "https://www.youtube.com/@jinju_queen", // 진주퀸 공식 유튜브 채널 (@jinju_queen)
-  kakaoUrl: "https://pf.kakao.com",
-  parking: "상가 지하 주차장 2시간 무료 주차 지원"
-};
-
-const YOUTUBE_VIDEOS = [
+const initialProperties = [
   {
-    id: "yt-01",
-    title: "[영상임장] 진주 혁신도시 대방노블랜드 34평 4Bay 판상형 내부 룸투어",
-    desc: "탁 트인 영구 조망과 일조권 최상 세대, 주방 펜트리와 안방 드레스룸 실물 영상",
-    thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
-    duration: "08:24",
-    views: "2.4천회",
-    url: "https://www.youtube.com/@jinju_queen"
+    "id": "prop-1793934055121",
+    "category": "아파트",
+    "transactionType": "매매",
+    "status": "ACTIVE",
+    "sourceType": "NAVER",
+    "naverArticleNo": "2659608022",
+    "title": "진주혁신코오롱하늘채 401동",
+    "price": 60000,
+    "priceFormatted": "매매 6억만원",
+    "deposit": 60000,
+    "monthlyRent": 0,
+    "location": "진주시 충무공동 (혁신도시)",
+    "addressMasked": "진주시 충무공동 (혁신도시) 일원",
+    "adminMemo": "",
+    "isPrivate": false,
+    "hidden": false,
+    "lat": 35.1776,
+    "lng": 128.1438,
+    "exclusiveArea": 84.95,
+    "exclusiveAreaPyeong": 25.7,
+    "supplyArea": 110.86,
+    "supplyAreaPyeong": 33.5,
+    "floor": "중 / 총 20",
+    "direction": "남향(거실기준)",
+    "rooms": 3,
+    "bathrooms": 2,
+    "approvalDate": "2014년 2월 13일",
+    "moveInDate": "즉시입주 가능",
+    "parking": "세대당 1.21대 (총 1260대)",
+    "maintenanceFee": "약 10~13만원 (실비정산)",
+    "maintenanceDetails": "공용관리비 실비 정산, 유선/인터넷 별도",
+    "badge": "네이버확인",
+    "isRecommended": true,
+    "tags": [
+      "아파트",
+      "매매",
+      "실매물확인"
+    ],
+    "images": [
+      "https://landthumb-phinf.pstatic.net/20201205_51/land_naver_1607120909920LSsjk_JPEG/1070033202010141939527871881205072829741000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20201205_147/land_naver_1607120668510aT1Nt_JPEG/1070033202010141939525616021205072428359000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20130820_142/hscp_img_1376982484948aGRmC_JPEG/photoinfra_1376982484528.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20201204_89/land_naver_1607077565255d4FnL_JPEG/1070033202010141939533123861204192605103000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20201204_137/land_naver_16070775645743T3RF_JPEG/1070033202010141939530807851204192604421000000.jpg?type=m1024",
+      "https://landthumb-phinf.pstatic.net/20130820_260/hscp_img_1376982494668U0ESn_JPEG/photoinfra_1376982494238.jpg?type=m1024"
+    ],
+    "agent": {
+      "name": "황선숙 대표공인중개사",
+      "phone": "010-4670-7248",
+      "role": "개업공인중개사"
+    },
+    "description": "📌 매물특징\n\n✔ 중문,줄눈,화이트씽크대 집상태뷰 아주 좋은집"
   },
-  {
-    id: "yt-02",
-    title: "[단지투어] 충무공동 중흥S클래스 센트럴시티 영천강 수변공원 산책로 완벽 분석",
-    desc: "초품아 학군과 쾌적한 숲세권 입지, 실제 보행 동선과 커뮤니티 시설 현장 촬영",
-    thumbnail: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
-    duration: "11:15",
-    views: "3.1천회",
-    url: "https://www.youtube.com/@jinju_queen"
-  },
-  {
-    id: "yt-03",
-    title: "[상권분석] LH 한국토지주택공사 본사 앞 1층 코너 상가 유동인구 및 추천업종",
-    desc: "공공기관 11개 배후수요와 점심·저녁 유동인구 동선 집중 체크",
-    thumbnail: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
-    duration: "06:50",
-    views: "1.8천회",
-    url: "https://www.youtube.com/@jinju_queen"
-  }
-];
-
-const BLOG_POSTS = [
-  {
-    id: "blog-01",
-    title: "[진주퀸 현장칼럼] 2026 충무공동 아파트 매매·전세 실거래가 추이와 매수 타이밍",
-    desc: "대방노블랜드, 중흥S클래스, 한림풀에버 단지별 최근 거래가와 학군 선호도 집중 해부",
-    date: "2026.11.03",
-    category: "부동산 시장분석",
-    url: "https://blog.naver.com"
-  },
-  {
-    id: "blog-02",
-    title: "[임장노트] 무지개초등학교 품은 혁신도시 한림풀에버 실거주 만족도 인터뷰",
-    desc: "학부모님들이 가장 만족하시는 통학 안전과 단지 내 조경 및 주차 환경 총정리",
-    date: "2026.10.29",
-    category: "단지별 심층리포트",
-    url: "https://blog.naver.com"
-  },
-  {
-    id: "blog-03",
-    title: "[부동산 세무상식] 1가구 1주택 비과세 요건 및 양도세·취득세 절세 핵심 가이드",
-    desc: "개업공인중개사 황선숙 대표가 쉽게 알려드리는 부동산 거래 시 필수 세금 절약 팁",
-    date: "2026.10.20",
-    category: "세무/법률 상식",
-    url: "https://blog.naver.com"
-  }
-];
-
-let PROPERTIES_DATA = [
   {
     "id": "prop-1793890528090",
     "category": "택지",
@@ -111,7 +91,7 @@ let PROPERTIES_DATA = [
       "매매"
     ],
     "images": [
-      "images/complex_cards/토지_클린카드.jpg?v=pastel"
+      "images/complex_cards/pastel_9ff84759fc.jpg"
     ],
     "agent": {
       "name": "황선숙 대표공인중개사",
@@ -291,58 +271,5 @@ let PROPERTIES_DATA = [
     "description": "📌 매물특징\n\n✔ LH 정문 도보 약 5분, 라온프라이빗시티S 오피스텔 B타입 원플원테라스형\n✔ 보증금 500만원, 월세 65만원 전월세 가능\n✔ 실입주 가능한 주거용 오피스텔 매매 1.25억원, 절충가능\n✔ LH공원뷰로 탁 트인 조망이 돋보이는 매물\n✔ 관리비(TV유선, 인터넷 별도) 임차인 부담\n✔ 27년 1월 19일 이후 입주가능, 입주시기 협의가능\n✔ 탑마트·편의점·식당 등 생활편의시설이 가깝고 인근 공원 이용도 편리\n✔ 인근 공원에서 산책·운동하기 좋은 쾌적한 주거환경",
     "feature": "귀한 주거용 원플원 전월세 또는 매매 1.25억원, 실입주가능",
     "adminMemo": "612호"
-  }
-];
-
-const NEWS_DATA = [
-  {
-    "category": "부동산 투자 분석",
-    "title": "[AI 칼럼] 진주 혁신도시 상권 및 배후 주거단지 분석",
-    "summary": "Claude 및 ChatGPT 분석 기반 진주 혁신도시 핵심 단지별 투자가치 및 실거래가 동향.",
-    "author": "황선숙 대표",
-    "date": "2026.11.05",
-    "content": "# 🏢 진주 혁신도시 핵심 상권 및 아파트 심층 분석\n\n최근 진주 혁신도시(충무공동)는 11개 공공기관의 이전 완료와 배후 주거단지의 성숙으로 **서부경남 최대의 프리미엄 주거벨트**를 형성하고 있습니다.\n\n## 1. 주요 단지별 특징 및 실거래 동향\n- **대방노블랜드**: 영천강 수변공원 인접, 84㎡ 국민평형 기준 가장 활발한 손바뀜\n- **중흥S클래스**: 초·중·고 학군 도보권 완비, 학부모 실수요층 선호도 1위\n- **한림풀에버**: 중심 상업지구 및 탑마트 인접으로 생활 편의성 우수\n\n## 2. 상업용지 및 오피스텔 투자 포인트\n> 💡 **황선숙 대표의 실전 팁**\n> 주중 공공기관 직장인 유동인구와 주말 영천강 가족 나들이 수요를 복합적으로 흡수할 수 있는 1층 테라스형 상가나 라온프라이빗시티 인근 중심상권을 주목하세요.\n\n| 구분 | 주요 타겟 | 권장 전용면적 |\n|---|---|---|\n| 배후 아파트 | 공공기관 종사자 및 가족 | 84㎡ ~ 102㎡ |\n| 중심 상가 | F&B, 병의원, 학원 | 50㎡ ~ 120㎡ |\n\n자세한 개별 매물 상담이나 시세 분석은 **진주퀸공인중개사사무소(010-4670-7248)**로 연락주시면 정확한 권리분석을 도와드립니다.",
-    "id": "board-1793868701823",
-    "views": 0
-  },
-  {
-    "id": "board-01",
-    "category": "혁신도시 소식",
-    "title": "진주 충무공동 혁신도시 공공기관 2차 이전 논의 본격화 및 파급효과",
-    "summary": "수도권 공공기관 2차 이전 가시화에 따른 진주 혁신도시 부동산 시장 전망과 충무공동 아파트 거래량 변화 분석.",
-    "date": "2026.11.02",
-    "author": "황선숙 대표",
-    "views": 482,
-    "content": "진주 혁신도시(충무공동)는 한국토지주택공사(LH), 한국남동발전, 중소벤처기업진흥공단 등 11개 주요 공공기관이 안착해 있는 서부경남 최고의 신도시 거점입니다.\n\n최근 제2차 공공기관 지방 이전 로드맵과 맞물려 배후 주거단지인 대방노블랜드, 중흥S클래스, 한림풀에버 등 핵심 아파트 단지의 매수 문의가 다시 활발해지고 있습니다. 특히 초·중·고 학군이 완비된 블록과 수변공원 인근의 선호도가 뚜렷합니다."
-  },
-  {
-    "id": "board-02",
-    "category": "주간 시세 리포트",
-    "title": "[11월 1주차] 충무공동 아파트 실거래가 및 전세가율 동향 브리핑",
-    "summary": "실수요자 중심 84㎡ 국민평형 매매가 강보합세 유지, 가을 이사철 전세 매물 품귀 현상 지속.",
-    "date": "2026.10.28",
-    "author": "황선숙 대표",
-    "views": 624,
-    "content": "2026년 가을 이사철을 맞아 진주 혁신도시 84㎡ 전세 매물이 빠르게 소진되고 있습니다.\n\n현재 매매가는 급매물이 대부분 소진된 후 실거래가 기준 전고점의 85~90% 수준을 회복하며 안착하는 모양새입니다. 전세가율은 60% 후반대를 유지하고 있어 갭투자보다는 실거주 매수자의 발길이 이어지고 있습니다."
-  },
-  {
-    "id": "board-03",
-    "category": "부동산 세무/상식",
-    "title": "2026년 공인중개사법 개정안 준수 안내 및 관리비 세부비목 표시",
-    "summary": "인터넷 표시광고 규정 강화에 따른 정액관리비 10만원 이상 매물의 비목별 분리 표기 안내.",
-    "date": "2026.10.15",
-    "author": "진주퀸 법률지원",
-    "views": 310,
-    "content": "진주퀸공인중개사사무소는 국토교통부 인터넷 표시·광고 고시를 철저히 준수합니다.\n\n공인중개사법에 따라 매물 광고 시 일반관리비, 전기료, 수도료 등 세부 내역을 투명하게 공개하여 임차인과 매수인의 알 권리를 보장하고 허위 매물 피해를 사전에 예방합니다."
-  },
-  {
-    "id": "board-04",
-    "category": "사무소 공지",
-    "title": "진주퀸공인중개사사무소 모바일 원스톱 상담 및 매물의뢰 서비스 개편",
-    "summary": "바쁘신 고객님을 위해 카카오톡, 문자, 전화 원클릭 연결 및 온라인 매물접수 시스템을 전면 오픈했습니다.",
-    "date": "2026.10.05",
-    "author": "황선숙 대표",
-    "views": 520,
-    "content": "안녕하세요. 진주시 충무공동 진주퀸공인중개사사무소 대표 황선숙입니다.\n\n고객 여러분께 더 신속하고 투명한 중개 서비스를 제공하기 위해 자체 홈페이지를 오픈하였습니다. 언제든 전화(055-761-7248 / 010-4670-7248)나 간편 문자로 연락주시면 친절하고 전문적인 상담을 약속드립니다."
   }
 ];

@@ -533,8 +533,12 @@
                 네이버에서 불러온 사진 외에도 내 PC나 휴대폰의 현장 사진을 최대 6장까지 추가할 수 있습니다.
               </p>
             </div>
-            <div>
+            <div class="flex items-center gap-2">
               <input type="file" id="propPhotoFileInput" accept="image/*" multiple class="hidden" onchange="handlePhotoFilesSelected(this.files)">
+              <button type="button" onclick="createAndAddPastelCard()" id="genPastelBtn" class="px-3 py-2 bg-gradient-to-r from-sky-50 to-indigo-50 hover:from-sky-100 hover:to-indigo-100 text-sky-800 text-xs font-bold rounded-xl border border-sky-200 shadow-xs flex items-center gap-1.5 cursor-pointer transition" title="현재 입력된 매물명과 정보에 맞춰 밝고 화사한 파스텔 타이틀 카드를 즉시 생성합니다">
+                <i data-lucide="palette" class="w-3.5 h-3.5 text-sky-600"></i>
+                <span>🎨 파스텔 타이틀 카드 생성</span>
+              </button>
               <button type="button" onclick="triggerPhotoUpload()" id="addPhotoBtn" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 shadow-xs flex items-center gap-1.5 cursor-pointer transition">
                 <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-600"></i>
                 <span>+ 사진 추가</span>
@@ -1147,19 +1151,274 @@
 let fetchedNaverPhotos = [];
     let currentPropertyPhotos = [];
 
-    function matchApartmentCard(title, category = '') {
-      if (category === '상가' || (title && (title.includes('상가') || title.includes('사무실') || title.includes('점포')))) {
-        return 'images/complex_cards/일반상가_클린카드.jpg';
+    // [화사한 파스텔 타이틀 카드 HTML5 Canvas 동적 생성 시스템]
+    function generatePastelCardCanvas(title, category = '아파트', detail = '') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 800;
+      const ctx = canvas.getContext('2d');
+
+      const cat = (category || '').trim();
+      const tit = (title || '진주혁신도시 추천매물').trim();
+
+      // 밝고 따뜻하며 화사한 파스텔 컬러 테마 지정 (스카이블루, 민트, 피치, 샴페인크림, 라벤더 등)
+      let bgTop, bgBottom, borderCol, titleCol, accentCol, tagText, tagCol;
+
+      if (cat === '택지' || tit.includes('토지') || tit.includes('택지') || tit.includes('주택용지')) {
+        bgTop = '#FFF3EA';       // Soft Warm Peach
+        bgBottom = '#FDE2CE';    // Pastel Apricot
+        borderCol = '#EBC0A0';
+        titleCol = '#412010';     // Deep Warm Mocha
+        accentCol = '#D97706';    // Warm Amber
+        tagText = '진주혁신도시 토지·택지 실매물';
+        tagCol = '#C2410C';
+      } else if (cat === '오피스텔' || tit.includes('오피스텔') || tit.includes('허브시티') || tit.includes('프라이빗시티')) {
+        bgTop = '#E0F7EE';       // Fresh Mint
+        bgBottom = '#C6EADC';    // Pastel Sage
+        borderCol = '#91D2B9';
+        titleCol = '#103026';     // Deep Forest Slate
+        accentCol = '#059669';    // Emerald
+        tagText = '진주혁신도시 오피스텔 실매물';
+        tagCol = '#059669';
+      } else if (cat === '상가' || tit.includes('상가') || tit.includes('사무실') || tit.includes('점포')) {
+        bgTop = '#FAF5EB';       // Warm Sand Cream
+        bgBottom = '#F5ECCD';    // Champagne Pastel
+        borderCol = '#DAC8AC';
+        titleCol = '#322616';     // Deep Mocha Slate
+        accentCol = '#B45309';    // Amber Bronze
+        tagText = '진주혁신도시 상가·사무실 실매물';
+        tagCol = '#B45309';
+      } else {
+        // 아파트 (단지명/선호도별 다채로운 파스텔)
+        if (tit.includes('더퍼스트') || tit.includes('로즈')) {
+          bgTop = '#FEF0F4';
+          bgBottom = '#FADCE4';
+          borderCol = '#ECB2C0';
+          titleCol = '#481826';
+          accentCol = '#BE185D';
+          tagText = '진주혁신도시 아파트 실매물';
+          tagCol = '#BE185D';
+        } else if (tit.includes('대방') || tit.includes('라벤더')) {
+          bgTop = '#ECEEFE';
+          bgBottom = '#DADFFA';
+          borderCol = '#B2BAEC';
+          titleCol = '#1C244C';
+          accentCol = '#4F46E5';
+          tagText = '진주혁신도시 아파트 실매물';
+          tagCol = '#4F46E5';
+        } else if (tit.includes('중흥') || tit.includes('센트럴')) {
+          bgTop = '#E1F7F7';
+          bgBottom = '#C7ECEE';
+          borderCol = '#94D0D4';
+          titleCol = '#10343A';
+          accentCol = '#0D9488';
+          tagText = '진주혁신도시 아파트 실매물';
+          tagCol = '#0D9488';
+        } else {
+          bgTop = '#E2F0FD';       // Soft Powder Sky Blue
+          bgBottom = '#CAE1F8';
+          borderCol = '#9BC3E8';
+          titleCol = '#122644';
+          accentCol = '#0284C7';
+          tagText = '진주혁신도시 아파트 실매물';
+          tagCol = '#0284C7';
+        }
       }
-      if (!title) return 'images/complex_cards/기본_아파트_클린카드.jpg';
-      if (title.includes('더힐')) return 'images/complex_cards/더힐_505동_클린카드.jpg';
-      if (title.includes('라온')) return 'images/complex_cards/라온프라이빗_204동_클린카드.jpg';
-      if (title.includes('LH8') || title.includes('8단지')) return 'images/complex_cards/LH8단지_803동_클린카드.jpg';
-      if (title.includes('대방')) return 'images/complex_cards/대방노블랜드_더센트럴_클린카드.jpg';
-      if (title.includes('더퍼스트')) return 'images/complex_cards/중흥S클래스_더퍼스트_클린카드.jpg';
-      if (title.includes('중흥')) return 'images/complex_cards/중흥S클래스_센트럴시티_클린카드.jpg';
-      if (title.includes('한림')) return 'images/complex_cards/한림풀에버_클린카드.jpg';
-      return 'images/complex_cards/기본_아파트_클린카드.jpg';
+
+      // 1. 부드러운 수직 파스텔 그라데이션
+      const grad = ctx.createLinearGradient(0, 0, 0, 800);
+      grad.addColorStop(0, bgTop);
+      grad.addColorStop(1, bgBottom);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1200, 800);
+
+      function drawRoundedRect(x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      // 2. 이중 테두리 라인
+      ctx.strokeStyle = borderCol;
+      ctx.lineWidth = 2;
+      drawRoundedRect(32, 32, 1136, 736, 24);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2;
+      drawRoundedRect(42, 42, 1116, 716, 18);
+      ctx.stroke();
+
+      // 3. 상단 화이트 필 태그
+      ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif';
+      const tagFullText = `●  ${tagText}`;
+      const tagMetrics = ctx.measureText(tagFullText);
+      const pillW = Math.max(tagMetrics.width + 54, 360);
+      const pillH = 50;
+      const pillX = (1200 - pillW) / 2;
+      const pillY = 120;
+
+      ctx.fillStyle = '#FFFFFF';
+      drawRoundedRect(pillX, pillY, pillW, pillH, 25);
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = tagCol;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tagFullText, 600, pillY + pillH / 2);
+
+      // 4. 중앙 매물명 (자동 줄바꿈)
+      let cleanTitle = tit.replace(/\[.*?\]/g, '').trim();
+      let lines = [];
+      let fontSize = 60;
+      if (cleanTitle.length <= 15) {
+        lines = [cleanTitle];
+        fontSize = 62;
+      } else if (cleanTitle.length <= 26) {
+        const mid = Math.floor(cleanTitle.length / 2);
+        let splitIdx = cleanTitle.indexOf(' ', mid - 4);
+        if (splitIdx === -1 || splitIdx > mid + 5) splitIdx = mid;
+        lines = [cleanTitle.substring(0, splitIdx).trim(), cleanTitle.substring(splitIdx).trim()];
+        fontSize = 50;
+      } else {
+        const mid = Math.floor(cleanTitle.length / 2);
+        let splitIdx = cleanTitle.indexOf(' ', mid - 5);
+        if (splitIdx === -1) splitIdx = mid;
+        lines = [cleanTitle.substring(0, splitIdx).trim(), cleanTitle.substring(splitIdx, splitIdx + 22).trim()];
+        fontSize = 48;
+      }
+
+      ctx.fillStyle = titleCol;
+      ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const titleCenterY = lines.length === 1 ? 280 : 255;
+      const lineHeight = fontSize + 20;
+      lines.forEach((line, idx) => {
+        const y = titleCenterY + (idx * lineHeight) - ((lines.length - 1) * lineHeight / 2);
+        ctx.fillText(line, 600, y);
+      });
+
+      // 5. 상세정보 서브 필
+      let subDetail = (detail || '').trim();
+      if (!subDetail) {
+        if (cat === '택지') subDetail = '즉시 건축가능 토지 · 현장 실매물';
+        else if (cat === '오피스텔') subDetail = '진주혁신도시 중심 상권 프리미엄 오피스텔';
+        else if (cat === '상가') subDetail = '공공기관 11개 배후수요 · 핵심 메인상가';
+        else subDetail = '진주혁신도시 선호 단지 · 정직 실매물';
+      }
+
+      ctx.font = 'bold 30px -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif';
+      const detMetrics = ctx.measureText(subDetail);
+      const detW = detMetrics.width + 50;
+      const detH = 50;
+      const detX = (1200 - detW) / 2;
+      const detY = titleCenterY + (lines.length * lineHeight / 2) + 40;
+
+      ctx.fillStyle = '#FFFFFF';
+      drawRoundedRect(detX, detY, detW, detH, 25);
+      ctx.fill();
+      ctx.strokeStyle = borderCol;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = accentCol;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(subDetail, 600, detY + detH / 2);
+
+      // 6. 하단 진주퀸공인중개사사무소 공식 보증 명판
+      const cardW = 980;
+      const cardH = 118;
+      const cardX = (1200 - cardW) / 2;
+      const cardY = 600;
+
+      ctx.fillStyle = '#FFFFFF';
+      drawRoundedRect(cardX, cardY, cardW, cardH, 18);
+      ctx.fill();
+      ctx.strokeStyle = '#E2E8F0';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Brand Line 1
+      ctx.fillStyle = '#1E293B';
+      ctx.font = 'bold 23px -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('진주퀸공인중개사사무소   |   대표 황선숙   |   055-761-7248  ·  010-4670-7248', 600, cardY + 42);
+
+      // Brand Line 2
+      ctx.fillStyle = '#64748B';
+      ctx.font = '18px -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif';
+      ctx.fillText('경남 진주시 에나로 146, 105호 (라온프라이빗시티)   |   충무공동 9년차 정직과 데이터의 책임중개', 600, cardY + 82);
+
+      return canvas.toDataURL('image/jpeg', 0.92);
+    }
+
+    // 사용자 수동 클릭 또는 사진 없을 때 원클릭 파스텔 카드 생성 및 대표사진 등록
+    async function createAndAddPastelCard() {
+      const title = (document.getElementById('newPropTitle')?.value || '').trim() || '진주혁신도시 추천 실매물';
+      const category = (document.getElementById('newPropCategory')?.value || '').trim() || '아파트';
+      let detail = '';
+
+      if (category === '택지') {
+        const areaBadge = document.getElementById('newPropLandPyeongBadge')?.textContent || '';
+        const district = document.getElementById('newPropUsageDistrict')?.value || '';
+        detail = `${areaBadge} · ${district || '제1종일반주거'}`.trim();
+      } else if (category === '상가') {
+        const tf = document.getElementById('newPropCommTargetFloor')?.value || '';
+        const exBadge = document.getElementById('newPropCommExPyeongBadge')?.textContent || '';
+        detail = `${tf} · ${exBadge}`.trim();
+      } else {
+        const tf = document.getElementById('newPropTargetFloor')?.value || '';
+        const exBadge = document.getElementById('newPropExPyeongBadge')?.textContent || '';
+        detail = `${tf} · ${exBadge}`.trim();
+      }
+
+      const cardDataUrl = generatePastelCardCanvas(title, category, detail);
+
+      try {
+        const uploadRes = await fetch('/api/upload_image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ images: [cardDataUrl] })
+        });
+        if (uploadRes.ok) {
+          const res = await uploadRes.json();
+          if (res.success && res.paths && res.paths[0]) {
+            currentPropertyPhotos.unshift(res.paths[0]);
+          } else {
+            currentPropertyPhotos.unshift(cardDataUrl);
+          }
+        } else {
+          currentPropertyPhotos.unshift(cardDataUrl);
+        }
+      } catch (e) {
+        currentPropertyPhotos.unshift(cardDataUrl);
+      }
+
+      if (currentPropertyPhotos.length > 6) {
+        currentPropertyPhotos = currentPropertyPhotos.slice(0, 6);
+      }
+
+      renderPropPhotoGallery();
+      showAdminToast('🎨 화사한 파스텔 타이틀 카드가 생성되어 대표 사진으로 등록되었습니다.');
+    }
+
+    function matchApartmentCard(title, category = '') {
+      return generatePastelCardCanvas(title || '진주혁신도시 실매물', category || '아파트');
     }
 
 
@@ -1608,22 +1867,51 @@ let fetchedNaverPhotos = [];
           fetchedNaverPhotos = data.photos || [];
           window.lastFetchedNaverData = data;
 
-          if (fetchedNaverPhotos && fetchedNaverPhotos.length > 0) {
+          const isFallbackCard = fetchedNaverPhotos.length > 0 && (
+            fetchedNaverPhotos[0].includes('클린카드') ||
+            fetchedNaverPhotos[0].includes('기본_')
+          );
+
+          if (fetchedNaverPhotos && fetchedNaverPhotos.length > 0 && !isFallbackCard) {
             currentPropertyPhotos = fetchedNaverPhotos.slice(0, 6);
             showAdminToast(`네이버 실매물 사진 ${currentPropertyPhotos.length}장을 불러왔습니다. [+ 사진 추가]로 현장 사진을 더 추가하실 수 있습니다.`);
           } else {
-            const cat = data.category || document.getElementById('newPropCategory').value;
-            if (cat === '아파트') {
-              const card = matchApartmentCard(data.title || '');
-              currentPropertyPhotos = [card];
-              showAdminToast('네이버 사진이 없어 아파트 전용 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
-            } else if (cat === '택지') {
-              currentPropertyPhotos = ['images/complex_cards/토지_클린카드.jpg?v=pastel'];
-              showAdminToast('네이버 사진이 없어 토지·택지 전용 파스텔 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
-            } else {
-              currentPropertyPhotos = ['images/complex_cards/일반상가_클린카드.jpg?v=pastel'];
-              showAdminToast('네이버 사진이 없어 상가 전용 파스텔 타이틀 카드가 자동 지정되었습니다. [+ 사진 추가]로 현장 사진을 직접 등록해 주세요.');
+            const cat = data.category || document.getElementById('newPropCategory').value || '아파트';
+            let detail = '';
+            if (cat === '택지') {
+              const p = data.landAreaPyeong ? `${data.landAreaPyeong}평` : '';
+              detail = `${p} · ${data.usageDistrict || '제1종일반주거'}`.trim();
+            } else if (data.floor) {
+              const p = data.exclusiveAreaPyeong ? `전용 ${data.exclusiveAreaPyeong}평` : '';
+              detail = `${data.floor} · ${p}`.trim();
             }
+
+            // 서버에서 이미 동적 생성된 pastel_ 카드 경로가 제공된 경우 바로 적용
+            if (fetchedNaverPhotos.length > 0 && fetchedNaverPhotos[0].includes('pastel_')) {
+              currentPropertyPhotos = [fetchedNaverPhotos[0]];
+            } else {
+              const cardDataUrl = generatePastelCardCanvas(data.title || '진주혁신도시 추천 실매물', cat, detail);
+              try {
+                const upRes = await fetch('/api/upload_image', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ images: [cardDataUrl] })
+                });
+                if (upRes.ok) {
+                  const upData = await upRes.json();
+                  if (upData.success && upData.paths && upData.paths[0]) {
+                    currentPropertyPhotos = [upData.paths[0]];
+                  } else {
+                    currentPropertyPhotos = [cardDataUrl];
+                  }
+                } else {
+                  currentPropertyPhotos = [cardDataUrl];
+                }
+              } catch (e) {
+                currentPropertyPhotos = [cardDataUrl];
+              }
+            }
+            showAdminToast('🎨 네이버 실사진이 없어 밝고 화사한 파스텔 타이틀 카드가 자동 생성되었습니다.');
           }
           renderPropPhotoGallery();
         } else {
@@ -1723,7 +2011,7 @@ let fetchedNaverPhotos = [];
       if (editId) {
         const finalImages = (currentPropertyPhotos && currentPropertyPhotos.length > 0)
           ? currentPropertyPhotos
-          : (category === '아파트' ? [matchApartmentCard(title)] : []);
+          : [generatePastelCardCanvas(title, category, floorStr)];
 
         const updatedFields = {
           id: editId,
@@ -1838,9 +2126,7 @@ let fetchedNaverPhotos = [];
 
       const fetched = window.lastFetchedNaverData || {};
 
-      const defaultCard = category === '택지' 
-        ? ['images/complex_cards/토지_클린카드.jpg']
-        : (category === '상가' ? ['images/complex_cards/일반상가_클린카드.jpg'] : [matchApartmentCard(title)]);
+      const defaultCard = [generatePastelCardCanvas(title, category, floorStr)];
 
       const newProperty = {
         id: 'prop-' + Date.now(),
