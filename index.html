@@ -145,10 +145,9 @@
         <a href="#split-map-anchor" onclick="switchViewMode('map')" class="hover:text-brand-navy transition flex items-center gap-1">
           <i data-lucide="map" class="w-4 h-4 text-brand-gold"></i> 지도 분할화면
         </a>
-        <a href="#media-section" class="hover:text-brand-navy transition flex items-center gap-1 font-semibold text-amber-800">
-          <span class="w-2 h-2 rounded-full bg-rose-500"></span> 블로그·유튜브
+        <a href="#news-section" class="hover:text-brand-navy transition flex items-center gap-1.5 font-semibold text-amber-800">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span> 부동산 칼럼 & 실거래 리포트
         </a>
-        <a href="#news-section" class="hover:text-brand-navy transition">부동산 소식</a>
         <a href="#office-section" class="hover:text-brand-navy transition">사무소 소개</a>
         <button onclick="openListingModal()" class="text-slate-800 hover:text-brand-gold transition font-medium">매물 의뢰하기</button>
       </nav>
@@ -176,10 +175,9 @@
     <div id="mobileMenuDropdown" class="hidden md:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 text-sm font-medium">
       <a href="#properties-section" class="block py-2 text-slate-800 hover:text-brand-navy">매물 검색</a>
       <a href="#split-map-anchor" onclick="switchViewMode('map')" class="block py-2 text-slate-800 hover:text-brand-navy">지도 분할화면</a>
-      <a href="#media-section" class="block py-2 text-rose-700 font-bold hover:text-brand-navy flex items-center gap-1.5">
-        <i data-lucide="play-circle" class="w-4 h-4 text-rose-600"></i> 유튜브 영상임장 & 네이버 블로그
+      <a href="#news-section" class="block py-2 text-amber-800 font-bold hover:text-brand-navy flex items-center gap-1.5">
+        <i data-lucide="book-open" class="w-4 h-4 text-amber-600"></i> 부동산 칼럼 & 실거래가 분석 리포트
       </a>
-      <a href="#news-section" class="block py-2 text-slate-800 hover:text-brand-navy">부동산 소식 및 뉴스 게시판</a>
       <a href="#office-section" class="block py-2 text-slate-800 hover:text-brand-navy">사무소 소개 및 오시는 길</a>
       <a href="#cta-section" class="block py-2 text-slate-800 hover:text-brand-navy">빠른 전화 & 문자 상담</a>
       <div class="pt-2 border-t border-slate-100 flex gap-2">
@@ -420,80 +418,6 @@
             </button>
           </div>
         </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Jinju Queen Media Section (YouTube 영상 임장 & Naver 블로그) -->
-  <section id="media-section" class="py-16 bg-slate-900 text-white border-t border-slate-800 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#C29B38_1px,transparent_1px)] [background-size:24px_24px]"></div>
-
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-        <div>
-          <div class="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider mb-1.5">
-            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-            <span>Video & Blog Media Channels</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">진주퀸 미디어 · 영상임장 & 공식 블로그</h2>
-          <p class="text-sm text-slate-300 mt-1">유튜브 현장 룸투어 영상과 네이버 블로그 심층 부동산 분석 칼럼을 지금 만나보세요</p>
-        </div>
-
-        <!-- Quick Channel Link Buttons -->
-        <div class="flex flex-wrap items-center gap-3">
-          <a href="https://www.youtube.com/@jinju_queen" target="_blank" rel="noopener noreferrer" class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg group">
-            <i data-lucide="youtube" class="w-4 h-4 group-hover:scale-110 transition"></i>
-            <span>진주퀸 유튜브 채널 바로가기</span>
-          </a>
-          <a href="https://blog.naver.com/property70" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg group">
-            <span class="font-extrabold text-sm">N</span>
-            <span>공식 네이버 블로그 바로가기</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Media Split Grid (Left: YouTube Video Tours, Right: Naver Blog Columns) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- Left: YouTube Section (7 Cols) -->
-        <div class="lg:col-span-7 space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <div class="flex items-center gap-2 text-sm font-bold text-white">
-              <i data-lucide="play-square" class="w-4 h-4 text-rose-500"></i>
-              <span>유튜브 현장 영상 임장 (랜선 룸투어)</span>
-            </div>
-            <a href="https://www.youtube.com/@jinju_queen" target="_blank" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
-              더보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-            </a>
-          </div>
-
-          <!-- Video Cards Grid -->
-          <div id="youtubeVideosContainer" class="space-y-3">
-            <!-- Rendered by js/app.js -->
-          </div>
-        </div>
-
-        <!-- Right: Naver Blog Section (5 Cols) -->
-        <div class="lg:col-span-5 space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <div class="flex items-center gap-2 text-sm font-bold text-white">
-              <span class="w-4 h-4 rounded bg-emerald-500 text-slate-950 font-black text-[10px] flex items-center justify-center">N</span>
-              <span>네이버 블로그 심층 분석 리포트</span>
-            </div>
-            <a href="https://blog.naver.com/property70" target="_blank" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1">
-              블로그 방문 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-            </a>
-          </div>
-
-          <!-- Blog Cards Container -->
-          <div id="blogPostsContainer" class="space-y-3">
-            <!-- Rendered by js/app.js -->
-          </div>
-        </div>
-
       </div>
 
     </div>
