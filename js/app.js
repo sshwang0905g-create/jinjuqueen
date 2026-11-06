@@ -30,11 +30,21 @@ let officeMarker = null;
 
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Immediately render properties from data.js (Zero latency, instant UI display)
+  // 1. Immediately render initial data from data.js (Zero latency, instant UI display)
   try {
     renderProperties();
   } catch (err) {
     console.error('Initial renderProperties error:', err);
+  }
+  try {
+    renderNews();
+  } catch (err) {
+    console.error('Initial renderNews error:', err);
+  }
+  try {
+    renderMediaSection();
+  } catch (err) {
+    console.error('Initial renderMediaSection error:', err);
   }
 
   // 2. Safe map initialization
@@ -49,18 +59,33 @@ document.addEventListener('DOMContentLoaded', () => {
     console.warn('initOfficeMap error:', err);
   }
 
-  // 3. Markers and live properties sync
+  // 3. Markers and live sync
   try {
     updateMapMarkers();
   } catch (err) {}
 
   loadLiveProperties();
-  renderMediaSection();
   loadLiveNews();
   updateFavBadge();
   setupEventListeners();
   if (window.lucide) {
     lucide.createIcons();
+  }
+
+  // IntersectionObserver for responsive map resizing when scrolled into view
+  if (typeof IntersectionObserver !== 'undefined') {
+    const mapObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target.id === 'officeMap' && officeMap) officeMap.invalidateSize();
+          if (entry.target.id === 'propertyMap' && map) map.invalidateSize();
+        }
+      });
+    }, { threshold: 0.1 });
+    const omEl = document.getElementById('officeMap');
+    if (omEl) mapObserver.observe(omEl);
+    const pmEl = document.getElementById('propertyMap');
+    if (pmEl) mapObserver.observe(pmEl);
   }
 });
 
@@ -176,61 +201,78 @@ function initOfficeMap() {
   const officeMapContainer = document.getElementById('officeMap');
   if (!officeMapContainer) return;
 
+  if (officeMap) {
+    try {
+      officeMap.remove();
+    } catch (e) {}
+    officeMap = null;
+  }
+
   // Exact coordinates for 경남 진주시 에나로 146 라온프라이빗시티 105호
   const OFFICE_LAT = 35.176734;
   const OFFICE_LNG = 128.144606;
 
-  officeMap = L.map('officeMap', {
-    center: [OFFICE_LAT, OFFICE_LNG],
-    zoom: 17, // Closer, crisp view of Raon Private City building
-    zoomControl: true,
-    scrollWheelZoom: true,
-    dragging: true
-  });
+  try {
+    officeMap = L.map('officeMap', {
+      center: [OFFICE_LAT, OFFICE_LNG],
+      zoom: 17, // Closer, crisp view of Raon Private City building
+      zoomControl: true,
+      scrollWheelZoom: false,
+      dragging: true
+    });
 
-  // Google Maps Roadmap for Office
-  L.tileLayer(GOOGLE_ROADMAP_URL, {
-    attribution: '&copy; Google Maps',
-    maxZoom: 20
-  }).addTo(officeMap);
+    // Google Maps Roadmap for Office
+    L.tileLayer(GOOGLE_ROADMAP_URL, {
+      attribution: '&copy; Google Maps',
+      maxZoom: 20
+    }).addTo(officeMap);
 
-  const officeIcon = L.divIcon({
-    className: 'office-pin',
-    html: `
-      <div style="background:#0F172A; color:#FFFFFF; padding:7px 15px; border-radius:24px; font-weight:800; font-size:12px; box-shadow:0 6px 20px rgba(15,23,42,0.5); border:2px solid #C29B38; display:flex; align-items:center; gap:6px; transform:translate(-50%, -100%); cursor:pointer;">
-        <img src="images/logo.png" style="width:20px; height:20px; object-fit:contain;">
-        <span>진주퀸공인중개사 (라온프라이빗시티 105호)</span>
-      </div>
-    `,
-    iconSize: [230, 38],
-    iconAnchor: [115, 38]
-  });
+    const officeIcon = L.divIcon({
+      className: 'office-pin',
+      html: `
+        <div style="background:#0F172A; color:#FFFFFF; padding:7px 15px; border-radius:24px; font-weight:800; font-size:12px; box-shadow:0 6px 20px rgba(15,23,42,0.5); border:2px solid #C29B38; display:flex; align-items:center; gap:6px; transform:translate(-50%, -100%); cursor:pointer;">
+          <img src="images/logo.png" style="width:20px; height:20px; object-fit:contain;">
+          <span>진주퀸공인중개사 (라온프라이빗시티 105호)</span>
+        </div>
+      `,
+      iconSize: [230, 38],
+      iconAnchor: [115, 38]
+    });
 
-  officeMarker = L.marker([OFFICE_LAT, OFFICE_LNG], { icon: officeIcon }).addTo(officeMap);
+    officeMarker = L.marker([OFFICE_LAT, OFFICE_LNG], { icon: officeIcon }).addTo(officeMap);
 
-  // Informative Interactive Popup
-  officeMarker.bindPopup(`
-    <div style="font-family:'Pretendard',sans-serif; padding:5px; max-width:280px;">
-      <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:4px; display:flex; align-items:center; gap:5px;">
-        <span style="color:#C29B38; font-size:16px;">👑</span> 진주퀸공인중개사사무소
+    // Informative Interactive Popup
+    officeMarker.bindPopup(`
+      <div style="font-family:'Pretendard',sans-serif; padding:5px; max-width:280px;">
+        <div style="font-size:14px; font-weight:800; color:#0F172A; margin-bottom:4px; display:flex; align-items:center; gap:5px;">
+          <span style="color:#C29B38; font-size:16px;">👑</span> 진주퀸공인중개사사무소
+        </div>
+        <div style="font-size:12px; color:#334155; line-height:1.45; margin-bottom:6px;">
+          경상남도 진주시 에나로 146, 105호 (라온프라이빗시티)<br>
+          <span style="color:#0D9488; font-weight:700;">LH 본사 공원 맞은편 · 탑마트 주변 중심상가 1층</span>
+        </div>
+        <div style="font-size:12px; font-weight:800; color:#C29B38; margin-bottom:8px;">
+          직통 010-4670-7248 / 유선 055-761-7248
+        </div>
+        <div style="border-top:1px solid #E2E8F0; padding-top:8px; display:flex; align-items:center; justify-content:space-between; font-size:11px; font-weight:700;">
+          <a href="https://map.naver.com/v5/search/%EC%A7%84%EC%A3%BC%EC%8B%9C%20%EC%97%90%EB%82%98%EB%A1%9C%20146%20%EB%9D%BC%EC%98%A8%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%EC%8B%9C%ED%8B%B0" target="_blank" style="color:#03C75A; text-decoration:none;">
+            네이버 지도 &rarr;
+          </a>
+          <a href="https://map.kakao.com/link/to/진주퀸공인중개사사무소,35.176734,128.144606" target="_blank" style="color:#3C1E1E; background:#FEE500; padding:2px 7px; border-radius:5px; text-decoration:none;">
+            카카오 길찾기
+          </a>
+        </div>
       </div>
-      <div style="font-size:12px; color:#334155; line-height:1.45; margin-bottom:6px;">
-        경상남도 진주시 에나로 146, 105호 (라온프라이빗시티)<br>
-        <span style="color:#0D9488; font-weight:700;">LH 본사 공원 맞은편 · 탑마트 주변 중심상가 1층</span>
-      </div>
-      <div style="font-size:12px; font-weight:800; color:#C29B38; margin-bottom:8px;">
-        직통 010-4670-7248 / 유선 055-761-7248
-      </div>
-      <div style="border-top:1px solid #E2E8F0; padding-top:8px; display:flex; items-center; justify-content:space-between; font-size:11px; font-weight:700;">
-        <a href="https://map.naver.com/v5/search/%EC%A7%84%EC%A3%BC%EC%8B%9C%20%EC%97%90%EB%82%98%EB%A1%9C%20146%20%EB%9D%BC%EC%98%A8%ED%94%84%EB%9D%BC%EC%9D%B4%EB%B9%97%EC%8B%9C%ED%8B%B0" target="_blank" style="color:#03C75A; text-decoration:none;">
-          네이버 지도 &rarr;
-        </a>
-        <a href="https://map.kakao.com/link/to/진주퀸공인중개사사무소,35.176734,128.144606" target="_blank" style="color:#3C1E1E; background:#FEE500; padding:2px 7px; border-radius:5px; text-decoration:none;">
-          카카오 길찾기
-        </a>
-      </div>
-    </div>
-  `).openPopup();
+    `).openPopup();
+
+    // Invalidate size on load and on scroll
+    setTimeout(() => { if (officeMap) officeMap.invalidateSize(); }, 300);
+    setTimeout(() => { if (officeMap) officeMap.invalidateSize(); }, 800);
+    setTimeout(() => { if (officeMap) officeMap.invalidateSize(); }, 1500);
+  } catch (err) {
+    console.warn('officeMap init error:', err);
+  }
+}
 }
 
 function updateMapMarkers() {
@@ -964,7 +1006,7 @@ async function loadLiveNews() {
     const res = await fetch('/api/board?t=' + Date.now());
     if (res.ok) {
       const data = await res.json();
-      if (data.posts && Array.isArray(data.posts)) {
+      if (data.posts && Array.isArray(data.posts) && data.posts.length > 0) {
         liveNewsData = data.posts;
         renderNews();
         return;
@@ -973,14 +1015,19 @@ async function loadLiveNews() {
     // Fallback to static data/board.json
     const fileRes = await fetch('data/board.json?t=' + Date.now());
     if (fileRes.ok) {
-      liveNewsData = await fileRes.json();
-      renderNews();
-      return;
+      const filePosts = await fileRes.json();
+      if (Array.isArray(filePosts) && filePosts.length > 0) {
+        liveNewsData = filePosts;
+        renderNews();
+        return;
+      }
     }
   } catch (err) {
-    // If running offline, fall back to initial NEWS_DATA
+    // Fallback below
   }
-  liveNewsData = typeof NEWS_DATA !== 'undefined' ? NEWS_DATA : [];
+  if (!liveNewsData || liveNewsData.length === 0) {
+    liveNewsData = (typeof NEWS_DATA !== 'undefined' && Array.isArray(NEWS_DATA)) ? NEWS_DATA : [];
+  }
   renderNews();
 }
 
@@ -1018,7 +1065,9 @@ function renderNews() {
   const container = document.getElementById('newsGrid');
   if (!container) return;
 
-  const dataset = liveNewsData || (typeof NEWS_DATA !== 'undefined' ? NEWS_DATA : []);
+  const dataset = (liveNewsData && liveNewsData.length > 0)
+    ? liveNewsData
+    : (typeof NEWS_DATA !== 'undefined' && Array.isArray(NEWS_DATA) ? NEWS_DATA : []);
 
   const list = dataset.filter(item => {
     if (currentNewsCategory !== 'ALL' && item.category !== currentNewsCategory) return false;
