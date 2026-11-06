@@ -1,4 +1,78 @@
-const initialProperties = [
+// 진주퀸공인중개사사무소 매물 및 뉴스 데이터베이스 (PRD 법정 12개 필수 항목 및 관리비 세부비목 완벽 반영)
+
+const OFFICE_INFO = {
+  name: "진주퀸공인중개사사무소",
+  representative: "황선숙",
+  regNumber: "48170-2017-00038",
+  address: "경상남도 진주시 에나로 146, 105호 (충무공동, 라온프라이빗시티)",
+  detailedLocation: "LH 한국토지주택공사 본사 공원 맞은편 / 탑마트 주변 중심상가",
+  phoneLandline: "055-761-7248",
+  phoneMobile: "010-4670-7248",
+  hours: "월~토 09:30 ~ 19:30 (일요일 사전 예약 상담 가능)",
+  naverBlogUrl: "https://blog.naver.com/property70", // 황선숙 대표 공식 네이버 블로그
+  youtubeUrl: "https://www.youtube.com/@jinju_queen", // 진주퀸 공식 유튜브 채널 (@jinju_queen)
+  kakaoUrl: "https://pf.kakao.com",
+  parking: "상가 지하 주차장 2시간 무료 주차 지원"
+};
+
+const YOUTUBE_VIDEOS = [
+  {
+    id: "yt-01",
+    title: "[영상임장] 진주 혁신도시 대방노블랜드 34평 4Bay 판상형 내부 룸투어",
+    desc: "탁 트인 영구 조망과 일조권 최상 세대, 주방 펜트리와 안방 드레스룸 실물 영상",
+    thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    duration: "08:24",
+    views: "2.4천회",
+    url: "https://www.youtube.com/@jinju_queen"
+  },
+  {
+    id: "yt-02",
+    title: "[단지투어] 충무공동 중흥S클래스 센트럴시티 영천강 수변공원 산책로 완벽 분석",
+    desc: "초품아 학군과 쾌적한 숲세권 입지, 실제 보행 동선과 커뮤니티 시설 현장 촬영",
+    thumbnail: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+    duration: "11:15",
+    views: "3.1천회",
+    url: "https://www.youtube.com/@jinju_queen"
+  },
+  {
+    id: "yt-03",
+    title: "[상권분석] LH 한국토지주택공사 본사 앞 1층 코너 상가 유동인구 및 추천업종",
+    desc: "공공기관 11개 배후수요와 점심·저녁 유동인구 동선 집중 체크",
+    thumbnail: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
+    duration: "06:50",
+    views: "1.8천회",
+    url: "https://www.youtube.com/@jinju_queen"
+  }
+];
+
+const BLOG_POSTS = [
+  {
+    id: "blog-01",
+    title: "[진주퀸 현장칼럼] 2026 충무공동 아파트 매매·전세 실거래가 추이와 매수 타이밍",
+    desc: "대방노블랜드, 중흥S클래스, 한림풀에버 단지별 최근 거래가와 학군 선호도 집중 해부",
+    date: "2026.11.03",
+    category: "부동산 시장분석",
+    url: "https://blog.naver.com"
+  },
+  {
+    id: "blog-02",
+    title: "[임장노트] 무지개초등학교 품은 혁신도시 한림풀에버 실거주 만족도 인터뷰",
+    desc: "학부모님들이 가장 만족하시는 통학 안전과 단지 내 조경 및 주차 환경 총정리",
+    date: "2026.10.29",
+    category: "단지별 심층리포트",
+    url: "https://blog.naver.com"
+  },
+  {
+    id: "blog-03",
+    title: "[부동산 세무상식] 1가구 1주택 비과세 요건 및 양도세·취득세 절세 핵심 가이드",
+    desc: "개업공인중개사 황선숙 대표가 쉽게 알려드리는 부동산 거래 시 필수 세금 절약 팁",
+    date: "2026.10.20",
+    category: "세무/법률 상식",
+    url: "https://blog.naver.com"
+  }
+];
+
+let PROPERTIES_DATA = [
   {
     "id": "prop-1793934055121",
     "category": "아파트",
@@ -273,3 +347,6 @@ const initialProperties = [
     "adminMemo": "612호"
   }
 ];
+const initialProperties = PROPERTIES_DATA;
+
+

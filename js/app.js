@@ -3,6 +3,15 @@
 // UI UX Pro Max & Taste Skill Standards
 // ========================================================
 
+// Global fallback for PROPERTIES_DATA if data.js is loaded in different order or cached
+if (typeof PROPERTIES_DATA === 'undefined') {
+  if (typeof initialProperties !== 'undefined') {
+    window.PROPERTIES_DATA = initialProperties;
+  } else {
+    window.PROPERTIES_DATA = [];
+  }
+}
+
 let state = {
   category: 'ALL',
   transType: 'ALL',
@@ -21,8 +30,30 @@ let officeMarker = null;
 
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-  initMap();
-  initOfficeMap();
+  // 1. Immediately render properties from data.js (Zero latency, instant UI display)
+  try {
+    renderProperties();
+  } catch (err) {
+    console.error('Initial renderProperties error:', err);
+  }
+
+  // 2. Safe map initialization
+  try {
+    initMap();
+  } catch (err) {
+    console.warn('initMap error:', err);
+  }
+  try {
+    initOfficeMap();
+  } catch (err) {
+    console.warn('initOfficeMap error:', err);
+  }
+
+  // 3. Markers and live properties sync
+  try {
+    updateMapMarkers();
+  } catch (err) {}
+
   loadLiveProperties();
   renderMediaSection();
   loadLiveNews();
@@ -284,7 +315,12 @@ function centerMapOnOffice() {
 // PROPERTY FILTERING & SORTING
 // ----------------------------------------------------
 function getFilteredProperties() {
-  return PROPERTIES_DATA.filter(item => {
+  const dataList = (typeof PROPERTIES_DATA !== 'undefined' && Array.isArray(PROPERTIES_DATA))
+    ? PROPERTIES_DATA
+    : (typeof initialProperties !== 'undefined' && Array.isArray(initialProperties) ? initialProperties : []);
+
+  return dataList.filter(item => {
+    if (!item) return false;
     // 0. Exclude Private (비공개) properties from public view
     if (item.isPrivate || item.status === 'PRIVATE' || item.hidden) {
       return false;
@@ -428,6 +464,9 @@ function renderProperties() {
     const isSold = prop.status === 'SOLD';
     const clickAction = isSold ? `openSoldNoticeModal('${prop.id}')` : `openPropertyModal('${prop.id}')`;
     const cardOpacity = isSold ? 'opacity-90 grayscale-[25%]' : '';
+    const firstImg = (prop.images && prop.images.length > 0 && prop.images[0])
+      ? prop.images[0]
+      : 'images/complex_cards/기본_아파트_클린카드.jpg';
 
     return `
       <article id="card-${prop.id}" 
@@ -437,7 +476,7 @@ function renderProperties() {
         
         <!-- Image Preview (High impact editorial thumbnail) -->
         <div class="sm:w-2/5 relative h-52 sm:h-auto overflow-hidden bg-slate-100 shrink-0">
-          <img src="${prop.images[0]}" alt="${prop.title}" 
+          <img src="${firstImg}" alt="${prop.title || '매물 사진'}" 
                loading="lazy"
                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
           
