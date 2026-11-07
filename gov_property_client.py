@@ -92,7 +92,7 @@ class GovPropertyClient:
         },
         "라온프라이빗시티": {
             "category": "오피스텔",
-            "aliases": ["라온프라이빗시티", "라온프라이빗", "라온", "280-1", "에나로 146", "에나로146"],
+            "aliases": ["라온프라이빗시티", "라온프라이빗", "라온", "280-1", "2801", "에나로 146", "에나로146"],
             "building_name": "라온프라이빗시티",
             "main_purpose": "업무시설(오피스텔) 및 제1·2종근린생활시설",
             "structure": "철근콘크리트구조",
@@ -121,6 +121,41 @@ class GovPropertyClient:
                 "heating": "개별난방, 도시가스",
                 "parking_per_household": "1.1대 (총 248대)",
                 "floor_range": "지상 20층 / 지하 4층",
+                "batl_ratio": "일반상업지역 기준",
+                "btl_ratio": "일반상업지역 기준"
+            }
+        },
+        "라온프라이빗시티S": {
+            "category": "상가",
+            "aliases": ["라온프라이빗시티s", "라온프라이빗s", "라온s", "287-6", "2876", "에나로 128", "에나로128"],
+            "building_name": "라온프라이빗시티S",
+            "main_purpose": "제1·2종근린생활시설(상가) 및 업무시설(오피스텔)",
+            "structure": "철근콘크리트구조",
+            "total_floor": "지상 16층 / 지하 5층",
+            "default_floor": "1층 (저층)",
+            "approval_date": "2016년 08월 29일",
+            "exclusive_area": 26.53,
+            "supply_area": 57.0,
+            "parking_total": "총 248대 (세대당 1.1대 자주식 주차)",
+            "elevators": "승강기 운행",
+            "direction": "남향(주출입구기준)",
+            "maintenance_fee": "약 8~10만원 (부가세 별도)",
+            "rooms": 1,
+            "bathrooms": 1,
+            "jimok": "대",
+            "usage_district": "일반상업지역, 지구단위계획구역",
+            "land_area": 2180.5,
+            "road_condition": "대로3류(폭 25m~30m) 접함",
+            "permission_zone": "해당없음 (자유거래 가능)",
+            "public_location": "경남 진주시 충무공동",
+            "base_address": "경남 진주시 충무공동 287-6 (라온프라이빗시티S, 에나로 128)",
+            "naver_complex": {
+                "complex_name": "라온프라이빗시티S",
+                "total_household": "167세대 (총 1개동) + 1~2층 상업시설",
+                "construction_company": "라온건설(주)",
+                "heating": "개별난방, 도시가스",
+                "parking_per_household": "1.1대 (총 248대)",
+                "floor_range": "지상 16층 / 지하 5층",
                 "batl_ratio": "일반상업지역 기준",
                 "btl_ratio": "일반상업지역 기준"
             }
@@ -306,13 +341,27 @@ class GovPropertyClient:
         parsed_loc = self._extract_location_hierarchy(input_address)
         public_loc = parsed_loc["public_location"]
 
-        matched = self._match_complex_preset(input_address)
+        matched = self._match_complex_preset(full_raw)
         if matched:
             data = dict(matched)
             base_addr = data.get("base_address", input_address)
         else:
-            data = self._generate_intelligent_gov_data(input_address, parsed_loc)
+            data = self._generate_intelligent_gov_data(full_raw, parsed_loc)
             base_addr = input_address
+
+        # 상가 호실 판별: 1~2층 호실(105호, 1층 등)이거나 '상가/점포' 키워드가 들어간 경우 상가 전용 스펙 자동 적용
+        is_commercial = (
+            data.get("category") == "상가" or
+            any(w in full_raw.lower() for w in ["상가", "점포", "근생", "사무실", "105호", "101호", "102호", "103호", "104호", "106호", "107호", "108호"]) or
+            (unit_info.get("raw_floor") in ["1층", "2층", "지하 1층"] and any(w in data.get("main_purpose", "") for w in ["근린생활", "상가", "업무", "오피스텔"]))
+        )
+        if is_commercial:
+            data["category"] = "상가"
+            data["main_purpose"] = "제1·2종근린생활시설(상가)"
+            if not data.get("exclusive_area") or data.get("exclusive_area") > 50:
+                data["exclusive_area"] = 26.53
+                data["supply_area"] = 57.0
+            data["default_floor"] = unit_info.get("raw_floor") or "1층"
 
         total_fl_str = data.get("total_floor", "20층")
         if unit_info["raw_floor"]:
@@ -488,7 +537,17 @@ class GovPropertyClient:
         pyeong = round(ex_area / 3.305785, 1)
 
         target_fl = data.get("target_floor", "중층")
-        suggested_title = f"{bname} {pyeong}평형 ({target_fl})"
+        if cat == "상가":
+            ho_text = f" ({unit_info.get('ho')})" if unit_info.get('ho') else ""
+            fl_text = unit_info.get('raw_floor') or "1층"
+            suggested_title = f"{bname} {fl_text} 상가 임대{ho_text}"
+            trans_type = "월세"
+        elif cat == "택지":
+            suggested_title = f"{bname} {pyeong}평형 (나대지)"
+            trans_type = "매매"
+        else:
+            suggested_title = f"{bname} {pyeong}평형 ({target_fl})"
+            trans_type = "매매"
 
         detail_addr = data.get("detail_address", raw_address)
         admin_memo = f"[상세주소] {detail_addr} / 건축물대장 및 토지이음·네이버부동산 단지정보 대조완료"
@@ -505,7 +564,10 @@ class GovPropertyClient:
         if c_heat: extra_spec.append(f"난방: {c_heat}")
         spec_text = f" ({', '.join(extra_spec)})" if extra_spec else ""
 
-        desc_template = f"[{bname}]{spec_text} 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: {data.get('structure', '철근콘크리트')}, {data.get('parking_total', '주차 편리')}, 실내 채광 및 동간 간격 우수, 즉시 입주 및 잔금 일정 협의 가능."
+        if cat == "상가":
+            desc_template = f"[{bname}]{spec_text} 건축물대장 및 상가현황 확인 완료. 추천업종: 일반음식점, 카페, 판매점, 사무실 등. 주구조: {data.get('structure', '철근콘크리트구조')}, {data.get('parking_total', '주차 편리')}, 접근성 및 가시성 우수, 즉시 입주 가능."
+        else:
+            desc_template = f"[{bname}]{spec_text} 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: {data.get('structure', '철근콘크리트')}, {data.get('parking_total', '주차 편리')}, 실내 채광 및 동간 간격 우수, 즉시 입주 및 잔금 일정 협의 가능."
 
         return {
             "success": True,
@@ -518,7 +580,7 @@ class GovPropertyClient:
             "category": cat,
             "suggested_title": suggested_title,
             "suggested_desc": desc_template,
-            "transaction_type": "매매",
+            "transaction_type": trans_type,
             "building": {
                 "name": bname,
                 "main_purpose": data.get("main_purpose"),

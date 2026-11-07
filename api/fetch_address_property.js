@@ -40,7 +40,7 @@ const KNOWN_COMPLEXES = {
   },
   "라온프라이빗시티": {
     category: "오피스텔",
-    aliases: ["라온프라이빗시티", "라온프라이빗", "라온", "280-1", "에나로 146", "에나로146"],
+    aliases: ["라온프라이빗시티", "라온프라이빗", "라온", "280-1", "2801", "에나로 146", "에나로146"],
     building_name: "라온프라이빗시티",
     main_purpose: "업무시설(오피스텔) 및 제1·2종근린생활시설",
     structure: "철근콘크리트구조",
@@ -65,6 +65,38 @@ const KNOWN_COMPLEXES = {
     naver_complex: {
       complex_name: "라온프라이빗시티",
       total_household: "171세대 (총 1개동) + 상업시설",
+      construction_company: "라온건설(주)",
+      heating: "개별난방, 도시가스",
+      parking_per_household: "1.1대 (총 248대)"
+    }
+  },
+  "라온프라이빗시티S": {
+    category: "상가",
+    aliases: ["라온프라이빗시티s", "라온프라이빗s", "라온s", "287-6", "2876", "에나로 128", "에나로128"],
+    building_name: "라온프라이빗시티S",
+    main_purpose: "제1·2종근린생활시설(상가) 및 업무시설(오피스텔)",
+    structure: "철근콘크리트구조",
+    total_floor: "지상 16층 / 지하 5층",
+    default_floor: "1층 (저층)",
+    approval_date: "2016년 08월 29일",
+    exclusive_area: 26.53,
+    supply_area: 57.0,
+    parking_total: "총 248대 (호실당 1.1대 자주식 주차)",
+    elevators: "승강기 운행",
+    direction: "남향(주출입구기준)",
+    maintenance_fee: "약 8~10만원 (부가세 별도)",
+    rooms: 1,
+    bathrooms: 1,
+    jimok: "대",
+    usage_district: "일반상업지역, 지구단위계획구역",
+    land_area: 2180.5,
+    road_condition: "대로3류(폭 25m~30m) 접함",
+    permission_zone: "해당없음 (자유거래 가능)",
+    public_location: "경남 진주시 충무공동",
+    base_address: "경남 진주시 충무공동 287-6 (라온프라이빗시티S, 에나로 128)",
+    naver_complex: {
+      complex_name: "라온프라이빗시티S",
+      total_household: "167세대 (총 1개동) + 1~2층 상업시설",
       construction_company: "라온건설(주)",
       heating: "개별난방, 도시가스",
       parking_per_household: "1.1대 (총 248대)"
@@ -288,11 +320,11 @@ module.exports = async (req, res) => {
   if (mDong) dong = mDong[1];
   const publicLocation = `${sido} ${sigungu} ${dong}`.trim();
 
-  const normAddr = rawAddr.toLowerCase().replace(/\s+/g, '');
+  const normText = fullText.toLowerCase().replace(/\s+/g, '');
   let matched = null;
   for (const [key, info] of Object.entries(KNOWN_COMPLEXES)) {
     for (const alias of info.aliases) {
-      if (normAddr.includes(alias.toLowerCase().replace(/\s+/g, ''))) {
+      if (normText.includes(alias.toLowerCase().replace(/\s+/g, ''))) {
         matched = { ...info };
         break;
       }
@@ -381,12 +413,41 @@ module.exports = async (req, res) => {
     };
   }
 
+  const isCommercial = (
+    matched.category === '상가' ||
+    ['상가', '점포', '근생', '사무실', '105호', '101호', '102호', '103호', '104호', '106호', '107호', '108호'].some(w => fullText.toLowerCase().includes(w)) ||
+    (['1층', '2층', '지하 1층'].includes(unitInfo.rawFloor) && ['근린생활', '상가', '업무', '오피스텔'].some(w => (matched.main_purpose || '').includes(w)))
+  );
+
+  if (isCommercial) {
+    matched.category = '상가';
+    matched.main_purpose = '제1·2종근린생활시설(상가)';
+    if (!matched.exclusive_area || matched.exclusive_area > 50) {
+      matched.exclusive_area = 26.53;
+      matched.supply_area = 57.0;
+    }
+  }
+
   const totalFloorStr = matched.total_floor || '20층';
   const targetFloor = unitInfo.rawFloor ? classifyFloorTier(unitInfo.rawFloor, totalFloorStr) : (matched.default_floor || '중층');
 
   const exArea = matched.exclusive_area || 84.85;
   const pyeong = Math.round((exArea / 3.305785) * 10) / 10;
-  const suggestedTitle = `${matched.building_name} ${pyeong}평형 (${targetFloor})`;
+
+  let suggestedTitle = '';
+  let transType = '매매';
+  if (matched.category === '상가') {
+    const hoText = unitInfo.ho ? ` (${unitInfo.ho})` : '';
+    const flText = unitInfo.rawFloor || '1층';
+    suggestedTitle = `${matched.building_name} ${flText} 상가 임대${hoText}`;
+    transType = '월세';
+  } else if (matched.category === '택지') {
+    suggestedTitle = `${matched.building_name} ${pyeong}평형 (나대지)`;
+    transType = '매매';
+  } else {
+    suggestedTitle = `${matched.building_name} ${pyeong}평형 (${targetFloor})`;
+    transType = '매매';
+  }
 
   const baseAddr = matched.base_address || rawAddr;
   const actualDetail = unitInfo.unitSummary ? `${baseAddr} ${unitInfo.unitSummary}` : fullText;
@@ -402,7 +463,12 @@ module.exports = async (req, res) => {
   if (cHeat) specs.push(`난방: ${cHeat}`);
   const specText = specs.length > 0 ? ` (${specs.join(', ')})` : '';
 
-  const suggestedDesc = `[${matched.building_name}]${specText} 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: ${matched.structure || '철근콘크리트'}, ${matched.parking_total || '주차 편리'}, 실내 일조권 및 거주환경 우수, 즉시 입주 및 잔금 협의 가능.`;
+  let suggestedDesc = '';
+  if (matched.category === '상가') {
+    suggestedDesc = `[${matched.building_name}]${specText} 건축물대장 및 상가현황 확인 완료. 추천업종: 일반음식점, 카페, 판매점, 사무실 등. 주구조: ${matched.structure || '철근콘크리트'}, ${matched.parking_total || '주차 편리'}, 접근성 및 가시성 우수, 즉시 입주 가능.`;
+  } else {
+    suggestedDesc = `[${matched.building_name}]${specText} 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: ${matched.structure || '철근콘크리트'}, ${matched.parking_total || '주차 편리'}, 실내 일조권 및 거주환경 우수, 즉시 입주 및 잔금 협의 가능.`;
+  }
 
   return res.status(200).json({
     success: true,
@@ -415,7 +481,7 @@ module.exports = async (req, res) => {
     category: matched.category,
     suggested_title: suggestedTitle,
     suggested_desc: suggestedDesc,
-    transaction_type: '매매',
+    transaction_type: transType,
     building: {
       name: matched.building_name,
       main_purpose: matched.main_purpose,
