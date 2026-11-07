@@ -1,25 +1,13 @@
 // Vercel Serverless Function: Admin Authentication
 // Path: /api/auth.js
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'queen1234!';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'queen!23';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_OWNER = process.env.GITHUB_OWNER || 'sshwang0905g-create';
 const GITHUB_REPO = process.env.GITHUB_REPO || 'jinjuqueen';
 
 const ALLOWED_PASSWORDS = [
-  ADMIN_PASSWORD.trim().toLowerCase(),
-  'queen1234!',
-  'queen1234',
-  'jinjuqueen',
-  'queen',
-  '1234',
-  '01046707248',
-  '010-4670-7248',
-  '7248',
-  '4670',
-  'property70',
-  '황선숙',
-  'admin'
+  'queen!23'
 ];
 
 module.exports = async (req, res) => {
@@ -39,11 +27,11 @@ module.exports = async (req, res) => {
   const { password } = body || {};
   const pass = String(password || '').trim().toLowerCase();
 
-  if (ALLOWED_PASSWORDS.includes(pass)) {
+  if (ALLOWED_PASSWORDS.includes(pass) || pass === ADMIN_PASSWORD.toLowerCase().trim()) {
     return res.status(200).json({
       success: true,
       message: '관리자 인증 성공',
-      token: 'queen1234!',
+      token: 'queen!23',
       githubConnected: Boolean(GITHUB_TOKEN && GITHUB_OWNER && GITHUB_REPO),
       githubRepo: GITHUB_REPO ? `${GITHUB_OWNER}/${GITHUB_REPO}` : null
     });

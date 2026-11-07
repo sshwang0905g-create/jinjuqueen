@@ -44,7 +44,7 @@
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- ==========================================
-       1. LOGIN OVERLAY (비밀번호: queen1234!)
+       1. LOGIN OVERLAY (비밀번호: queen!23)
        ========================================== -->
   <div id="loginOverlay"
     class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
@@ -834,18 +834,7 @@
   <!-- Main JavaScript -->
   <script>
     const VALID_ADMIN_PASSWORDS = [
-      'queen1234!',
-      'queen1234',
-      'jinjuqueen',
-      'queen',
-      '1234',
-      '01046707248',
-      '010-4670-7248',
-      '7248',
-      '4670',
-      'property70',
-      '황선숙',
-      'admin'
+      'queen!23'
     ];
 
     let adminToken = sessionStorage.getItem('jinjuqueen_admin_token') || localStorage.getItem('jinjuqueen_admin_token') || '';
@@ -864,7 +853,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       // If already logged in, hide overlay immediately
-      if (adminToken && VALID_ADMIN_PASSWORDS.includes(adminToken.toLowerCase())) {
+      if (adminToken && (adminToken.toLowerCase() === 'queen!23' || VALID_ADMIN_PASSWORDS.includes(adminToken.toLowerCase()))) {
         hideLoginOverlay();
         loadAdminProperties();
         loadBoardPosts();
@@ -901,11 +890,11 @@
       const input = document.getElementById('adminPasswordInput');
       const pass = (input?.value || '').trim();
 
-      const isOfflineValid = VALID_ADMIN_PASSWORDS.includes(pass.toLowerCase());
+      const isOfflineValid = (pass.toLowerCase() === 'queen!23');
 
       // If valid, hide overlay immediately so the representative doesn't wait
       if (isOfflineValid) {
-        adminToken = 'queen1234!';
+        adminToken = 'queen!23';
         sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
         localStorage.setItem('jinjuqueen_admin_token', adminToken);
         hideLoginOverlay();
@@ -918,11 +907,11 @@
         const res = await fetch('/api/auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: pass || 'queen1234!' })
+          body: JSON.stringify({ password: pass || 'queen!23' })
         });
         if (res.ok) {
           const data = await res.json();
-          adminToken = data.token || pass || 'queen1234!';
+          adminToken = data.token || pass || 'queen!23';
           sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
           localStorage.setItem('jinjuqueen_admin_token', adminToken);
           hideLoginOverlay();
@@ -976,7 +965,7 @@
 
     
     function downloadAdminExcel() {
-      if (!adminToken || adminToken !== 'queen1234!') {
+      if (!adminToken) {
         alert('관리자 인증이 필요합니다. 먼저 로그인해 주세요.');
         return;
       }
@@ -1303,7 +1292,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminToken || 'queen1234!'}`
+            'Authorization': `Bearer ${adminToken || 'queen!23'}`
           },
           body: JSON.stringify({
             action: 'create',
@@ -1317,7 +1306,7 @@
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer queen1234!`
+                'Authorization': `Bearer queen!23`
               },
               body: JSON.stringify({
                 action: 'create',
@@ -1373,7 +1362,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminToken || 'queen1234!'}`
+            'Authorization': `Bearer ${adminToken || 'queen!23'}`
           },
           body: JSON.stringify({
             action: 'delete',
@@ -1387,7 +1376,7 @@
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer queen1234!`
+                'Authorization': `Bearer queen!23`
               },
               body: JSON.stringify({
                 action: 'delete',
@@ -3396,7 +3385,7 @@ let fetchedNaverPhotos = [];
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminToken || 'queen1234!'}`
+            'Authorization': `Bearer ${adminToken || 'queen!23'}`
           },
           body: JSON.stringify({
             action: 'create',
@@ -3411,7 +3400,7 @@ let fetchedNaverPhotos = [];
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer queen1234!`
+                'Authorization': `Bearer queen!23`
               },
               body: JSON.stringify({
                 action: 'create',

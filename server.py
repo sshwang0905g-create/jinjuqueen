@@ -13,7 +13,7 @@ PORT = 8080
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOARD_FILE = os.path.join(BASE_DIR, "data", "board.json")
 PROPERTIES_FILE = os.path.join(BASE_DIR, "data", "properties.json")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "queen1234!")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "queen!23")
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
