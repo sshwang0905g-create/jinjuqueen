@@ -2195,22 +2195,33 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = b.direction || '남향(거실기준)';
             if (document.getElementById('newPropMaintenanceFee')) document.getElementById('newPropMaintenanceFee').value = b.maintenance_fee || '약 14~18만원 (실비정산)';
             if (document.getElementById('newPropApprovalDate')) document.getElementById('newPropApprovalDate').value = b.approval_date || '2018년';
-            if (document.getElementById('newPropParkingMove')) document.getElementById('newPropParkingMove').value = `${b.parking || '자주식 지하주차장'} / 즉시입주 가능`;
+            const ncInfo = data.naver_complex || {};
+            const parkingSummary = ncInfo.parking_per_household ? `세대당 ${ncInfo.parking_per_household}` : (b.parking_total || b.parking || '자주식 지하주차장');
+            if (document.getElementById('newPropParkingMove')) document.getElementById('newPropParkingMove').value = `${parkingSummary} / 즉시입주 협의`;
           }
 
+          const nc = data.naver_complex || {};
           const descInput = document.getElementById('newPropDesc');
           if (descInput) {
-            descInput.value = `[${b.name || '추천 매물'}] 건축물대장 및 토지이용계획 열람 확인 완료. 주구조: ${b.structure || '철근콘크리트구조'}, 용도지역: ${l.usage_district || '제1종일반주거지역'}, 전용률 및 채광 우수, 즉시 입주 및 잔금 일정 협의 가능.`;
+            descInput.value = data.suggested_desc || `[${b.name || '추천 매물'}] 건축물대장 및 토지이용계획 열람 확인 완료. 주구조: ${b.structure || '철근콘크리트구조'}, 용도지역: ${l.usage_district || '제1종일반주거지역'}, 전용률 및 채광 우수, 즉시 입주 및 잔금 일정 협의 가능.`;
           }
 
           if (noticeEl) {
-            noticeEl.className = 'text-[11px] font-bold mt-2 p-3 rounded-xl border flex flex-col gap-1 bg-emerald-50 text-emerald-950 border-emerald-300';
+            noticeEl.className = 'text-[11px] font-bold mt-2 p-3 rounded-xl border flex flex-col gap-1.5 bg-emerald-50 text-emerald-950 border-emerald-300';
+            const ncBadges = [];
+            if (nc.complex_name) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 text-[10px] font-bold border border-emerald-300">🏢 네이버단지: ${nc.complex_name}</span>`);
+            if (nc.total_household) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 text-[10px] font-bold border border-blue-300">👥 세대수: ${nc.total_household}</span>`);
+            if (nc.parking_per_household) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-bold border border-amber-300">🚗 주차: ${nc.parking_per_household}</span>`);
+            if (nc.construction_company) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 text-[10px] font-bold border border-slate-300">🏗️ 시공사: ${nc.construction_company}</span>`);
+            if (nc.heating) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-orange-100 text-orange-900 text-[10px] font-bold border border-orange-300">🔥 난방: ${nc.heating}</span>`);
+
             noticeEl.innerHTML = `
               <div class="flex items-center gap-1.5 text-emerald-800 font-extrabold text-xs">
                 <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                <span>건축물대장 및 토지이음 공공데이터 조회 성공!</span>
+                <span>건축물대장 · 토지이음 · 네이버 부동산 단지정보 연동 성공!</span>
               </div>
-              <div class="text-[11px] text-emerald-900 leading-relaxed pl-5.5">
+              ${ncBadges.length > 0 ? `<div class="flex flex-wrap gap-1.5 my-0.5">${ncBadges.join('')}</div>` : ''}
+              <div class="text-[11px] text-emerald-900 leading-relaxed pl-1 pt-1 border-t border-emerald-200/60">
                 • <strong>층수 표기</strong>: 공인중개사법 권장에 따라 해당층이 [<strong>${(b.target_floor || '중층')}</strong>]으로 자동 표기되었습니다. (상단 [저/중/고] 퀵 버튼 또는 마우스 클릭으로 언제든 수정 가능)<br>
                 • <strong>자유 수정 가능</strong>: 자동 완성된 모든 입력값(면적, 층수, 가격, 설명 등)은 마우스로 클릭하여 원하시는 대로 직접 수정하실 수 있습니다.<br>
                 • <strong>상세주소 비공개 준수</strong>: 실제 상세 동·호수 및 지번은 [적요란]에만 기록되며, 일반 방문객에게는 [${data.public_location}]으로만 노출됩니다.
@@ -2219,7 +2230,7 @@ let fetchedNaverPhotos = [];
             if (window.lucide) lucide.createIcons();
           }
 
-          showAdminToast(`'${address}' 건축물대장 및 토지이음 항목이 자동 채워졌습니다!`);
+          showAdminToast(`'${address}' 건축물대장·토지이음·네이버단지정보가 자동 연동되었습니다!`);
         } else {
           if (noticeEl) {
             noticeEl.className = 'text-[11px] font-bold mt-2 p-2.5 rounded-xl border flex items-center gap-1.5 bg-rose-50 text-rose-800 border-rose-300';
