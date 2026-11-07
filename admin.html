@@ -711,7 +711,14 @@
         loadAdminProperties();
         loadBoardPosts();
       }
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     });
 
     async function handleLogin(e) {
@@ -768,7 +775,14 @@
 
     function openDbGuideModal() {
       document.getElementById('dbGuideModal').classList.remove('hidden');
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function closeDbGuideModal() {
@@ -812,14 +826,23 @@
         btnProp.className = 'px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition flex items-center gap-2';
         loadBoardPosts();
       }
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     // PROPERTIES LOGIC
     async function handleRefreshAdmin() {
       const btn = document.getElementById('adminRefreshBtn');
-      const icon = document.getElementById('adminRefreshIcon');
       const span = btn ? btn.querySelector('span') : null;
+      const getIcon = () => btn ? btn.querySelector('svg, i') : null;
+
+      const icon = getIcon();
       if (icon) icon.classList.add('animate-spin');
       if (span) span.textContent = '새로고침 중...';
       if (btn) btn.disabled = true;
@@ -832,21 +855,38 @@
           showAdminToast('게시판 목록을 최신 상태로 새로고침했습니다.');
         }
       } catch (e) {
+        console.error('Refresh error:', e);
         showAdminToast('새로고침 완료');
       } finally {
         setTimeout(() => {
-          if (icon) icon.classList.remove('animate-spin');
+          if (btn) {
+            btn.querySelectorAll('svg, i').forEach(el => el.classList.remove('animate-spin'));
+            btn.disabled = false;
+          }
           if (span) span.textContent = '새로고침';
-          if (btn) btn.disabled = false;
-        }, 500);
+        }, 400);
       }
     }
 
     async function loadAdminProperties(showToast = false) {
       let loadedFromServer = false;
       try {
-        const res = await fetch('/api/properties?t=' + Date.now());
-        if (res.ok) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        let res = null;
+        try {
+          res = await fetch('/api/properties?t=' + Date.now(), { signal: controller.signal });
+        } catch (fetchErr) {
+          if (location.hostname !== 'localhost') {
+            try {
+              res = await fetch('http://localhost:8080/api/properties?t=' + Date.now(), { signal: controller.signal });
+            } catch (localErr) {}
+          }
+        } finally {
+          clearTimeout(timeoutId);
+        }
+
+        if (res && res.ok) {
           const data = await res.json();
           if (data && data.properties && Array.isArray(data.properties)) {
             adminProperties = data.properties;
@@ -854,11 +894,13 @@
           }
         }
         if (!loadedFromServer) {
-          const fileRes = await fetch('data/properties.json?t=' + Date.now());
-          if (fileRes.ok) {
-            adminProperties = await fileRes.json();
-            loadedFromServer = true;
-          }
+          try {
+            const fileRes = await fetch('data/properties.json?t=' + Date.now());
+            if (fileRes && fileRes.ok) {
+              adminProperties = await fileRes.json();
+              loadedFromServer = true;
+            }
+          } catch (fileErr) {}
         }
       } catch (e) {
         console.warn('Server fetch error:', e);
@@ -1006,7 +1048,14 @@
         `;
       }).join('');
 
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function handleDeleteFromModal() {
@@ -1568,7 +1617,14 @@ let fetchedNaverPhotos = [];
         if (secRes) secRes.classList.remove('hidden');
       }
 
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function calcLandPyeong(val) {
@@ -1736,7 +1792,14 @@ let fetchedNaverPhotos = [];
         `).join('');
       }
 
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
 
@@ -1778,7 +1841,14 @@ let fetchedNaverPhotos = [];
       currentPropertyPhotos = [];
       renderPropPhotoGallery();
       document.getElementById('propRegisterModal').classList.remove('hidden');
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function openEditPropModal(propId, focusMemo = false) {
@@ -1809,7 +1879,6 @@ let fetchedNaverPhotos = [];
         badgeEl.textContent = '수정';
         badgeEl.className = 'w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center font-black text-xs';
       }
-      if (importBox) importBox.classList.add('hidden');
       if (submitBtn) {
         submitBtn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>수정 내용 안전하게 저장</span>';
       }
@@ -2043,7 +2112,14 @@ let fetchedNaverPhotos = [];
         if (titleEl) titleEl.textContent = '네이버 매물 간편등록';
         if (subEl) subEl.textContent = '매물번호를 입력하시면 홈페이지에 1초 만에 등록됩니다.';
       }
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function openAddressSearchPopup() {
@@ -2824,7 +2900,14 @@ let fetchedNaverPhotos = [];
         </tr>`;
       }).join('');
 
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function filterAdminPosts() {
@@ -2870,7 +2953,14 @@ let fetchedNaverPhotos = [];
       document.getElementById('savePostBtnText').textContent = '홈페이지에 즉시 발행';
       switchEditorTab('editor');
       document.getElementById('writePostModal').classList.remove('hidden');
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function openEditModal(postId) {
@@ -2888,7 +2978,14 @@ let fetchedNaverPhotos = [];
       document.getElementById('savePostBtnText').textContent = '수정 내용 저장';
       switchEditorTab('editor');
       document.getElementById('writePostModal').classList.remove('hidden');
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
     }
 
     function closeWriteModal() {
