@@ -749,7 +749,13 @@
 
   <!-- Main JavaScript -->
   <script>
-    let adminToken = sessionStorage.getItem('jinjuqueen_admin_token') || localStorage.getItem('jinjuqueen_admin_token') || '';
+    // 보안 강화: 브라우저에 비밀번호 토큰을 영구 저장하지 않고, 관리자 모드 접속 시 항상 비밀번호를 확인합니다.
+    try {
+      localStorage.removeItem('jinjuqueen_admin_token');
+      sessionStorage.removeItem('jinjuqueen_admin_token');
+    } catch (e) {}
+
+    let adminToken = '';
     let adminProperties = [];
     let boardPosts = [];
     let currentAdminTab = 'properties';
@@ -778,12 +784,21 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // If already logged in, hide overlay and load data
-      if (adminToken && adminToken.toLowerCase() === 'queen!23') {
-        hideLoginOverlay();
-        loadAdminProperties();
-        loadBoardPosts();
+      // 보안 필수: 관리자 페이지 방문 시 항상 비밀번호 입력창 강제 표시
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) {
+        overlay.style.removeProperty('display');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
       }
+      const passInput = document.getElementById('adminPasswordInput');
+      if (passInput) {
+        passInput.value = '';
+        setTimeout(() => passInput.focus(), 100);
+      }
+      loadAdminProperties();
+      loadBoardPosts();
+
       if (window.lucide) {
         try {
           const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
@@ -805,8 +820,6 @@
 
       if (isMatch) {
         adminToken = 'queen!23';
-        sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
-        localStorage.setItem('jinjuqueen_admin_token', adminToken);
         hideLoginOverlay();
         showAdminToast('관리자 인증 완료! 환영합니다.');
         loadAdminProperties();
@@ -822,8 +835,6 @@
         if (res.ok) {
           const data = await res.json();
           adminToken = data.token || pass || 'queen!23';
-          sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
-          localStorage.setItem('jinjuqueen_admin_token', adminToken);
           hideLoginOverlay();
           updateDbStatusBadge(data.githubConnected, data.githubRepo);
           loadAdminProperties();
