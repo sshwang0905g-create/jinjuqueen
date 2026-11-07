@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>진주퀸공인중개사 관리자 센터 | 매물 & 거래완료 관리 시스템</title>
   <link rel="icon" type="image/png" href="images/logo.png">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -27,36 +26,30 @@
       }
     }
   </script>
-
+  
   <!-- Pretendard Font & Lucide Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script src="js/data.js"></script>
   <style>
-    body {
-      font-family: 'Pretendard', sans-serif;
-      letter-spacing: -0.02em;
-    }
+    body { font-family: 'Pretendard', sans-serif; letter-spacing: -0.02em; }
   </style>
 </head>
-
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- ==========================================
        1. LOGIN OVERLAY (비밀번호: queen!23)
        ========================================== -->
-  <div id="loginOverlay"
-    class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+  <div id="loginOverlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center">
-      <div
-        class="w-16 h-16 rounded-2xl bg-brand-navy border border-brand-gold/40 flex items-center justify-center p-2 mx-auto mb-4 shadow-lg">
+      <div class="w-16 h-16 rounded-2xl bg-brand-navy border border-brand-gold/40 flex items-center justify-center p-2 mx-auto mb-4 shadow-lg">
         <img src="images/logo.png" alt="진주퀸 로고" class="w-full h-full object-contain">
       </div>
       <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">진주퀸 관리자 로그인</h2>
       <p class="text-xs text-slate-500 mt-1 mb-6">부동산 매물 관리 및 거래완료 설정 시스템</p>
 
-      <form id="adminLoginForm" onsubmit="handleLogin(event)" class="space-y-4">
+      <form id="adminLoginForm" onsubmit="handleLogin(event); return false;" class="space-y-4">
         <div>
           <div class="relative">
             <input type="password" id="adminPasswordInput" placeholder="관리자 비밀번호를 입력하세요" required autofocus
@@ -65,15 +58,13 @@
               <i data-lucide="eye" id="togglePasswordIcon" class="w-4 h-4"></i>
             </button>
           </div>
-          
-          <div
-            class="text-[11px] text-slate-500 mt-2.5 flex items-center justify-center gap-1.5 bg-slate-50 py-1.5 rounded-lg border border-slate-200">
+          <div class="text-[11px] text-slate-500 mt-2.5 flex items-center justify-center gap-1.5 bg-slate-50 py-1.5 rounded-lg border border-slate-200">
             <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-500"></i>
             <span>진주퀸 대표 전용 보안 구역 (비밀번호 인증)</span>
           </div>
         </div>
 
-        <button type="submit" id="adminLoginSubmitBtn"
+        <button type="button" onclick="handleLogin(event)" id="adminLoginSubmitBtn"
           class="w-full bg-brand-navy hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2 cursor-pointer">
           <i data-lucide="lock" class="w-4 h-4 text-brand-gold"></i>
           <span>관리자 대시보드 입장</span>
@@ -99,26 +90,20 @@
         </div>
         <div>
           <span class="font-bold text-base text-white tracking-tight">진주퀸 관리자 센터</span>
-          <span
-            class="ml-2 text-[11px] bg-brand-gold/20 text-brand-gold font-semibold px-2 py-0.5 rounded border border-brand-gold/40">매물
-            & 거래관리</span>
+          <span class="ml-2 text-[11px] bg-brand-gold/20 text-brand-gold font-semibold px-2 py-0.5 rounded border border-brand-gold/40">매물 & 거래관리</span>
         </div>
       </div>
 
       <div class="flex items-center gap-3 text-xs">
         <!-- Vercel Serverless GitHub DB Status -->
-        <div id="githubDbStatusBadge"
-          class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-slate-300 border border-white/15 text-[11px] font-semibold cursor-pointer"
-          onclick="openDbGuideModal()" title="서버리스 GitHub DB 연동 상태 안내">
+        <div id="githubDbStatusBadge" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-slate-300 border border-white/15 text-[11px] font-semibold cursor-pointer" onclick="openDbGuideModal()" title="서버리스 GitHub DB 연동 상태 안내">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span id="githubDbStatusText">서버리스 Git DB 모드</span>
         </div>
-        <a href="index.html" target="_blank"
-          class="hidden sm:flex items-center gap-1 text-slate-300 hover:text-white bg-white/10 px-3 py-1.5 rounded-lg transition">
+        <a href="index.html" target="_blank" class="hidden sm:flex items-center gap-1 text-slate-300 hover:text-white bg-white/10 px-3 py-1.5 rounded-lg transition">
           <i data-lucide="external-link" class="w-3.5 h-3.5"></i> 사이트 바로가기
         </a>
-        <button onclick="handleLogout()"
-          class="text-rose-300 hover:text-white bg-rose-950/80 hover:bg-rose-900 border border-rose-800/80 px-3 py-1.5 rounded-lg transition font-semibold flex items-center gap-1">
+        <button onclick="handleLogout()" class="text-rose-300 hover:text-white bg-rose-950/80 hover:bg-rose-900 border border-rose-800/80 px-3 py-1.5 rounded-lg transition font-semibold flex items-center gap-1">
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i> 로그아웃
         </button>
       </div>
@@ -126,18 +111,15 @@
   </header>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
+    
     <!-- Admin Navigation Tabs -->
     <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
-      <button id="tabBtnProperties" onclick="switchAdminTab('properties')"
-        class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow transition flex items-center gap-2">
+      <button id="tabBtnProperties" onclick="switchAdminTab('properties')" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-brand-navy text-white shadow transition flex items-center gap-2">
         <i data-lucide="building-2" class="w-4 h-4 text-brand-gold"></i>
         <span>실시간 매물 관리 & 거래완료 설정</span>
-        <span id="adminPropBadge"
-          class="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
+        <span id="adminPropBadge" class="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
       </button>
-      <button id="tabBtnBoard" onclick="switchAdminTab('board')"
-        class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition flex items-center gap-2">
+      <button id="tabBtnBoard" onclick="switchAdminTab('board')" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition flex items-center gap-2">
         <i data-lucide="newspaper" class="w-4 h-4 text-slate-500"></i>
         <span>부동산 소식 & 칼럼 관리</span>
         <span id="adminBoardBadge" class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">0</span>
@@ -155,14 +137,12 @@
             <h3 class="text-lg font-bold text-slate-900">실매물 및 거래완료 상태 관리</h3>
           </div>
           <p class="text-xs text-slate-500 mt-0.5">
-            거래가 체결된 매물은 <strong class="text-rose-600 font-bold">[거래완료 처리]</strong> 버튼을 누르면 홈페이지 사진에 도장이 찍히며 상세정보 열람이 자동
-            차단됩니다.
+            거래가 체결된 매물은 <strong class="text-rose-600 font-bold">[거래완료 처리]</strong> 버튼을 누르면 홈페이지 사진에 도장이 찍히며 상세정보 열람이 자동 차단됩니다.
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
-          <select id="adminPropFilter" onchange="renderAdminProperties()"
-            class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          <select id="adminPropFilter" onchange="renderAdminProperties()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
             <option value="ALL">전체 매물 보기</option>
             <option value="ACTIVE">진행중(공개) 매물만</option>
             <option value="PRIVATE">🔒 비공개(숨김) 매물만</option>
@@ -170,26 +150,19 @@
             <option value="NAVER">네이버 확인 매물</option>
             <option value="HOMEPAGE">홈페이지 단독 매물</option>
           </select>
-          <button onclick="openAddPropModal()"
-            class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-1.5 shadow">
+          <button onclick="openAddPropModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-1.5 shadow">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>매물등록</span>
           </button>
-          <button type="button" onclick="downloadAdminExcel()"
-            class="px-3.5 py-2.5 bg-brand-navy hover:bg-slate-800 text-amber-300 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow border border-brand-gold/40 cursor-pointer">
+          <button type="button" onclick="downloadAdminExcel()" class="px-3.5 py-2.5 bg-brand-navy hover:bg-slate-800 text-amber-300 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow border border-brand-gold/40 cursor-pointer">
             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-amber-400"></i>
             <span>전체 매물 엑셀 다운로드 (관리자 전용)</span>
           </button>
-          <button id="adminRefreshBtn" type="button" onclick="handleRefreshAdmin()"
-            class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition flex items-center gap-2 shadow-md hover:shadow cursor-pointer active:scale-95 border border-blue-500"
-            title="최신 매물 목록 새로고침">
-            <i id="adminRefreshIcon" data-lucide="refresh-cw"
-              class="w-4 h-4 text-white font-bold transition-transform"></i>
+          <button id="adminRefreshBtn" type="button" onclick="handleRefreshAdmin()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition flex items-center gap-2 shadow-md hover:shadow cursor-pointer active:scale-95 border border-blue-500" title="최신 매물 목록 새로고침">
+            <i id="adminRefreshIcon" data-lucide="refresh-cw" class="w-4 h-4 text-white font-bold transition-transform"></i>
             <span>새로고침</span>
           </button>
-          <button id="adminSyncNaverBtn" type="button" onclick="handleSyncNaverStatus()"
-            class="px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-xs font-black rounded-xl transition flex items-center gap-1.5 shadow-md hover:shadow cursor-pointer active:scale-95 border border-emerald-600"
-            title="네이버 매물 상태를 실시간 전수 점검하여 네이버에서 내려간 매물은 즉시 자동으로 비공개 처리합니다.">
+          <button id="adminSyncNaverBtn" type="button" onclick="handleSyncNaverStatus()" class="px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-xs font-black rounded-xl transition flex items-center gap-1.5 shadow-md hover:shadow cursor-pointer active:scale-95 border border-emerald-600" title="네이버 매물 상태를 실시간 전수 점검하여 네이버에서 내려간 매물은 즉시 자동으로 비공개 처리합니다.">
             <i id="adminSyncIcon" data-lucide="shield-check" class="w-4 h-4 text-emerald-300 font-bold"></i>
             <span>네이버 종료매물 자동비공개 점검</span>
           </button>
@@ -222,21 +195,18 @@
       <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 class="text-lg font-bold text-slate-900">부동산 소식 및 공지사항 관리</h3>
-          <p class="text-xs text-slate-500 mt-0.5">총 <span id="postCount" class="font-bold text-amber-700">0</span>개의
-            게시글이 등록되어 있습니다.</p>
+          <p class="text-xs text-slate-500 mt-0.5">총 <span id="postCount" class="font-bold text-amber-700">0</span>개의 게시글이 등록되어 있습니다.</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
-          <select id="adminCategoryFilter" onchange="filterAdminPosts()"
-            class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          <select id="adminCategoryFilter" onchange="filterAdminPosts()" class="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
             <option value="ALL">전체 카테고리</option>
             <option value="실거래가 & 시세 분석">실거래가 & 시세 분석</option>
             <option value="진주시 개발 & 정책">진주시 개발 & 정책</option>
             <option value="부동산 상식 & 세무">부동산 상식 & 세무</option>
             <option value="공지사항">공지사항</option>
           </select>
-          <button onclick="openWriteModal()"
-            class="px-4 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-extrabold rounded-xl transition shadow flex items-center gap-1.5">
+          <button onclick="openWriteModal()" class="px-4 py-2.5 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-extrabold rounded-xl transition shadow flex items-center gap-1.5">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>새 글 작성하기</span>
           </button>
@@ -266,15 +236,11 @@
   <!-- ==========================================
        PROPERTY REGISTER MODAL (네이버 매물)
        ========================================== -->
-  <div id="propRegisterModal"
-    class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div
-      class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+  <div id="propRegisterModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
         <div class="flex items-center gap-2.5">
-          <div id="propModalBadge"
-            class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs">
-            NAVER</div>
+          <div id="propModalBadge" class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs">NAVER</div>
           <div>
             <h3 id="propModalTitle" class="text-lg font-bold text-slate-900">네이버 매물 간편등록</h3>
             <p id="propModalSubtitle" class="text-xs text-slate-500">매물번호를 입력하시면 홈페이지에 1초 만에 등록됩니다.</p>
@@ -287,13 +253,11 @@
 
       <!-- Quick Import Mode Tabs -->
       <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl mb-4 border border-slate-200">
-        <button type="button" id="tabModeAddress" onclick="switchPropInputMode('address')"
-          class="flex-1 py-2.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-white text-blue-700 shadow-xs border border-blue-200 cursor-pointer">
+        <button type="button" id="tabModeAddress" onclick="switchPropInputMode('address')" class="flex-1 py-2.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-white text-blue-700 shadow-xs border border-blue-200 cursor-pointer">
           <i data-lucide="building-2" class="w-4 h-4 text-blue-600"></i>
           <span>주소로 자동등록 (건축물대장·토지이음)</span>
         </button>
-        <button type="button" id="tabModeNaver" onclick="switchPropInputMode('naver')"
-          class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer">
+        <button type="button" id="tabModeNaver" onclick="switchPropInputMode('naver')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer">
           <i data-lucide="link-2" class="w-4 h-4 text-emerald-600"></i>
           <span>네이버 매물번호</span>
         </button>
@@ -306,56 +270,49 @@
             <i data-lucide="map-pin" class="w-4 h-4 text-blue-700"></i>
             <span>부동산 주소 (지번 / 도로명 / 건물명) 입력 :</span>
           </label>
-          <span
-            class="text-[10px] font-extrabold text-blue-800 bg-white px-2 py-0.5 rounded-md border border-blue-300 shadow-2xs">
+          <span class="text-[10px] font-extrabold text-blue-800 bg-white px-2 py-0.5 rounded-md border border-blue-300 shadow-2xs">
             🔒 상세지번 홈페이지 자동 비공개
           </span>
         </div>
         <div class="space-y-2">
           <!-- 기본 주소 입력창 + 카카오 주소검색 -->
           <div class="flex gap-2">
-            <input type="text" id="addrQuickInput" placeholder="기본 주소 (예: 충무공동 285, 에나로 190 또는 대방노블랜드)"
-              class="flex-1 px-3.5 py-2.5 rounded-xl border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs bg-white font-bold text-slate-900"
-              onkeydown="if(event.key==='Enter'){event.preventDefault(); document.getElementById('addrDetailInput').focus();}">
-            <button type="button" onclick="openAddressSearchPopup()"
-              class="px-3.5 py-2.5 bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 flex items-center gap-1 cursor-pointer"
-              title="카카오 우편번호/주소 검색 팝업 열기">
+            <input type="text" id="addrQuickInput" placeholder="기본 주소 (예: 충무공동 285, 에나로 190 또는 대방노블랜드)" 
+                   class="flex-1 px-3.5 py-2.5 rounded-xl border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs bg-white font-bold text-slate-900"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); document.getElementById('addrDetailInput').focus();}">
+            <button type="button" onclick="openAddressSearchPopup()" class="px-3.5 py-2.5 bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 flex items-center gap-1 cursor-pointer" title="카카오 우편번호/주소 검색 팝업 열기">
               <i data-lucide="search" class="w-3.5 h-3.5"></i>
               <span>주소검색</span>
             </button>
           </div>
           <!-- 상세 주소 (동·호수) 입력창 + 조회 버튼 -->
           <div class="flex gap-2">
-            <input type="text" id="addrDetailInput" placeholder="상세 동·호수 (예: 105동 1402호, 809호) ➜ 전유부 층수 자동분석"
-              class="flex-1 px-3.5 py-2.5 rounded-xl border border-amber-300 bg-amber-50/40 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-bold text-slate-900 placeholder:text-slate-400"
-              onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchAddressProperty();}">
-            <button type="button" id="btnFetchAddress" onclick="autoFetchAddressProperty()"
-              class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition shadow shrink-0 flex items-center gap-1.5 cursor-pointer">
+            <input type="text" id="addrDetailInput" placeholder="상세 동·호수 (예: 105동 1402호, 809호) ➜ 전유부 층수 자동분석" 
+                   class="flex-1 px-3.5 py-2.5 rounded-xl border border-amber-300 bg-amber-50/40 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-bold text-slate-900 placeholder:text-slate-400"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchAddressProperty();}">
+            <button type="button" id="btnFetchAddress" onclick="autoFetchAddressProperty()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition shadow shrink-0 flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
               <span>건축물대장·토지이음 조회</span>
             </button>
           </div>
         </div>
         <p class="text-[11px] text-blue-900 leading-relaxed">
-          💡 <strong>동·호수(예: 1402호)</strong>를 넣으시면 <strong>전유부 층수(14층)</strong>가 자동 계산되며, <strong>실제 동·호수는 [적요란]에만
-            보관</strong>되어 일반 화면에는 절대 노출되지 않습니다.
+          💡 <strong>동·호수(예: 1402호)</strong>를 넣으시면 <strong>전유부 층수(14층)</strong>가 자동 계산되며, <strong>실제 동·호수는 [적요란]에만 보관</strong>되어 일반 화면에는 절대 노출되지 않습니다.
         </p>
         <div id="addrGovStatusNotice" class="text-[11px] font-bold mt-1.5 hidden"></div>
       </div>
 
       <!-- 2. Quick Import Box (네이버) -->
-      <div id="naverQuickImportBox"
-        class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 mb-5 space-y-2.5 hidden">
+      <div id="naverQuickImportBox" class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 mb-5 space-y-2.5 hidden">
         <label class="block text-xs font-extrabold text-emerald-950 flex items-center gap-1.5" for="naverQuickInput">
           <i data-lucide="link-2" class="w-4 h-4 text-emerald-600"></i>
           <span>네이버 매물번호(8~10자리) 입력 :</span>
         </label>
         <div class="flex gap-2">
-          <input type="text" id="naverQuickInput" placeholder="예: 24591230 또는 매물 관리번호"
-            class="flex-1 px-3.5 py-2.5 rounded-xl border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs bg-white font-medium"
-            onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchNaverProperty();}">
-          <button type="button" onclick="autoFetchNaverProperty()"
-            class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow shrink-0 flex items-center gap-1">
+          <input type="text" id="naverQuickInput" placeholder="예: 24591230 또는 매물 관리번호" 
+                 class="flex-1 px-3.5 py-2.5 rounded-xl border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs bg-white font-medium"
+                 onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchNaverProperty();}">
+          <button type="button" onclick="autoFetchNaverProperty()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow shrink-0 flex items-center gap-1">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
             <span>정보 불러오기</span>
           </button>
@@ -369,21 +326,17 @@
       <form id="propRegisterForm" onsubmit="handleSaveProperty(event)" class="space-y-4 text-xs sm:text-sm">
         <input type="hidden" id="editPropId" value="">
         <!-- 자유 수정 가능 안내 배너 -->
-        <div
-          class="px-3.5 py-2 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between text-[11px] text-slate-700 font-medium">
+        <div class="px-3.5 py-2 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between text-[11px] text-slate-700 font-medium">
           <span class="flex items-center gap-1.5 font-bold text-slate-800">
             <i data-lucide="edit-3" class="w-3.5 h-3.5 text-blue-600"></i>
             <span>자동 완성된 모든 항목(면적·층수·가격·설명 등)은 직접 클릭하여 자유롭게 수정 가능합니다.</span>
           </span>
-          <span
-            class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-extrabold">✏️
-            자유 수정</span>
+          <span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-extrabold">✏️ 자유 수정</span>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="newPropCategory">매물 유형 (카테고리)</label>
-            <select id="newPropCategory" onchange="handleCategoryChange()" required
-              class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-bold text-slate-900">
+            <select id="newPropCategory" onchange="handleCategoryChange()" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-bold text-slate-900">
               <option value="아파트">아파트 (공동주택)</option>
               <option value="오피스텔">오피스텔 (주거/업무)</option>
               <option value="상가">상가 / 점포 / 사무실</option>
@@ -393,8 +346,7 @@
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="newPropTrans">거래 유형</label>
-            <select id="newPropTrans" required
-              class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold">
+            <select id="newPropTrans" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold">
               <option value="매매">매매</option>
               <option value="전세">전세</option>
               <option value="월세">월세</option>
@@ -409,21 +361,17 @@
               <i data-lucide="hash" class="w-4 h-4 text-emerald-600"></i>
               <span>네이버 매물번호 (동일매물 모니터링 / 거래종료 연동)</span>
             </label>
-            <span
-              class="text-[10px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-emerald-300 shadow-2xs">
+            <span class="text-[10px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-emerald-300 shadow-2xs">
               ⚡ 거래종료 시 홈페이지 자동비공개/완료
             </span>
           </div>
           <p class="text-[11px] text-emerald-900/90 mb-2 leading-tight">
-            💡 <strong>타 부동산 동일매물 연동</strong>: 대표님께서 직접 네이버에 매물을 올리지 않으셨더라도, <strong>다른 부동산에서 네이버에 올린 동일 매물번호</strong>를
-            여기에 입력해 두시면 네이버에서 거래 완료(종료) 시 우리 홈페이지 매물도 자동으로 [비공개] 또는 [거래완료]로 안전하게 내릴 수 있습니다.
+            💡 <strong>타 부동산 동일매물 연동</strong>: 대표님께서 직접 네이버에 매물을 올리지 않으셨더라도, <strong>다른 부동산에서 네이버에 올린 동일 매물번호</strong>를 여기에 입력해 두시면 네이버에서 거래 완료(종료) 시 우리 홈페이지 매물도 자동으로 [비공개] 또는 [거래완료]로 안전하게 내릴 수 있습니다.
           </p>
           <div class="flex gap-2">
-            <input type="text" id="newPropNaverNo" placeholder="예: 2659608022 (숫자 8~10자리 입력)"
-              class="flex-1 border border-emerald-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-xs font-bold text-slate-800 bg-white placeholder:text-slate-400">
-            <button type="button" onclick="checkCurrentPropNaverStatus()"
-              class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5 shrink-0 cursor-pointer"
-              title="이 매물번호가 네이버에 현재 정상 게시 중인지 즉시 점검">
+            <input type="text" id="newPropNaverNo" placeholder="예: 2659608022 (숫자 8~10자리 입력)" 
+                   class="flex-1 border border-emerald-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-xs font-bold text-slate-800 bg-white placeholder:text-slate-400">
+            <button type="button" onclick="checkCurrentPropNaverStatus()" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5 shrink-0 cursor-pointer" title="이 매물번호가 네이버에 현재 정상 게시 중인지 즉시 점검">
               <i data-lucide="activity" class="w-3.5 h-3.5"></i>
               <span>게시상태 확인</span>
             </button>
@@ -434,18 +382,14 @@
         <!-- 관리자 전용 비공개 적요란 (동·호수, 비밀번호, 소유주 연락처 등 관리자만 열람) -->
         <div class="p-3.5 bg-amber-50/80 rounded-2xl border border-amber-300">
           <div class="flex items-center justify-between mb-1.5">
-            <label class="block font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5"
-              for="newPropAdminMemo">
+            <label class="block font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5" for="newPropAdminMemo">
               <i data-lucide="lock" class="w-4 h-4 text-amber-600"></i>
               <span>적요란 (동·호수 / 관리자 전용 비공개 메모)</span>
             </label>
-            <span
-              class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200">🔒
-              고객·홈페이지 절대 비공개</span>
+            <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200">🔒 고객·홈페이지 절대 비공개</span>
           </div>
-          <input type="text" id="newPropAdminMemo"
-            placeholder="예: 105동 1402호 / 현관비번 1234* / 소유주 010-XXXX-XXXX / 희망 잔금일 등"
-            class="w-full border border-amber-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-amber-500 bg-white font-medium text-xs sm:text-sm text-slate-800 placeholder:text-slate-400">
+          <input type="text" id="newPropAdminMemo" placeholder="예: 105동 1402호 / 현관비번 1234* / 소유주 010-XXXX-XXXX / 희망 잔금일 등" 
+                 class="w-full border border-amber-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-amber-500 bg-white font-medium text-xs sm:text-sm text-slate-800 placeholder:text-slate-400">
           <p class="text-[11px] text-amber-800 mt-1.5 flex items-center gap-1">
             <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 text-amber-600"></i>
             <span>동·호수 및 소유주 정보 등은 관리자 모드와 엑셀 다운로드 파일에만 기록되며, 일반 방문객에게는 노출되지 않습니다.</span>
@@ -454,14 +398,12 @@
 
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="newPropTitle">매물명 (제목)</label>
-          <input type="text" id="newPropTitle" placeholder="예: 진주혁신 대방노블랜드 34평 로열동 판상형" required
-            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+          <input type="text" id="newPropTitle" placeholder="예: 진주혁신 대방노블랜드 34평 로열동 판상형" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="newPropPrice">거래 가격 표시 *</label>
-          <input type="text" id="newPropPrice" placeholder="예: 매매 4억 8,000만원 / 보증금 500만원 / 월세 50만원" required
-            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-bold text-amber-900 bg-amber-50/30">
+          <input type="text" id="newPropPrice" placeholder="예: 매매 4억 8,000만원 / 보증금 500만원 / 월세 50만원" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-bold text-amber-900 bg-amber-50/30">
         </div>
 
         <!-- ========================================================
@@ -479,17 +421,13 @@
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">토지(대지)면적 (㎡) *</label>
               <div class="relative">
-                <input type="number" step="0.01" id="newPropLandArea" oninput="calcLandPyeong(this.value)"
-                  placeholder="예: 280.9"
-                  class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
-                <span id="newPropLandPyeongBadge"
-                  class="absolute right-2.5 top-2 text-[11px] font-extrabold text-emerald-700">0.0평</span>
+                <input type="number" step="0.01" id="newPropLandArea" oninput="calcLandPyeong(this.value)" placeholder="예: 280.9" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+                <span id="newPropLandPyeongBadge" class="absolute right-2.5 top-2 text-[11px] font-extrabold text-emerald-700">0.0평</span>
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">지목 *</label>
-              <input type="text" id="newPropLandCategory" list="jimokList" placeholder="대 (대지)"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+              <input type="text" id="newPropLandCategory" list="jimokList" placeholder="대 (대지)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
               <datalist id="jimokList">
                 <option value="대">
                 <option value="전">
@@ -503,8 +441,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">용도지역 *</label>
-              <input type="text" id="newPropUsageDistrict" list="usageDistrictList" placeholder="제1종일반주거지역"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+              <input type="text" id="newPropUsageDistrict" list="usageDistrictList" placeholder="제1종일반주거지역" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
               <datalist id="usageDistrictList">
                 <option value="제1종전용주거지역">
                 <option value="제1종일반주거지역">
@@ -520,18 +457,15 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">도로접면 조건</label>
-              <input type="text" id="newPropRoadCondition" placeholder="예: 소로한면접함 (8m 아스팔트)"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+              <input type="text" id="newPropRoadCondition" placeholder="예: 소로한면접함 (8m 아스팔트)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">추천 용도</label>
-              <input type="text" id="newPropRecommendedUsage" placeholder="예: 단독주택용지, 상가주택"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+              <input type="text" id="newPropRecommendedUsage" placeholder="예: 단독주택용지, 상가주택" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">토지거래허가구역</label>
-              <select id="newPropPermissionZone"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
+              <select id="newPropPermissionZone" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
                 <option value="해당없음 (비지정구역)">해당없음 (자유거래 가능)</option>
                 <option value="지정구역 (허가필요)">토지거래허가구역 지정</option>
               </select>
@@ -554,19 +488,15 @@
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">전용면적 (㎡) *</label>
               <div class="relative">
-                <input type="number" step="0.01" id="newPropExArea" oninput="calcResPyeong()" placeholder="84.89"
-                  class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold">
-                <span id="newPropExPyeongBadge"
-                  class="absolute right-2 top-2 text-[10px] font-extrabold text-blue-700">0.0평</span>
+                <input type="number" step="0.01" id="newPropExArea" oninput="calcResPyeong()" placeholder="84.89" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                <span id="newPropExPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-blue-700">0.0평</span>
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">공급면적 (㎡) *</label>
               <div class="relative">
-                <input type="number" step="0.01" id="newPropSpArea" oninput="calcResPyeong()" placeholder="114.7"
-                  class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold">
-                <span id="newPropSpPyeongBadge"
-                  class="absolute right-2 top-2 text-[10px] font-extrabold text-blue-700">0.0평</span>
+                <input type="number" step="0.01" id="newPropSpArea" oninput="calcResPyeong()" placeholder="114.7" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                <span id="newPropSpPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-blue-700">0.0평</span>
               </div>
             </div>
             <div>
@@ -574,26 +504,25 @@
                 <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
                 <!-- 저/중/고 원클릭 퀵 버튼 -->
                 <div class="inline-flex rounded-lg border border-blue-200 p-0.5 bg-blue-50/80 gap-0.5">
-                  <button type="button" onclick="setFloorTier('저층')" id="btnFloorLow"
-                    class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
-                  <button type="button" onclick="setFloorTier('중층')" id="btnFloorMid"
-                    class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
-                  <button type="button" onclick="setFloorTier('고층')" id="btnFloorHigh"
-                    class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                  <button type="button" onclick="setFloorTier('저층')" id="btnFloorLow" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setFloorTier('중층')" id="btnFloorMid" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setFloorTier('고층')" id="btnFloorHigh" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
                 </div>
               </div>
               <div class="flex items-center gap-1.5">
                 <div class="relative flex-1">
-                  <input type="text" id="newPropTargetFloor" list="floorTierList" placeholder="중층"
-                    oninput="handleFloorTierManual(this.value)" onblur="onTargetFloorBlur(this)"
-                    class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-white text-xs outline-none text-center font-black text-blue-900 focus:ring-2 focus:ring-blue-500 shadow-2xs"
-                    title="저층, 중층, 고층 등 표기할 층수 (퀵 버튼 클릭 또는 직접 수정 가능)">
+                  <input type="text" id="newPropTargetFloor" list="floorTierList" placeholder="중층" 
+                         oninput="handleFloorTierManual(this.value)"
+                         onblur="onTargetFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-white text-xs outline-none text-center font-black text-blue-900 focus:ring-2 focus:ring-blue-500 shadow-2xs" 
+                         title="저층, 중층, 고층 등 표기할 층수 (퀵 버튼 클릭 또는 직접 수정 가능)">
                 </div>
                 <span class="text-slate-400 font-bold px-0.5">/</span>
                 <div class="relative flex-1">
-                  <input type="text" id="newPropTotalFloor" placeholder="25" onblur="onTotalFloorBlur(this)"
-                    class="w-full border border-slate-300 rounded-xl px-2.5 py-2 pr-6 bg-white text-xs outline-none text-center font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 shadow-2xs"
-                    title="건물 전체 최고층수 (숫자만 표기)">
+                  <input type="text" id="newPropTotalFloor" placeholder="25" 
+                         onblur="onTotalFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 pr-6 bg-white text-xs outline-none text-center font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 shadow-2xs" 
+                         title="건물 전체 최고층수 (숫자만 표기)">
                   <span class="absolute right-2 top-2 text-[10px] text-slate-400 font-bold pointer-events-none">층</span>
                 </div>
               </div>
@@ -612,32 +541,26 @@
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">방 수 / 욕실 수</label>
               <div class="flex items-center gap-1">
-                <input type="number" id="newPropRooms" value="3"
-                  class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <input type="number" id="newPropRooms" value="3" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
                 <span class="text-slate-400">/</span>
-                <input type="number" id="newPropBathrooms" value="2"
-                  class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <input type="number" id="newPropBathrooms" value="2" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">방향 (거실 기준)</label>
-              <input type="text" id="newPropDirection" placeholder="남향(거실기준)"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropDirection" placeholder="남향(거실기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">월 관리비</label>
-              <input type="text" id="newPropMaintenanceFee" placeholder="약 10~13만원 (실비정산)"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropMaintenanceFee" placeholder="약 10~13만원 (실비정산)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">사용승인일 (준공)</label>
-              <input type="text" id="newPropApprovalDate" placeholder="2018년 10월"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropApprovalDate" placeholder="2018년 10월" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">주차대수 / 입주시기</label>
-              <input type="text" id="newPropParkingMove" placeholder="총 1,200대 / 즉시입주"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropParkingMove" placeholder="총 1,200대 / 즉시입주" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
           </div>
         </div>
@@ -657,19 +580,15 @@
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">전용면적 (㎡) *</label>
               <div class="relative">
-                <input type="number" step="0.01" id="newPropCommExArea" oninput="calcCommPyeong()" placeholder="26.53"
-                  class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold">
-                <span id="newPropCommExPyeongBadge"
-                  class="absolute right-2 top-2 text-[10px] font-extrabold text-amber-700">0.0평</span>
+                <input type="number" step="0.01" id="newPropCommExArea" oninput="calcCommPyeong()" placeholder="26.53" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold">
+                <span id="newPropCommExPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-amber-700">0.0평</span>
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">계약(공급)면적 (㎡) *</label>
               <div class="relative">
-                <input type="number" step="0.01" id="newPropCommSpArea" oninput="calcCommPyeong()" placeholder="57.0"
-                  class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold">
-                <span id="newPropCommSpPyeongBadge"
-                  class="absolute right-2 top-2 text-[10px] font-extrabold text-amber-700">0.0평</span>
+                <input type="number" step="0.01" id="newPropCommSpArea" oninput="calcCommPyeong()" placeholder="57.0" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold">
+                <span id="newPropCommSpPyeongBadge" class="absolute right-2 top-2 text-[10px] font-extrabold text-amber-700">0.0평</span>
               </div>
             </div>
             <div>
@@ -677,68 +596,60 @@
                 <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
                 <!-- 상가 저/중/고 퀵 버튼 -->
                 <div class="inline-flex rounded-lg border border-amber-200 p-0.5 bg-amber-50/80 gap-0.5">
-                  <button type="button" onclick="setCommFloorTier('저층')" id="btnCommFloorLow"
-                    class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
-                  <button type="button" onclick="setCommFloorTier('중층')" id="btnCommFloorMid"
-                    class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
-                  <button type="button" onclick="setCommFloorTier('고층')" id="btnCommFloorHigh"
-                    class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                  <button type="button" onclick="setCommFloorTier('저층')" id="btnCommFloorLow" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setCommFloorTier('중층')" id="btnCommFloorMid" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setCommFloorTier('고층')" id="btnCommFloorHigh" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
                 </div>
               </div>
               <div class="flex items-center gap-1.5">
                 <div class="relative flex-1">
-                  <input type="text" id="newPropCommTargetFloor" list="floorTierList" placeholder="1층"
-                    oninput="handleCommFloorTierManual(this.value)" onblur="onCommTargetFloorBlur(this)"
-                    class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-white text-xs outline-none text-center font-black text-amber-900 focus:ring-2 focus:ring-amber-500 shadow-2xs"
-                    title="상가 해당층 (예: 1층, 저층, 2층)">
+                  <input type="text" id="newPropCommTargetFloor" list="floorTierList" placeholder="1층" 
+                         oninput="handleCommFloorTierManual(this.value)"
+                         onblur="onCommTargetFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-white text-xs outline-none text-center font-black text-amber-900 focus:ring-2 focus:ring-amber-500 shadow-2xs" 
+                         title="상가 해당층 (예: 1층, 저층, 2층)">
                 </div>
                 <span class="text-slate-400 font-bold px-0.5">/</span>
                 <div class="relative flex-1">
-                  <input type="text" id="newPropCommTotalFloor" placeholder="6" onblur="onTotalFloorBlur(this)"
-                    class="w-full border border-slate-300 rounded-xl px-2.5 py-2 pr-6 bg-white text-xs outline-none text-center font-bold text-slate-800 focus:ring-2 focus:ring-amber-500 shadow-2xs"
-                    title="상가 건물 전체 층수">
+                  <input type="text" id="newPropCommTotalFloor" placeholder="6" 
+                         onblur="onTotalFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 pr-6 bg-white text-xs outline-none text-center font-bold text-slate-800 focus:ring-2 focus:ring-amber-500 shadow-2xs" 
+                         title="상가 건물 전체 층수">
                   <span class="absolute right-2 top-2 text-[10px] text-slate-400 font-bold pointer-events-none">층</span>
                 </div>
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">추천 업종</label>
-              <input type="text" id="newPropCommRecommendedBiz" placeholder="예: 소형사무실, 카페, 미용실"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropCommRecommendedBiz" placeholder="예: 소형사무실, 카페, 미용실" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">방향 (주출입구)</label>
-              <input type="text" id="newPropCommDirection" placeholder="남향(주출입구기준)"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropCommDirection" placeholder="남향(주출입구기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">월 관리비</label>
-              <input type="text" id="newPropCommMaintenance" placeholder="약 8~9만원 (부가세 별도)"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropCommMaintenance" placeholder="약 8~9만원 (부가세 별도)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">주차대수</label>
-              <input type="text" id="newPropCommParking" placeholder="총 55대 주차가능"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropCommParking" placeholder="총 55대 주차가능" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">사용승인일 (준공)</label>
-              <input type="text" id="newPropCommApprovalDate" placeholder="2016년 8월"
-                class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <input type="text" id="newPropCommApprovalDate" placeholder="2016년 8월" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
           </div>
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="newPropLocation">소재지 위치</label>
-          <input type="text" id="newPropLocation" value="경남 진주시 충무공동" required
-            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
+          <input type="text" id="newPropLocation" value="경남 진주시 충무공동" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold">
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="newPropDesc">매물 특징 설명</label>
-          <textarea id="newPropDesc" rows="3" placeholder="남향 일조권 최상, 시스템에어컨, 빠른 입주 협의 가능 등 핵심 특징"
-            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold leading-relaxed"></textarea>
+          <textarea id="newPropDesc" rows="3" placeholder="남향 일조권 최상, 시스템에어컨, 빠른 입주 협의 가능 등 핵심 특징" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold leading-relaxed"></textarea>
         </div>
 
         <!-- 비공개 매물 설정 스위치 (홈페이지 메인 및 지도에서 노출 차단) -->
@@ -752,9 +663,7 @@
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="newPropIsPrivate" class="sr-only peer">
-            <div
-              class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
-            </div>
+            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
           </label>
         </div>
 
@@ -764,24 +673,19 @@
             <div>
               <label class="block text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                 <i data-lucide="images" class="w-4 h-4 text-brand-gold"></i>
-                <span>매물 사진 등록 & 첨부 (<span id="propPhotoCountBadge" class="text-blue-600 font-black">0</span> /
-                  6장)</span>
+                <span>매물 사진 등록 & 첨부 (<span id="propPhotoCountBadge" class="text-blue-600 font-black">0</span> / 6장)</span>
               </label>
               <p class="text-[11px] text-slate-500 mt-0.5">
                 네이버에서 불러온 사진 외에도 내 PC나 휴대폰의 현장 사진을 최대 6장까지 추가할 수 있습니다.
               </p>
             </div>
             <div class="flex items-center gap-2">
-              <input type="file" id="propPhotoFileInput" accept="image/*" multiple class="hidden"
-                onchange="handlePhotoFilesSelected(this.files)">
-              <button type="button" onclick="createAndAddPastelCard()" id="genPastelBtn"
-                class="px-3 py-2 bg-gradient-to-r from-sky-50 to-indigo-50 hover:from-sky-100 hover:to-indigo-100 text-sky-800 text-xs font-bold rounded-xl border border-sky-200 shadow-xs flex items-center gap-1.5 cursor-pointer transition"
-                title="현재 입력된 매물명과 정보에 맞춰 밝고 화사한 파스텔 타이틀 카드를 즉시 생성합니다">
+              <input type="file" id="propPhotoFileInput" accept="image/*" multiple class="hidden" onchange="handlePhotoFilesSelected(this.files)">
+              <button type="button" onclick="createAndAddPastelCard()" id="genPastelBtn" class="px-3 py-2 bg-gradient-to-r from-sky-50 to-indigo-50 hover:from-sky-100 hover:to-indigo-100 text-sky-800 text-xs font-bold rounded-xl border border-sky-200 shadow-xs flex items-center gap-1.5 cursor-pointer transition" title="현재 입력된 매물명과 정보에 맞춰 밝고 화사한 파스텔 타이틀 카드를 즉시 생성합니다">
                 <i data-lucide="palette" class="w-3.5 h-3.5 text-sky-600"></i>
                 <span>🎨 파스텔 타이틀 카드 생성</span>
               </button>
-              <button type="button" onclick="triggerPhotoUpload()" id="addPhotoBtn"
-                class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 shadow-xs flex items-center gap-1.5 cursor-pointer transition">
+              <button type="button" onclick="triggerPhotoUpload()" id="addPhotoBtn" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 shadow-xs flex items-center gap-1.5 cursor-pointer transition">
                 <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-600"></i>
                 <span>+ 사진 추가</span>
               </button>
@@ -795,26 +699,22 @@
 
           <div class="text-[11px] text-slate-400 mt-2 flex items-center justify-between">
             <span>* 첫 번째 사진이 매물 대표 썸네일로 노출됩니다. 사진 우측 상단 ✕ 버튼으로 삭제 가능합니다.</span>
-            <button type="button" onclick="clearAllPhotos()"
-              class="text-rose-500 hover:text-rose-700 font-medium hover:underline text-[11px]">
+            <button type="button" onclick="clearAllPhotos()" class="text-rose-500 hover:text-rose-700 font-medium hover:underline text-[11px]">
               전체 사진 지우기
             </button>
           </div>
         </div>
 
         <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-          <button type="button" id="modalDeletePropBtn" onclick="handleDeleteFromModal()"
-            class="hidden px-4 py-2.5 rounded-xl border border-rose-300 text-rose-600 hover:bg-rose-50 font-bold transition flex items-center gap-1.5 text-xs cursor-pointer">
+          <button type="button" id="modalDeletePropBtn" onclick="handleDeleteFromModal()" class="hidden px-4 py-2.5 rounded-xl border border-rose-300 text-rose-600 hover:bg-rose-50 font-bold transition flex items-center gap-1.5 text-xs cursor-pointer">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             <span>이 매물 삭제</span>
           </button>
           <div class="flex items-center gap-3 ml-auto">
-            <button type="button" onclick="closeAddPropModal()"
-              class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition cursor-pointer">
+            <button type="button" onclick="closeAddPropModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition cursor-pointer">
               취소
             </button>
-            <button type="submit" id="savePropSubmitBtn"
-              class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow flex items-center gap-2 cursor-pointer">
+            <button type="submit" id="savePropSubmitBtn" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow flex items-center gap-2 cursor-pointer">
               <i data-lucide="check" class="w-4 h-4"></i>
               <span>홈페이지에 즉시 등록</span>
             </button>
@@ -825,18 +725,13 @@
   </div>
 
   <!-- Toast -->
-  <div id="adminToast"
-    class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 pointer-events-none opacity-0 transition-all duration-300">
+  <div id="adminToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 pointer-events-none opacity-0 transition-all duration-300">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
     <span id="adminToastMsg">알림</span>
   </div>
 
   <!-- Main JavaScript -->
   <script>
-    const VALID_ADMIN_PASSWORDS = [
-      'queen!23'
-    ];
-
     let adminToken = sessionStorage.getItem('jinjuqueen_admin_token') || localStorage.getItem('jinjuqueen_admin_token') || '';
     let adminProperties = [];
     let boardPosts = [];
@@ -850,23 +745,6 @@
         overlay.classList.remove('flex');
       }
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // If already logged in, hide overlay immediately
-      if (adminToken && (adminToken.toLowerCase() === 'queen!23' || VALID_ADMIN_PASSWORDS.includes(adminToken.toLowerCase()))) {
-        hideLoginOverlay();
-        loadAdminProperties();
-        loadBoardPosts();
-      }
-      if (window.lucide) {
-        try {
-          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
-          lucide.createIcons(r ? { root: r } : undefined);
-        } catch (e) {
-          lucide.createIcons();
-        }
-      }
-    });
 
     function togglePasswordVisibility() {
       const input = document.getElementById('adminPasswordInput');
@@ -882,18 +760,33 @@
       if (window.lucide) lucide.createIcons();
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
+      // If already logged in, hide overlay and load data
+      if (adminToken && adminToken.toLowerCase() === 'queen!23') {
+        hideLoginOverlay();
+        loadAdminProperties();
+        loadBoardPosts();
+      }
+      if (window.lucide) {
+        try {
+          const r = (typeof tbody !== 'undefined' && tbody) ? tbody : undefined;
+          lucide.createIcons(r ? { root: r } : undefined);
+        } catch (e) {
+          lucide.createIcons();
+        }
+      }
+    });
+
     async function handleLogin(e) {
-      if (e) {
+      if (e && e.preventDefault) {
         e.preventDefault();
         e.stopPropagation();
       }
       const input = document.getElementById('adminPasswordInput');
       const pass = (input?.value || '').trim();
+      const isMatch = (pass.toLowerCase() === 'queen!23');
 
-      const isOfflineValid = (pass.toLowerCase() === 'queen!23');
-
-      // If valid, hide overlay immediately so the representative doesn't wait
-      if (isOfflineValid) {
+      if (isMatch) {
         adminToken = 'queen!23';
         sessionStorage.setItem('jinjuqueen_admin_token', adminToken);
         localStorage.setItem('jinjuqueen_admin_token', adminToken);
@@ -919,7 +812,7 @@
           loadAdminProperties();
           loadBoardPosts();
           return;
-        } else if (!isOfflineValid) {
+        } else if (!isMatch) {
           alert('비밀번호가 올바르지 않습니다. 다시 입력해 주세요.');
           if (input) {
             input.value = '';
@@ -927,7 +820,7 @@
           }
         }
       } catch (err) {
-        if (!isOfflineValid) {
+        if (!isMatch) {
           alert('비밀번호가 올바르지 않습니다. 다시 입력해 주세요.');
         }
       }
@@ -960,12 +853,12 @@
     }
 
     function closeDbGuideModal() {
-      document.getElementById('dbGuideModal').classList.add('hn');
+      document.getElementById('dbGuideModal').classList.add('hidden');
     }
 
     
     function downloadAdminExcel() {
-      if (!adminToken) {
+      if (!adminToken || adminToken !== 'queen!23') {
         alert('관리자 인증이 필요합니다. 먼저 로그인해 주세요.');
         return;
       }
@@ -988,7 +881,6 @@
         input.value = '';
         input.focus();
       }
-      showAdminToast('로그아웃 되었습니다.');
     }
 
     function switchAdminTab(tab) {
@@ -1101,7 +993,7 @@
               p.adminMemo = localMemos[p.id];
             }
           });
-         } catch (err) {}
+        } catch (err) {}
       } else {
         // 서버 연결 불가 시 로컬 저장소 백업 로드
         try {
@@ -1111,7 +1003,7 @@
           } else if (window.PROPERTIES && Array.isArray(window.PROPERTIES)) {
             adminProperties = JSON.parse(JSON.stringify(window.PROPERTIES));
           }
-         } catch (ex) {}
+        } catch (ex) {}
       }
 
       const badge = document.getElementById('adminPropBadge');
@@ -1145,7 +1037,7 @@
       tbody.innerHTML = filtered.map(prop => {
         const isSold = prop.status === 'SOLD';
         const isPrivate = Boolean(prop.isPrivate || prop.status === 'PRIVATE' || prop.hidden);
-        const sourceBadge = prop.sourceype === 'NAVER' 
+        const sourceBadge = prop.sourceType === 'NAVER' 
           ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold px-2 py-0.5 rounded text-[10px]">네이버</span>`
           : `<span class="bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2 py-0.5 rounded text-[10px]">진주퀸단독</span>`;
 
@@ -1174,7 +1066,9 @@
                       <i data-lucide="hash" class="w-3 h-3 text-emerald-600"></i>
                       <span>네이버 No. ${prop.naverArticleNo}</span>
                     </span>
-                    ${prop.naverStats                              ? '<span class="text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded font-bold">네이버종료(                              : '<span class="text-emerald-600 font-bold flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>게시중</span>'}
+                    ${prop.naverStatus === 'EXPIRED' 
+                      ? '<span class="text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded font-bold">네이버종료 (자동비공개)</span>' 
+                      : '<span class="text-emerald-600 font-bold flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>게시중</span>'}
                   </div>
                 </div>
               ` : ''}
@@ -1280,7 +1174,7 @@
           localMemos[newId] = clone.adminMemo;
           localStorage.setItem('jinjuqueen_admin_memos', JSON.stringify(localMemos));
         }
-       } catch (e) {}
+      } catch (e) {}
 
       // 2. 화면 반영
       adminProperties.unshift(clone);
@@ -1313,7 +1207,7 @@
                 property: clone
               })
             });
-          }  catch (locErr) {}
+          } catch (locErr) {}
         }
 
         if (res.ok) {
@@ -1350,7 +1244,7 @@
         const localMemos = JSON.parse(localStorage.getItem('jinjuqueen_admin_memos') || '{}');
         delete localMemos[propId];
         localStorage.setItem('jinjuqueen_admin_memos', JSON.stringify(localMemos));
-       } catch (e) {}
+      } catch (e) {}
 
       // 2. 화면에서 즉시 제거
       adminProperties = adminProperties.filter(p => p.id !== propId);
@@ -1383,7 +1277,7 @@
                 property: { id: propId }
               })
             });
-          }  catch (locErr) {}
+          } catch (locErr) {}
         }
 
         if (res.ok) {
@@ -1408,7 +1302,7 @@
       if (!prop) return;
 
       const willBeSold = prop.status !== 'SOLD';
-      const confirmsg = willBeSold 
+      const confirmMsg = willBeSold 
         ? `[${prop.title}] 매물을 '거래완료'로 변경하시겠습니까?\n홈페이지 사진에 [계약완료] 도장이 찍히며 상세정보 열람이 차단됩니다.`
         : `[${prop.title}] 매물을 다시 '진행중'으로 복구하시겠습니까?`;
 
@@ -1437,7 +1331,8 @@
         prop.status = willBeSold ? 'SOLD' : 'ACTIVE';
         prop.badge = willBeSold ? '거래완료' : '추천매물';
         renderAdminProperties();
-        showAdminToast('상태 변경 완료');    
+        showAdminToast('상태 변경 완료');
+      }
     }
 
         async function handleTogglePrivate(propId) {
@@ -1462,7 +1357,7 @@
       // 1. 브라우저 로컬 저장소 즉시 보존
       try {
         localStorage.setItem('jinjuqueen_saved_properties', JSON.stringify(adminProperties));
-       } catch (e) {}
+      } catch (e) {}
 
       renderAdminProperties();
 
@@ -1503,7 +1398,7 @@
         }
         showAdminToast(willBePrivate ? '🔒 매물이 비공개(화면 숨김)로 전환되었습니다.' : '🌐 매물이 다시 공개되었습니다.');
       } catch (e) {
-        showAdminToast(willBePrivate ? '🔒 매물이 비공개(화면 숨김) 처리되었습니다.' : '🌐 매물이 공개 처리되었습니다.');    
+        showAdminToast(willBePrivate ? '🔒 매물이 비공개(화면 숨김) 처리되었습니다.' : '🌐 매물이 공개 처리되었습니다.');
       }
     }
 
@@ -1997,7 +1892,7 @@ let fetchedNaverPhotos = [];
 
       const modalDelBtn = document.getElementById('modalDeletePropBtn');
       if (modalDelBtn) modalDelBtn.classList.add('hidden');
-      if (tabsContainer) tabsContainer.classList.rehidden');
+      if (tabsContainer) tabsContainer.classList.remove('hidden');
       
       switchPropInputMode('address');
 
@@ -2344,7 +2239,7 @@ let fetchedNaverPhotos = [];
       }
 
       noticeEl.className = 'text-[11px] font-bold mt-2 p-2.5 rounded-xl border flex items-center gap-1.5 bg-blue-50 text-blue-800 border-blue-200';
-      noticeEl.innerHTML = '<span class="inline-block animate-spin">↻</span> 네이버 실시간  게시 상태 확인 중...';
+      noticeEl.innerHTML = '<span class="inline-block animate-spin">↻</span> 네이버 실시간 게시 상태 확인 중...';
       noticeEl.classList.remove('hidden');
 
       try {
@@ -2407,7 +2302,7 @@ let fetchedNaverPhotos = [];
         showAdminToast('🔒 [비공개] 상태로 전환되었습니다. 저장 시 일반 방문객에게 노출되지 않습니다.');
       } else if (action === 'COMPLETED') {
         const privCheck = document.getElementById('newPropIsPrivate');
-        if (p rivCheck) privCheck.checked = true;
+        if (privCheck) privCheck.checked = true;
         const memo = document.getElementById('newPropAdminMemo');
         if (memo && !memo.value.includes('거래완료')) {
           memo.value = `[거래완료] ${memo.value}`.trim();
@@ -2471,7 +2366,7 @@ let fetchedNaverPhotos = [];
           tabAddr.className = 'flex-1 py-2.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-white text-blue-700 shadow-xs border border-blue-200 cursor-pointer';
         }
         if (tabNaver) {
-          tabNaver.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900  cursor-pointer';
+          tabNaver.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer';
         }
         if (boxAddr) boxAddr.classList.remove('hidden');
         if (boxNaver) boxNaver.classList.add('hidden');
@@ -2532,194 +2427,6 @@ let fetchedNaverPhotos = [];
       }
     }
 
-    function getClientAddressProperty(address, detail) {
-      const fullText = `${address} ${detail}`.trim();
-      const norm = fullText.toLowerCase().replace(/\s+/g, '');
-
-      let dong = '', ho = '', rawFloor = '';
-      const mDong = fullText.match(/(\d+)\s*동/);
-      if (mDong) dong = `${mDong[1]}동`;
-      const mFloor = fullText.match(/((?:지하\s*)?\d+)\s*층/);
-      if (mFloor) rawFloor = `${mFloor[1].replace(/\s+/g, '')}층`;
-      const mHo = fullText.match(/(\d+)\s*호/);
-      if (mHo) {
-        ho = `${mHo[1]}호`;
-        const n = parseInt(mHo[1], 10);
-        if (!rawFloor) {
-          rawFloor = n >= 100 ? `${Math.floor(n / 100)}층` : `${n}층`;
-        }
-      }
-
-      let info = null;
-      if (norm.includes('라온')) {
-        if (norm.includes('시티s') || norm.includes('287-6') || norm.includes('에나로128')) {
-          info = {
-            category: '상가',
-            building_name: '진주혁신도시 라온프라이빗시티S',
-            main_purpose: '제1·2종근린생활시설(상가)',
-            structure: '철근콘크리트구조',
-            total_floor: '지상 16층 / 지하 5층',
-            default_floor: '1층 (저층)',
-            approval_date: '2016년 08월 30일',
-            exclusive_area: 26.53,
-            supply_area: 57.0,
-            parking_total: '총 254대',
-            direction: '남향(주출입구기준)',
-            maintenance_fee: '약 8~9만원 (부가세 별도)',
-            naver_complex: { complex_name: '라온프라이빗시티S상가', total_household: '지상 16층 상업복합' }
-          };
-        } else if (norm.includes('시티') || norm.includes('280-1') || norm.includes('에나로146')) {
-          info = {
-            category: '오피스텔',
-            building_name: '진주혁신도시 라온프라이빗시티',
-            main_purpose: '업무시설(오피스텔)',
-            structure: '철근콘크리트구조',
-            total_floor: '지상 20층 / 지하 4층',
-            default_floor: '중층',
-            approval_date: '2016년 08월 30일',
-            exclusive_area: 29.80,
-            supply_area: 55.40,
-            parking_total: '총 254대',
-            direction: '남향(거실기준)',
-            maintenance_fee: '약 10~13만원 (실비정산)',
-            naver_complex: { complex_name: '라온프라이빗시티오피스텔', total_household: '160실' }
-          };
-        } else {
-          info = {
-            category: '아파트',
-            building_name: '진주혁신도시 라온프라이빗',
-            main_purpose: '공동주택(아파트)',
-            structure: '철근콘크리트구조',
-            total_floor: '지상 25층 / 지하 1층',
-            default_floor: '중층',
-            approval_date: '2017년 11월 30일',
-            exclusive_area: 84.97,
-            supply_area: 111.23,
-            parking_total: '총 530대 (세대당 1.25대)',
-            direction: '남향(거실기준)',
-            maintenance_fee: '약 14~17만원 (실비정산)',
-            naver_complex: { complex_name: '진주혁신도시라온프라이빗', total_household: '422세대 (총 6개동)', heating: '지역난방, 열병합', construction_company: '라온산업개발(주)' }
-          };
-        }
-      } else if (norm.includes('대방') || norm.includes('285') || norm.includes('에나로190')) {
-        info = {
-          category: '아파트',
-          building_name: '진주혁신도시 대방노블랜드 더 캐슬',
-          main_purpose: '공동주택(아파트) 및 부대복리시설',
-          structure: '철근콘크리트구조',
-          total_floor: '지상 25층 / 지하 1층',
-          default_floor: '중층',
-          approval_date: '2018년 09월 28일',
-          exclusive_area: 84.95,
-          supply_area: 114.72,
-          parking_total: '총 1,180대 (세대당 1.58대)',
-          direction: '남향(거실기준)',
-          maintenance_fee: '약 15~18만원 (실비정산)',
-          naver_complex: { complex_name: '진주혁신도시대방노블랜드더캐슬', total_household: '743세대 (총 9개동)', heating: '지역난방, 열병합', construction_company: '대방건설(주)' }
-        };
-      } else if (norm.includes('센텀') || norm.includes('리버파크') || norm.includes('191') || norm.includes('사들로157') || norm.includes('사들로11')) {
-        info = {
-          category: '아파트',
-          building_name: '진주혁신도시 센텀리버파크',
-          main_purpose: '공동주택(아파트)',
-          structure: '철근콘크리트구조',
-          total_floor: '지상 25층 / 지하 1층',
-          default_floor: '중층',
-          approval_date: '2013년 12월 24일',
-          exclusive_area: 84.92,
-          supply_area: 113.2,
-          parking_total: '총 868대 (세대당 1.17대)',
-          direction: '남향(거실기준)',
-          maintenance_fee: '약 14~17만원 (실비정산)',
-          naver_complex: { complex_name: '진주혁신도시센텀리버파크', total_household: '742세대 (총 8개동)', heating: '지역난방, 열병합', construction_company: '계룡건설산업(주)' }
-        };
-      } else if (norm.includes('중흥') || norm.includes('더센트럴') || norm.includes('센트럴시티') || norm.includes('295')) {
-        info = {
-          category: '아파트',
-          building_name: '진주혁신도시 중흥S-클래스 더센트럴',
-          main_purpose: '공동주택(아파트) 및 부대복리시설',
-          structure: '철근콘크리트구조',
-          total_floor: '지상 24층 / 지하 2층',
-          default_floor: '중층',
-          approval_date: '2020년 08월 14일',
-          exclusive_area: 84.98,
-          supply_area: 112.5,
-          parking_total: '총 1,600대 (세대당 1.40대)',
-          direction: '남향(거실기준)',
-          maintenance_fee: '약 15~18만원 (실비정산)',
-          naver_complex: { complex_name: '진주혁신도시중흥S-클래스더센트럴', total_household: '1,143세대 (총 12개동)' }
-        };
-      } else if (norm.includes('한림') || norm.includes('풀에버') || norm.includes('282') || norm.includes('사들로10')) {
-        info = {
-          category: '아파트',
-          building_name: '진주혁신도시 한림풀에버',
-          main_purpose: '공동주택(아파트)',
-          structure: '철근콘크리트구조',
-          total_floor: '지상 25층 / 지하 1층',
-          default_floor: '중층',
-          approval_date: '2015년 10월 30일',
-          exclusive_area: 84.99,
-          supply_area: 112.8,
-          parking_total: '총 1,820대 (세대당 1.28대)',
-          direction: '남향(거실기준)',
-          maintenance_fee: '약 14~17만원 (실비정산)',
-          naver_complex: { complex_name: '진주혁신도시한림풀에버', total_household: '1,421세대 (총 19개동)' }
-        };
-      } else {
-        info = {
-          category: norm.includes('상가') ? '상가' : (norm.includes('토지') ? '택지' : '아파트'),
-          building_name: '진주혁신도시 추천 부동산',
-          main_purpose: norm.includes('상가') ? '제1·2종근린생활시설(상가)' : '공동주택(아파트)',
-          structure: '철근콘크리트구조',
-          total_floor: '지상 25층 / 지하 1층',
-          default_floor: '중층',
-          approval_date: '2018년',
-          exclusive_area: 84.85,
-          supply_area: 112.4,
-          parking_total: '주차 완비',
-          direction: '남향(거실기준)',
-          maintenance_fee: '약 14~18만원 (실비정산)',
-          naver_complex: { complex_name: '진주혁신도시', total_household: '단지' }
-        };
-      }
-
-      const totClean = cleanTotalFloorClient(info.total_floor);
-      const tf = classifyFloorTierClient(rawFloor || '중층', totClean);
-      const exP = Number((info.exclusive_area / 3.305785).toFixed(1));
-      const dongTxt = dong ? ` ${dong}` : '';
-      const suggested_title = info.category === '상가' 
-        ? `${info.building_name} ${rawFloor || '1층'} 상가 임대${ho ? ` (${ho})` : ''}`
-        : `${info.building_name}${dongTxt} ${exP}평형 (${tf})`;
-
-      return {
-        success: true,
-        source: 'client_complex_db',
-        category: info.category,
-        suggested_title: suggested_title,
-        suggested_desc: `[${info.building_name}] 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: ${info.structure}, ${info.parking_total || '주차 편리'}, 채광 및 거주환경 우수, 즉시 입주 및 잔금 협의 가능.`,
-        transaction_type: info.category === '상가' ? '월세' : '매매',
-        public_location: '경남 진주시 충무공동',
-        admin_memo: `[상세주소] ${fullText} / 건축물대장 및 네이버단지정보 확인 완료`,
-        building: {
-          name: info.building_name,
-          main_purpose: info.main_purpose,
-          structure: info.structure,
-          total_floor: info.total_floor,
-          target_floor: tf,
-          raw_floor_num: rawFloor,
-          approval_date: info.approval_date,
-          exclusive_area: info.exclusive_area,
-          supply_area: info.supply_area,
-          parking: info.parking_total,
-          rooms: 3,
-          bathrooms: 2,
-          direction: info.direction || '남향(거실기준)',
-          maintenance_fee: info.maintenance_fee || '약 14~18만원 (실비정산)'
-        },
-        naver_complex: info.naver_complex
-      };
-    }
-
     async function autoFetchAddressProperty() {
       const inputEl = document.getElementById('addrQuickInput');
       const detailEl = document.getElementById('addrDetailInput');
@@ -2768,19 +2475,16 @@ let fetchedNaverPhotos = [];
           }
         }
 
-        let data = null;
+        let data = {};
         if (res && res.ok) {
-          try {
-            data = await res.json();
-          } catch (e) {}
-        }
-        
-        if (!data || !data.success) {
-          // Vercel Serverless / Network Fallback: 클라이언트 단지 DB를 통해 100% 무중단 자동 완성
-          data = getClientAddressProperty(address, detail);
+          data = await res.json();
+        } else if (res) {
+          data = await res.json().catch(() => ({ success: false, message: '공공데이터 조회 서버 응답 오류' }));
+        } else {
+          data = { success: false, message: '조회 서버에 연결할 수 없습니다.' };
         }
 
-        if (data && data.success) {
+        if (data.success) {
           if (data.category) {
             document.getElementById('newPropCategory').value = data.category;
             handleCategoryChange();
@@ -2864,7 +2568,7 @@ let fetchedNaverPhotos = [];
           if (noticeEl) {
             noticeEl.className = 'text-[11px] font-bold mt-2 p-3 rounded-xl border flex flex-col gap-1.5 bg-emerald-50 text-emerald-950 border-emerald-300';
             const ncBadges = [];
-            if (nc.complex_name)  ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 text-[10px] font-bold border border-emerald-300">🏢 네이버단지: ${nc.complex_name}</span>`);
+            if (nc.complex_name) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 text-[10px] font-bold border border-emerald-300">🏢 네이버단지: ${nc.complex_name}</span>`);
             if (nc.total_household) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 text-[10px] font-bold border border-blue-300">👥 세대수: ${nc.total_household}</span>`);
             if (nc.parking_per_household) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-bold border border-amber-300">🚗 주차: ${nc.parking_per_household}</span>`);
             if (nc.construction_company) ncBadges.push(`<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 text-[10px] font-bold border border-slate-300">🏗️ 시공사: ${nc.construction_company}</span>`);
@@ -3028,8 +2732,8 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = resTot;
             if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = data.rooms !== undefined ? data.rooms : 3;
             if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = data.bathrooms !== undefined ? data.bathrooms : 2;
-            if (document.get        rection')) document.getElementById('newPropDirection').value = data.direction || '남향(거실기준)';
-            if (document.getElementById('newPropMaintenanceFee')) document.getElementById('newPropMaintenanceFee').value = data.maintenanceFee || '약 10      원 (실비정산)';
+            if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = data.direction || '남향(거실기준)';
+            if (document.getElementById('newPropMaintenanceFee')) document.getElementById('newPropMaintenanceFee').value = data.maintenanceFee || '약 10~13만원 (실비정산)';
             if (document.getElementById('newPropApprovalDate')) document.getElementById('newPropApprovalDate').value = data.approvalDate || '2018년';
             if (document.getElementById('newPropParkingMove')) document.getElementById('newPropParkingMove').value = `${data.parking || '지하주차장'} / 즉시입주 가능`;
           }
@@ -3121,8 +2825,8 @@ let fetchedNaverPhotos = [];
     const isPrivate = Boolean(document.getElementById('newPropIsPrivate') && document.getElementById('newPropIsPrivate').checked);
 
       // Parse Category-Specific Values
-      let exArea = 84.89, spArea = 114.7, exPyeong = 25.7          ng = 34.7;
-      let f          = '중층', dirStr = '남향(거실기준)', roomVal = 3, bathVal = 2;
+      let exArea = 84.89, spArea = 114.7, exPyeong = 25.7, spPyeong = 34.7;
+      let floorStr = '중층', dirStr = '남향(거실기준)', roomVal = 3, bathVal = 2;
       let appDate = '2018년', parkingVal = '지하 주차장 완비', moveVal = '즉시입주 가능 (협의)', maintVal = '약 10~13만원 (실비정산)';
       let landCategoryVal = '대', usageDistrictVal = '제1종일반주거지역', roadCondVal = '소로한면접함', recUsageVal = '단독주택지', permZoneVal = '해당없음 (비지정구역)';
 
@@ -3149,7 +2853,7 @@ let fetchedNaverPhotos = [];
         exArea = parseFloat(document.getElementById('newPropCommExArea')?.value) || 26.53;
         spArea = parseFloat(document.getElementById('newPropCommSpArea')?.value) || 57.0;
         exPyeong = Number((exArea / 3.305785).toFixed(1));
-        spPyeong = Number((spArea / 3.305785).toFixed( 1));
+        spPyeong = Number((spArea / 3.305785).toFixed(1));
         const tf = document.getElementById('newPropCommTargetFloor')?.value.trim() || '1층';
         const rawTot = document.getElementById('newPropCommTotalFloor')?.value.trim() || '6';
         const tot = cleanTotalFloorClient(rawTot);
@@ -3244,7 +2948,7 @@ let fetchedNaverPhotos = [];
 
         // 2. 관리자 화면 목록에 즉시 반영
         const idx = adminProperties.findIndex(p => p.id === editId);
-         if (idx > -1) {
+        if (idx > -1) {
           adminProperties[idx] = { ...adminProperties[idx], ...updatedFields };
           renderAdminProperties();
         }
@@ -3277,7 +2981,7 @@ let fetchedNaverPhotos = [];
         } catch (err) {
           showAdminToast('적요(동·호수)가 안전하게 저장되었습니다.');
         } finally {
-          saveBtn.disable d = false;
+          saveBtn.disabled = false;
           if (window.lucide) lucide.createIcons();
         }
         return;
@@ -3655,13 +3359,14 @@ let fetchedNaverPhotos = [];
         extractedCategory = '진주시 개발 & 정책';
       } else if (fullText.includes('세금') || fullText.includes('양도세') || fullText.includes('취득세') || fullText.includes('세무') || fullText.includes('상식') || fullText.includes('공인중개사법') || fullText.includes('임대차') || fullText.includes('계약') || fullText.includes('대출')) {
         extractedCategory = '부동산 상식 & 세무';
-      } else if (fullText.includes('공지') || fullText.includes('사무소') || fullTextncludes('휴무') || fullText.includes('개편') || fullText.includes('영업')) {
+      } else if (fullText.includes('공지') || fullText.includes('사무소') || fullText.includes('휴무') || fullText.includes('개편') || fullText.includes('영업')) {
         extractedCategory = '공지사항';
       } else {
         extractedCategory = '실거래가 & 시세 분석';
       }
 
-      // Detect summaryfor (const line of lines) {
+      // Detect summary
+      for (const line of lines) {
         const trimmed = line.trim();
         if (trimmed.match(/^[\*\_]{0,2}요약[\*\_]{0,2}\s*[:：]\s*(.*)$/i)) {
           extractedSummary = trimmed.replace(/^[\*\_]{0,2}요약[\*\_]{0,2}\s*[:：]\s*/i, '').replace(/[\*\_]/g, '').trim();
@@ -3787,14 +3492,11 @@ let fetchedNaverPhotos = [];
   <!-- ==========================================
        AI BLOG & COLUMN WRITE MODAL (AI 마크다운 칼럼 작성 모달)
        ========================================== -->
-  <div id="writePostModal"
-    class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div
-      class="bg-white rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto">
+  <div id="writePostModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
         <div class="flex items-center gap-3">
-          <div
-            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center font-black shadow-sm">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center font-black shadow-sm">
             <i data-lucide="sparkles" class="w-5 h-5"></i>
           </div>
           <div>
@@ -3808,24 +3510,20 @@ let fetchedNaverPhotos = [];
       </div>
 
       <!-- AI Smart Paste Box (AI 생성 글 원클릭 자동 파싱 마법사) -->
-      <div
-        class="p-4 bg-gradient-to-r from-amber-50 to-orange-50/60 rounded-2xl border border-amber-200/80 mb-5 space-y-2.5">
+      <div class="p-4 bg-gradient-to-r from-amber-50 to-orange-50/60 rounded-2xl border border-amber-200/80 mb-5 space-y-2.5">
         <div class="flex items-center justify-between">
           <label class="block text-xs font-extrabold text-amber-950 flex items-center gap-1.5" for="aiQuickPasteInput">
             <i data-lucide="bot" class="w-4 h-4 text-amber-600"></i>
             <span>🤖 AI(Claude · Gemini · ChatGPT) 생성 글 원클릭 자동 완성 마법사</span>
           </label>
-          <span class="text-[11px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">제목·요약·카테고리 자동
-            추출</span>
+          <span class="text-[11px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">제목·요약·카테고리 자동 추출</span>
         </div>
         <p class="text-[11px] text-amber-900/80 leading-relaxed">
           AI에게 답변받은 전체 글(제목, 소제목, 본문)을 복사하여 아래 상자에 넣고 <strong>[AI 내용 자동 분석]</strong>을 누르면 양식이 자동으로 채워집니다.
         </p>
-        <textarea id="aiQuickPasteInput" rows="2" placeholder="Claude, 재미나이, ChatGPT의 글 전체를 여기에 붙여넣으세요..."
-          class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs bg-white font-medium resize-none"></textarea>
+        <textarea id="aiQuickPasteInput" rows="2" placeholder="Claude, 재미나이, ChatGPT의 글 전체를 여기에 붙여넣으세요..." class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs bg-white font-medium resize-none"></textarea>
         <div class="flex justify-end">
-          <button type="button" onclick="autoParseAIText()"
-            class="px-4 py-2 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-black rounded-xl transition shadow flex items-center gap-1.5">
+          <button type="button" onclick="autoParseAIText()" class="px-4 py-2 bg-brand-gold hover:bg-brand-goldHover text-slate-950 text-xs font-black rounded-xl transition shadow flex items-center gap-1.5">
             <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
             <span>AI 내용 자동 분석 및 입력</span>
           </button>
@@ -3839,8 +3537,7 @@ let fetchedNaverPhotos = [];
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="postCategory">카테고리</label>
-            <select id="postCategory" required
-              class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+            <select id="postCategory" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white outline-none focus:ring-2 focus:ring-brand-gold font-medium">
               <option value="실거래가 & 시세 분석">실거래가 & 시세 분석</option>
               <option value="진주시 개발 & 정책">진주시 개발 & 정책</option>
               <option value="부동산 상식 & 세무">부동산 상식 & 세무</option>
@@ -3849,26 +3546,22 @@ let fetchedNaverPhotos = [];
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="postAuthor">작성자</label>
-            <input type="text" id="postAuthor" value="황선숙 대표" required
-              class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+            <input type="text" id="postAuthor" value="황선숙 대표" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="postDate">등록일자</label>
-            <input type="text" id="postDate" required
-              class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
+            <input type="text" id="postDate" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
           </div>
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="postTitle">칼럼 및 게시글 제목</label>
-          <input type="text" id="postTitle" placeholder="예: [혁신도시 심층분석] 2026년 하반기 충무공동 아파트 실거래가 및 매수 전략" required
-            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-semibold text-slate-900">
+          <input type="text" id="postTitle" placeholder="예: [혁신도시 심층분석] 2026년 하반기 충무공동 아파트 실거래가 및 매수 전략" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-semibold text-slate-900">
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="postSummary">요약 설명 (목록 카드에 표시될 1~2줄 요약)</label>
-          <input type="text" id="postSummary" placeholder="예: 가을 이사철 국민평형 전세 매물 품귀와 매매가 회복세를 중심으로 분석한 현장 브리핑." required
-            class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold text-slate-700">
+          <input type="text" id="postSummary" placeholder="예: 가을 이사철 국민평형 전세 매물 품귀와 매매가 회복세를 중심으로 분석한 현장 브리핑." required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold text-slate-700">
         </div>
 
         <!-- Content Editor with Dual Tabs (Markdown / Live Preview) -->
@@ -3879,36 +3572,27 @@ let fetchedNaverPhotos = [];
               <span class="text-[11px] font-normal text-slate-400">(마크다운 #소제목, **굵게**, -목록, >인용구 완벽 지원)</span>
             </label>
             <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
-              <button type="button" id="tabBtnEditor" onclick="switchEditorTab('editor')"
-                class="px-2.5 py-1 rounded font-bold bg-white text-slate-900 shadow-xs transition">✏️ 마크다운 작성</button>
-              <button type="button" id="tabBtnPreview" onclick="switchEditorTab('preview')"
-                class="px-2.5 py-1 rounded font-medium text-slate-500 hover:text-slate-800 transition">👁️ 실시간
-                미리보기</button>
+              <button type="button" id="tabBtnEditor" onclick="switchEditorTab('editor')" class="px-2.5 py-1 rounded font-bold bg-white text-slate-900 shadow-xs transition">✏️ 마크다운 작성</button>
+              <button type="button" id="tabBtnPreview" onclick="switchEditorTab('preview')" class="px-2.5 py-1 rounded font-medium text-slate-500 hover:text-slate-800 transition">👁️ 실시간 미리보기</button>
             </div>
           </div>
 
           <!-- Editor Pane -->
           <div id="editorPane">
-            <textarea id="postContent" rows="12"
-              placeholder="Claude, 재미나이, GPT에서 복사한 마크다운이나 일반 텍스트를 입력하세요.&#10;# 대제목&#10;## 소제목&#10;**굵은 글씨**와 - 목록 형태, > 인용구 등이 홈페이지에 세련되게 나타납니다."
-              required
-              class="w-full border border-slate-300 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-brand-gold font-mono text-xs leading-relaxed resize-y"></textarea>
+            <textarea id="postContent" rows="12" placeholder="Claude, 재미나이, GPT에서 복사한 마크다운이나 일반 텍스트를 입력하세요.&#10;# 대제목&#10;## 소제목&#10;**굵은 글씨**와 - 목록 형태, > 인용구 등이 홈페이지에 세련되게 나타납니다." required class="w-full border border-slate-300 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-brand-gold font-mono text-xs leading-relaxed resize-y"></textarea>
           </div>
 
           <!-- Live Preview Pane -->
-          <div id="previewPane"
-            class="hidden border border-slate-300 rounded-2xl p-5 bg-white min-h-[280px] max-h-[400px] overflow-y-auto">
+          <div id="previewPane" class="hidden border border-slate-300 rounded-2xl p-5 bg-white min-h-[280px] max-h-[400px] overflow-y-auto">
             <div id="liveMarkdownPreview" class="markdown-body"></div>
           </div>
         </div>
 
         <div class="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
-          <button type="button" onclick="closeWriteModal()"
-            class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition">
+          <button type="button" onclick="closeWriteModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 font-bold transition">
             취소
           </button>
-          <button type="submit" id="savePostSubmitBtn"
-            class="px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-extrabold transition shadow flex items-center gap-2">
+          <button type="submit" id="savePostSubmitBtn" class="px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-extrabold transition shadow flex items-center gap-2">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span id="savePostBtnText">홈페이지에 즉시 발행</span>
           </button>
@@ -3921,10 +3605,8 @@ let fetchedNaverPhotos = [];
   <!-- ==========================================
        GITHUB SERVERLESS DATABASE GUIDE MODAL
        ========================================== -->
-  <div id="dbGuideModal"
-    class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div
-      class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+  <div id="dbGuideModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
@@ -3947,9 +3629,7 @@ let fetchedNaverPhotos = [];
             <span>동작 방식 (Git as a Database)</span>
           </h4>
           <p class="text-[12px] text-emerald-900/80">
-            관리자 모드에서 매물 상태를 변경하거나 AI 칼럼을 작성하면, Vercel 서버리스 API가 GitHub 저장소의 <code
-              class="font-bold text-emerald-800">data/board.json</code>과 <code
-              class="font-bold text-emerald-800">data/properties.json</code> 파일에 직접 자동 커밋(Commit)하여 영구 보존합니다.
+            관리자 모드에서 매물 상태를 변경하거나 AI 칼럼을 작성하면, Vercel 서버리스 API가 GitHub 저장소의 <code class="font-bold text-emerald-800">data/board.json</code>과 <code class="font-bold text-emerald-800">data/properties.json</code> 파일에 직접 자동 커밋(Commit)하여 영구 보존합니다.
           </p>
         </div>
 
@@ -3969,8 +3649,7 @@ let fetchedNaverPhotos = [];
         </p>
 
         <div class="pt-3 border-t border-slate-100 flex justify-end">
-          <button type="button" onclick="closeDbGuideModal()"
-            class="px-5 py-2.5 rounded-xl bg-brand-navy hover:bg-slate-800 text-white font-bold text-xs transition">
+          <button type="button" onclick="closeDbGuideModal()" class="px-5 py-2.5 rounded-xl bg-brand-navy hover:bg-slate-800 text-white font-bold text-xs transition">
             확인 및 닫기
           </button>
         </div>
@@ -3979,5 +3658,4 @@ let fetchedNaverPhotos = [];
   </div>
 
 </body>
-
 </html>
