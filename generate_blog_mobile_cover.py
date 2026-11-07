@@ -321,3 +321,4 @@ def create_mobile_cover_option_b():
 if __name__ == '__main__':
     create_mobile_cover_option_a()
     create_mobile_cover_option_b()
+
