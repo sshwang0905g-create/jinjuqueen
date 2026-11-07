@@ -68,8 +68,8 @@
     "lat": 35.1759,
     "lng": 128.1446,
     "exclusiveArea": 26.53,
-    "exclusiveAreaPyeong": 8.0,
-    "supplyArea": 57.0,
+    "exclusiveAreaPyeong": 8,
+    "supplyArea": 57,
     "supplyAreaPyeong": 17.2,
     "floor": "1층 (저층) / 총 16층",
     "direction": "북동향",
@@ -165,9 +165,9 @@
     "lat": 35.1775,
     "lng": 128.1453,
     "exclusiveArea": 257.8,
-    "exclusiveAreaPyeong": 78.0,
+    "exclusiveAreaPyeong": 78,
     "supplyArea": 257.8,
-    "supplyAreaPyeong": 78.0,
+    "supplyAreaPyeong": 78,
     "floor": "토지 (지목: 대 / 제1종일반주거지역)",
     "direction": "남향(추천 건축방향)",
     "rooms": 0,
@@ -202,7 +202,7 @@
     "buildingCoverageRatio": "60%",
     "floorAreaRatio": "100%",
     "landArea": 257.8,
-    "landAreaPyeong": 78.0
+    "landAreaPyeong": 78
   },
   {
     "id": "prop-1793889733246",
