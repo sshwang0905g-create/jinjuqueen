@@ -457,7 +457,9 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                     start_i = js_content.find('let PROPERTIES_DATA = [')
                     if start_i == -1:
                         start_i = js_content.find('const PROPERTIES_DATA = [')
-                    end_i = js_content.find('const NEWS_DATA = [')
+                    end_i = js_content.find('let NEWS_DATA = [')
+                    if end_i == -1:
+                        end_i = js_content.find('const NEWS_DATA = [')
                     if start_i != -1 and end_i != -1:
                         new_js_part = 'let PROPERTIES_DATA = ' + json.dumps(props, ensure_ascii=False, indent=2) + ';\n\n'
                         updated_js = js_content[:start_i] + new_js_part + js_content[end_i:]

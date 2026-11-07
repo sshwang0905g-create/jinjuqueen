@@ -87,8 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // 실시간 매물 로드 (관리자 등록 즉시 홈페이지 지도 및 목록 동기화)
 async function loadLiveProperties() {
   try {
-    const res = await fetch('/api/properties?t=' + Date.now());
-    if (res.ok) {
+    let res = null;
+    try {
+      res = await fetch('/api/properties?t=' + Date.now());
+    } catch (e) {
+      if (location.hostname !== 'localhost') {
+        try {
+          res = await fetch('http://localhost:8080/api/properties?t=' + Date.now());
+        } catch (err) {}
+      }
+    }
+
+    if (res && res.ok) {
       const data = await res.json();
       const props = data.properties || (Array.isArray(data) ? data : null);
       if (props && Array.isArray(props) && props.length > 0) {
@@ -100,7 +110,7 @@ async function loadLiveProperties() {
     }
     // Fallback to static data/properties.json file
     const fileRes = await fetch('data/properties.json?t=' + Date.now());
-    if (fileRes.ok) {
+    if (fileRes && fileRes.ok) {
       const fileProps = await fileRes.json();
       if (Array.isArray(fileProps) && fileProps.length > 0) {
         PROPERTIES_DATA = fileProps;

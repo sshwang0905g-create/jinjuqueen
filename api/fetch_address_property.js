@@ -102,6 +102,41 @@ const KNOWN_COMPLEXES = {
       parking_per_household: "1.1대 (총 248대)"
     }
   },
+  "센텀리버파크": {
+    category: "아파트",
+    aliases: ["센텀리버파크", "센텀", "리버파크", "191", "사들로 11", "사들로11", "4단지", "lh4단지"],
+    building_name: "진주혁신도시 센텀리버파크",
+    main_purpose: "공동주택(아파트)",
+    structure: "철근콘크리트구조",
+    total_floor: "지상 25층 / 지하 1층",
+    default_floor: "중층",
+    approval_date: "2013년 12월 24일",
+    exclusive_area: 84.92,
+    supply_area: 113.2,
+    parking_total: "총 868대 (세대당 1.17대)",
+    elevators: "동별 승강기 완비",
+    direction: "남향(거실기준)",
+    maintenance_fee: "약 15~18만원 (실비정산)",
+    rooms: 3,
+    bathrooms: 2,
+    jimok: "대",
+    usage_district: "제3종일반주거지역, 지구단위계획구역",
+    land_area: 49870.0,
+    road_condition: "중로1류(폭 20m~25m) 접함",
+    permission_zone: "해당없음 (자유거래 가능)",
+    public_location: "경남 진주시 충무공동",
+    base_address: "경남 진주시 충무공동 191 (센텀리버파크, 사들로 11)",
+    naver_complex: {
+      complex_name: "진주혁신도시센텀리버파크",
+      total_household: "742세대 (총 8개동)",
+      construction_company: "계룡건설산업(주)",
+      heating: "지역난방, 열병합",
+      parking_per_household: "1.17대 (총 868대)",
+      floor_range: "최저 18층 ~ 최고 25층",
+      batl_ratio: "176%",
+      btl_ratio: "14%"
+    }
+  },
   "중흥S클래스더센트럴": {
     category: "아파트",
     aliases: ["중흥s클래스", "중흥s-클래스", "중흥더센트럴", "중흥센트럴", "295", "영천강로 167"],
@@ -316,8 +351,13 @@ module.exports = async (req, res) => {
   let sigungu = '진주시';
   let dong = '충무공동';
 
-  const mDong = rawAddr.match(/([가-힣0-9]+(?:동|읍|면|리))/);
-  if (mDong) dong = mDong[1];
+  const cleanAddr = rawAddr.replace(/센텀리버파크|리버파크/g, '');
+  const mDong = cleanAddr.match(/([가-힣]{2,}(?:동|읍|면))/);
+  if (mDong && !/^\d+동$/.test(mDong[1])) {
+    dong = mDong[1];
+  } else {
+    dong = '충무공동';
+  }
   const publicLocation = `${sido} ${sigungu} ${dong}`.trim();
 
   const normText = fullText.toLowerCase().replace(/\s+/g, '');
