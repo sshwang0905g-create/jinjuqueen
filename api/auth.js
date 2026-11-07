@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 
   let body = req.body;
   if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) {}
+    try { body = JSON.parse(body); } catch (e) { }
   }
 
   const { password } = body || {};
