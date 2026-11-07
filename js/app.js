@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Markers and live sync
   try {
     updateMapMarkers();
-  } catch (err) {}
+  } catch (err) { }
 
   loadLiveProperties();
   loadLiveNews();
@@ -94,7 +94,7 @@ async function loadLiveProperties() {
       if (location.hostname !== 'localhost') {
         try {
           res = await fetch('http://localhost:8080/api/properties?t=' + Date.now());
-        } catch (err) {}
+        } catch (err) { }
       }
     }
 
@@ -209,7 +209,7 @@ function initOfficeMap() {
   if (officeMap) {
     try {
       officeMap.remove();
-    } catch (e) {}
+    } catch (e) { }
     officeMap = null;
   }
 
@@ -336,7 +336,7 @@ function updateMapMarkers() {
     });
 
     const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-    
+
     marker.on('click', () => {
       highlightPropertyCard(prop.id, true);
     });
@@ -532,8 +532,8 @@ function renderProperties() {
   container.innerHTML = list.map(prop => {
     const isFav = state.favorites.includes(prop.id);
     const badgeColor = prop.badge === '추천매물' ? 'bg-amber-100 text-amber-800 border-amber-200' :
-                       prop.badge === '급전세' ? 'bg-rose-100 text-rose-800 border-rose-200' :
-                       'bg-emerald-100 text-emerald-800 border-emerald-200';
+      prop.badge === '급전세' ? 'bg-rose-100 text-rose-800 border-rose-200' :
+        'bg-emerald-100 text-emerald-800 border-emerald-200';
 
     const isSold = prop.status === 'SOLD';
     const clickAction = isSold ? `openSoldNoticeModal('${prop.id}')` : `openPropertyModal('${prop.id}')`;
@@ -659,7 +659,7 @@ function onPropertyHover(propId) {
 
 function highlightPropertyCard(propId, shouldScroll = false) {
   state.selectedPropertyId = propId;
-  
+
   // Highlight map marker
   Object.keys(markersMap).forEach(id => {
     const el = markersMap[id].getElement();
@@ -1195,7 +1195,7 @@ function openNewsModal(newsId) {
   document.getElementById('newsModalTitle').textContent = item.title;
   document.getElementById('newsModalDate').textContent = item.date;
   document.getElementById('newsModalAuthor').textContent = `${item.author || '황선숙 대표'} · 조회수 ${item.views || 0}`;
-  
+
   const bodyEl = document.getElementById('newsModalBody');
   if (bodyEl) {
     if (window.marked && typeof window.marked.parse === 'function') {
@@ -1405,7 +1405,7 @@ async function handleListingSubmit(e) {
     const list = JSON.parse(localStorage.getItem('jinjuqueen_client_inquiries') || '[]');
     list.unshift(inquiryData);
     localStorage.setItem('jinjuqueen_client_inquiries', JSON.stringify(list));
-  } catch (err) {}
+  } catch (err) { }
 
   // 2. 서버 DB 자동 전송
   try {
@@ -1413,8 +1413,8 @@ async function handleListingSubmit(e) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(inquiryData)
-    }).catch(() => {});
-  } catch (err) {}
+    }).catch(() => { });
+  } catch (err) { }
 
   closeListingModal();
 
@@ -1556,7 +1556,7 @@ function closeSoldNoticeModal() {
 // ----------------------------------------------------
 function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-         || (window.innerWidth <= 768 && 'ontouchstart' in window);
+    || (window.innerWidth <= 768 && 'ontouchstart' in window);
 }
 
 function openPcContactModal(type, phone, bodyText) {

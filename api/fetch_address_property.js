@@ -761,9 +761,6 @@ module.exports = async (req, res) => {
   } else {
     suggestedDesc = `[${matched.building_name}]${specText} 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: ${matched.structure || '철근콘크리트'}, ${matched.parking_total || '주차 편리'}, 실내 채광 및 동간 간격 우수, 즉시 입주 및 잔금 일정 협의 가능.`;
   }
-  } else {
-    suggestedDesc = `[${matched.building_name}]${specText} 건축물대장 및 네이버 부동산 단지정보 확인 완료. 주구조: ${matched.structure || '철근콘크리트'}, ${matched.parking_total || '주차 편리'}, 실내 일조권 및 거주환경 우수, 즉시 입주 및 잔금 협의 가능.`;
-  }
 
   return res.status(200).json({
     success: true,
@@ -783,6 +780,7 @@ module.exports = async (req, res) => {
       structure: matched.structure,
       total_floor: matched.total_floor,
       target_floor: targetFloor,
+      raw_floor_num: unitInfo.rawFloor || '',
       approval_date: matched.approval_date,
       exclusive_area: matched.exclusive_area,
       supply_area: matched.supply_area,
