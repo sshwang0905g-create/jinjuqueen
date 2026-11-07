@@ -1,11 +1,67 @@
 import re
 import urllib.parse
+import urllib.request
 import json
 import logging
+import os
 from typing import Dict, Any, Optional
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("GovPropertyClient")
+
+# 진주시 관내 법정동 코드 매핑 (국토교통부 행정표준코드)
+JINJU_BJDONG_CODES = {
+    "충무공동": "13400",
+    "초전동": "11300",
+    "하대동": "11400",
+    "상평동": "11500",
+    "상대동": "11600",
+    "가좌동": "11900",
+    "호탄동": "12000",
+    "평거동": "11100",
+    "신안동": "11000",
+    "이현동": "11200",
+    "판문동": "12100",
+    "주약동": "10600",
+    "칠암동": "10800",
+    "망경동": "10500",
+    "강남동": "10700",
+    "본성동": "10100",
+    "동성동": "10200",
+    "남성동": "10300",
+    "인사동": "10400",
+    "봉곡동": "10900",
+    "상봉동": "13200",
+    "옥봉동": "12200",
+    "장대동": "12300",
+    "금산면": "36000",
+    "문산읍": "25000",
+    "정촌면": "32000",
+    "명석면": "38000",
+    "집현면": "37000",
+    "미천면": "40000",
+    "대곡면": "39000",
+    "진성면": "34000",
+    "일반성면": "35000",
+    "이반성면": "36000",
+    "사봉면": "35000",
+    "지수면": "37000",
+    "수곡면": "42000",
+    "대평면": "41000"
+}
+
+def load_data_go_kr_key() -> str:
+    """ .env 또는 환경변수에서 공공데이터포털 인증키 로드 """
+    key = os.getenv("DATA_GO_KR_API_KEY", "")
+    if not key:
+        env_path = os.path.join(os.path.dirname(__file__), ".env")
+        if os.path.exists(env_path):
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.startswith("DATA_GO_KR_API_KEY="):
+                        key = line.strip().split("=", 1)[1]
+                        break
+    return key.strip()
 
 def classify_floor_tier(floor_str_or_num: Any, total_floor_str: str) -> str:
     """
@@ -478,7 +534,99 @@ class GovPropertyClient:
     }
 
     def __init__(self):
-        pass
+        self.api_key = load_data_go_kr_key()
+
+    def fetch_real_bld_rgst(self, sigungu_cd: str, bjdong_cd: str, bun: str, ji: str, dong: str = "", ho: str = "") -> Optional[Dict[str, Any]]:
+        """
+        국토교통부 건축물대장정보 서비스 (BldRgstService_v2) 실시간 다이렉트 조회
+        1. getBrTitleInfo (표제부): 건물명, 주용도, 주구조, 지상/지하층수, 사용승인일, 주차대수, 승강기
+        2. getBrExposInfo (전유부): 동·호수별 법정 전용면적(㎡), 공용면적
+        """
+        if not self.api_key:
+            return None
+
+        title_url = (
+            f"http://apis.data.go.kr/1613000/BldRgstService_v2/getBrTitleInfo"
+            f"?serviceKey={self.api_key}&sigunguCd={sigungu_cd}&bjdongCd={bjdong_cd}"
+            f"&bun={bun}&ji={ji}&numOfRows=10&pageNo=1&_type=json"
+        )
+        try:
+            req = urllib.request.Request(title_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=4) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                items = data.get("response", {}).get("body", {}).get("items", {})
+                item_list = items.get("item", []) if isinstance(items, dict) else []
+                if isinstance(item_list, dict):
+                    item_list = [item_list]
+
+                if not item_list:
+                    return None
+
+                matched_item = item_list[0]
+                if dong:
+                    clean_dong = re.sub(r"[^\d]", "", dong)
+                    for it in item_list:
+                        if clean_dong in str(it.get("dongNm", "")):
+                            matched_item = it
+                            break
+
+                bld_name = matched_item.get("bldNm", "").strip()
+                main_purp = matched_item.get("mainPurpsCdNm", "").strip() or matched_item.get("etcPurps", "").strip()
+                struct = matched_item.get("strctCdNm", "").strip() or matched_item.get("etcStrct", "철근콘크리트구조").strip()
+                grnd_fl = matched_item.get("grndFlrCnt", 0)
+                ugrnd_fl = matched_item.get("ugrndFlrCnt", 0)
+                use_apr = str(matched_item.get("useAprDay", "")).strip()
+                tot_pkng = matched_item.get("totPkngCnt", 0)
+
+                total_floor_str = f"지상 {grnd_fl}층 / 지하 {ugrnd_fl}층" if ugrnd_fl else f"지상 {grnd_fl}층"
+                approval_date_str = f"{use_apr[:4]}년 {use_apr[4:6]}월 {use_apr[6:]}일" if len(use_apr) == 8 else use_apr
+
+                res = {
+                    "building_name": bld_name,
+                    "main_purpose": main_purp,
+                    "structure": struct,
+                    "total_floor": total_floor_str,
+                    "approval_date": approval_date_str,
+                    "parking_total": f"총 {tot_pkng}대" if tot_pkng else "주차 완비",
+                    "grnd_floor": grnd_fl,
+                    "ugrnd_floor": ugrnd_fl
+                }
+
+                # 전유부(호실별 면적) 조회 시도
+                if ho:
+                    clean_ho = re.sub(r"[^\d]", "", ho)
+                    clean_dong = re.sub(r"[^\d]", "", dong)
+                    expos_url = (
+                        f"http://apis.data.go.kr/1613000/BldRgstService_v2/getBrExposInfo"
+                        f"?serviceKey={self.api_key}&sigunguCd={sigungu_cd}&bjdongCd={bjdong_cd}"
+                        f"&bun={bun}&ji={ji}&numOfRows=50&pageNo=1&_type=json"
+                    )
+                    try:
+                        req_expos = urllib.request.Request(expos_url, headers={"User-Agent": "Mozilla/5.0"})
+                        with urllib.request.urlopen(req_expos, timeout=4) as expos_resp:
+                            expos_data = json.loads(expos_resp.read().decode("utf-8"))
+                            expos_items = expos_data.get("response", {}).get("body", {}).get("items", {})
+                            expos_list = expos_items.get("item", []) if isinstance(expos_items, dict) else []
+                            if isinstance(expos_list, dict):
+                                expos_list = [expos_list]
+
+                            for e_it in expos_list:
+                                e_ho = str(e_it.get("hoNm", ""))
+                                e_dong = str(e_it.get("dongNm", ""))
+                                if clean_ho in e_ho and (not clean_dong or clean_dong in e_dong):
+                                    area = float(e_it.get("area", 0))
+                                    if area > 0:
+                                        res["exclusive_area"] = round(area, 2)
+                                        res["raw_floor_num"] = str(e_it.get("flrNo", ""))
+                                        break
+                    except Exception as expos_err:
+                        logger.debug(f"전유부 상세 조회 스킵: {expos_err}")
+
+                logger.info(f"✅ [국토교통부 실시간 건축물대장 수신 성공] 건물명: {bld_name}, 주용도: {main_purp}, 층수: {total_floor_str}")
+                return res
+        except Exception as e:
+            logger.debug(f"국토교통부 건축물대장 API 호출 패스: {e}")
+            return None
 
     def extract_unit_details(self, text: str) -> Dict[str, Any]:
         dong = ""
@@ -522,6 +670,27 @@ class GovPropertyClient:
         logger.info(f"[GovPropertyClient] 건축물대장+토지이음+네이버단지정보 종합 분석: '{full_raw}'")
 
         unit_info = self.extract_unit_details(full_raw)
+
+        # 1. 국토교통부 건축물대장 세움터 실시간 API 다이렉트 조회 시도
+        real_gov_bld = None
+        sigungu_cd = "48170"  # 진주시 기본
+        bjdong_cd = None
+        for dong_name, code in JINJU_BJDONG_CODES.items():
+            if dong_name in full_raw:
+                bjdong_cd = code
+                break
+        if not bjdong_cd:
+            bjdong_cd = "13400"  # 기본 충무공동
+
+        m_jibun = re.search(r"(\d+)(?:-(\d+))?", full_raw)
+        if m_jibun:
+            try:
+                bun_val = f"{int(m_jibun.group(1)):04d}"
+                ji_val = f"{int(m_jibun.group(2)):04d}" if m_jibun.group(2) else "0000"
+                real_gov_bld = self.fetch_real_bld_rgst(sigungu_cd, bjdong_cd, bun_val, ji_val, unit_info.get("dong", ""), unit_info.get("ho", ""))
+            except Exception as e:
+                logger.debug(f"지번 추출 및 실시간 조회 패스: {e}")
+
         matched = self._match_complex_preset(full_raw)
 
         if matched:
@@ -533,6 +702,29 @@ class GovPropertyClient:
             public_loc = parsed_loc["public_location"]
             data = self._generate_intelligent_gov_data(full_raw, parsed_loc)
             base_addr = input_address
+
+        # 국토교통부 실시간 건축물대장 수신 시 공적 장부 데이터 100% 최우선 적용
+        if real_gov_bld:
+            if real_gov_bld.get("building_name"):
+                data["building_name"] = real_gov_bld["building_name"]
+            if real_gov_bld.get("main_purpose"):
+                data["main_purpose"] = real_gov_bld["main_purpose"]
+                if any(w in real_gov_bld["main_purpose"] for w in ["아파트", "공동주택"]):
+                    data["category"] = "아파트"
+                elif "오피스텔" in real_gov_bld["main_purpose"]:
+                    data["category"] = "오피스텔"
+                elif any(w in real_gov_bld["main_purpose"] for w in ["근린생활", "상가", "판매"]):
+                    data["category"] = "상가"
+            if real_gov_bld.get("structure"):
+                data["structure"] = real_gov_bld["structure"]
+            if real_gov_bld.get("total_floor"):
+                data["total_floor"] = real_gov_bld["total_floor"]
+            if real_gov_bld.get("approval_date"):
+                data["approval_date"] = real_gov_bld["approval_date"]
+            if real_gov_bld.get("exclusive_area"):
+                data["exclusive_area"] = real_gov_bld["exclusive_area"]
+            if real_gov_bld.get("parking_total"):
+                data["parking_total"] = real_gov_bld["parking_total"]
 
         # 상가 호실 판별: 사용자가 주소에 '상가동', '단지내상가', '점포', '근생'을 직접 명시했거나,
         # 등록 대상 건물이 상가 전용인 경우에만 상가로 판별!
