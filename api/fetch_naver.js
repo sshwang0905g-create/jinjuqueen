@@ -342,11 +342,42 @@ module.exports = async (req, res) => {
       allPhotos = [complexCover, ...allPhotos.filter(p => p !== complexCover)];
     }
 
+    // (8) Move-in date (입주가능일)
+    let moveInDate = '입주협의';
+    const midMatch = fullDecoded.match(/"(?:moveInDate|moveInPossibleDate)":"([^"]+)"/);
+    const mitMatch = fullDecoded.match(/"(?:moveInTypeName|moveInType)":"([^"]+)"/);
+    if (midMatch && midMatch[1]) {
+      const rawDate = midMatch[1].trim();
+      if (/^\d{8}$/.test(rawDate)) {
+        moveInDate = `${rawDate.substring(0, 4)}-${rawDate.substring(4, 6)}-${rawDate.substring(6, 8)}`;
+      } else {
+        moveInDate = rawDate;
+      }
+    } else if (mitMatch && mitMatch[1]) {
+      const mName = mitMatch[1].trim();
+      if (mName.includes('즉시')) moveInDate = '즉시입주';
+      else if (mName.includes('협의')) moveInDate = '입주협의';
+      else moveInDate = mName;
+    } else {
+      const combinedDesc = `${detailDesc} ${featureDesc}`;
+      if (combinedDesc.includes('즉시입주') || combinedDesc.includes('즉시 입주') || combinedDesc.includes('공실')) {
+        moveInDate = '즉시입주';
+      } else if (combinedDesc.includes('협의입주') || combinedDesc.includes('입주협의') || combinedDesc.includes('협의 입주') || combinedDesc.includes('입주 협의')) {
+        moveInDate = '입주협의';
+      } else {
+        const dateMatch = combinedDesc.match(/(\d{4}[년.-]\s*\d{1,2}[월.-]\s*(?:\d{1,2}[일]?)?|\d{2}년\s*\d{1,2}월)/);
+        if (dateMatch) {
+          moveInDate = `${dateMatch[1].trim()} 협의`;
+        }
+      }
+    }
+
     return res.status(200).json({
       success: true,
       articleNo: atclNo,
       title,
       priceFormatted,
+      moveInDate,
       deposit,
       monthlyRent: monthly,
       category,

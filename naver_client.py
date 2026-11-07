@@ -487,13 +487,43 @@ class NaverRealEstateClient:
                         fallback_card = "images/complex_cards/기본_아파트_클린카드.jpg"
                     photos = [fallback_card] + complex_photos
 
-            logger.info(f"[매물 파싱 완료] {atcl_no} | {title} | {price_formatted} | 사진 {len(photos)}장 (실내실사진: {len(room_photos)}장)")
+            # 입주가능일 파싱
+            move_in_parsed = "입주협의"
+            m_mid = re.search(r'"(?:moveInDate|moveInPossibleDate)":"([^"]+)"', full_decoded)
+            m_mit = re.search(r'"(?:moveInTypeName|moveInType)":"([^"]+)"', full_decoded)
+            if m_mid and m_mid.group(1):
+                raw_d = m_mid.group(1).strip()
+                if re.match(r'^\d{8}$', raw_d):
+                    move_in_parsed = f"{raw_d[0:4]}-{raw_d[4:6]}-{raw_d[6:8]}"
+                else:
+                    move_in_parsed = raw_d
+            elif m_mit and m_mit.group(1):
+                t_name = m_mit.group(1).strip()
+                if "즉시" in t_name:
+                    move_in_parsed = "즉시입주"
+                elif "협의" in t_name:
+                    move_in_parsed = "입주협의"
+                else:
+                    move_in_parsed = t_name
+            else:
+                combined_desc = f"{detail_desc} {feature_desc}"
+                if any(k in combined_desc for k in ["즉시입주", "즉시 입주", "공실"]):
+                    move_in_parsed = "즉시입주"
+                elif any(k in combined_desc for k in ["협의입주", "입주협의", "협의 입주", "입주 협의"]):
+                    move_in_parsed = "입주협의"
+                else:
+                    m_date = re.search(r'(\d{4}[년.-]\s*\d{1,2}[월.-]\s*(?:\d{1,2}[일]?)?|\d{2}년\s*\d{1,2}월)', combined_desc)
+                    if m_date:
+                        move_in_parsed = f"{m_date.group(1).strip()} 협의"
+
+            logger.info(f"[매물 파싱 완료] {atcl_no} | {title} | {price_formatted} | 입주: {move_in_parsed} | 사진 {len(photos)}장 (실내실사진: {len(room_photos)}장)")
 
             return {
                 "success": True,
                 "articleNo": atcl_no,
                 "title": title,
                 "priceFormatted": price_formatted,
+                "moveInDate": move_in_parsed,
                 "deposit": deposit,
                 "monthlyRent": monthly,
                 "category": category,
