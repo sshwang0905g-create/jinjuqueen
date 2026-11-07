@@ -9,7 +9,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "업무시설(오피스텔) 및 제1·2종근린생활시설",
     structure: "철근콘크리트구조",
     total_floor: "지상 20층 / 지하 4층",
-    default_floor: "10층",
+    default_floor: "중층",
     approval_date: "2017-02-23",
     exclusive_area: 38.65,
     supply_area: 84.12,
@@ -34,7 +34,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "공동주택(아파트) 및 부대복리시설",
     structure: "철근콘크리트구조",
     total_floor: "지상 25층 / 지하 1층",
-    default_floor: "15층",
+    default_floor: "중층",
     approval_date: "2018-09-28",
     exclusive_area: 84.95,
     supply_area: 114.72,
@@ -59,7 +59,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "공동주택(아파트)",
     structure: "철근콘크리트구조",
     total_floor: "지상 24층 / 지하 2층",
-    default_floor: "12층",
+    default_floor: "중층",
     approval_date: "2020-08-31",
     exclusive_area: 84.98,
     supply_area: 112.56,
@@ -84,7 +84,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "공동주택(아파트)",
     structure: "철근콘크리트구조",
     total_floor: "지상 25층 / 지하 1층",
-    default_floor: "16층",
+    default_floor: "중층",
     approval_date: "2015-10-29",
     exclusive_area: 84.88,
     supply_area: 111.45,
@@ -109,7 +109,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "지식산업센터 및 제1·2종근린생활시설",
     structure: "철골철근콘크리트구조",
     total_floor: "지상 19층 / 지하 3층",
-    default_floor: "2층",
+    default_floor: "저층",
     approval_date: "2017-11-15",
     exclusive_area: 68.42,
     supply_area: 142.15,
@@ -154,35 +154,58 @@ const KNOWN_COMPLEXES = {
   }
 };
 
+function classifyFloorTier(floorInput, totalFloorStr) {
+  try {
+    const mTot = String(totalFloorStr).match(/지상\s*(\d+)/) || String(totalFloorStr).match(/(\d+)\s*층/);
+    const totalFl = mTot ? parseInt(mTot[1], 10) : 20;
+
+    const mCur = String(floorInput).match(/(\d+)/);
+    if (!mCur) return '중층';
+    const curFl = parseInt(mCur[1], 10);
+
+    if (String(floorInput).includes('지하')) return '지하층';
+    if (totalFl <= 3) return `${curFl}층`;
+
+    const t1 = totalFl / 3.0;
+    const t2 = totalFl * (2.0 / 3.0);
+
+    if (curFl <= t1) return '저층';
+    if (curFl <= t2) return '중층';
+    return '고층';
+  } catch (e) {
+    return '중층';
+  }
+}
+
 function extractUnitDetails(text) {
   let dong = '';
   let ho = '';
-  let floor = '';
+  let rawFloor = '';
 
   const mDong = text.match(/(\d+)\s*동/);
   if (mDong) dong = `${mDong[1]}동`;
 
   const mFloor = text.match(/((?:지하\s*)?\d+)\s*층/);
-  if (mFloor) floor = `${mFloor[1].replace(/\s+/g, '')}층`;
+  if (mFloor) rawFloor = `${mFloor[1].replace(/\s+/g, '')}층`;
 
   const mHo = text.match(/([A-Za-z0-9\-]+)\s*호/);
   if (mHo) {
     ho = `${mHo[1]}호`;
     const rawHo = mHo[1];
-    if (!floor && /^\d+$/.test(rawHo)) {
+    if (!rawFloor && /^\d+$/.test(rawHo)) {
       const num = parseInt(rawHo, 10);
       if (num >= 100) {
-        floor = `${Math.floor(num / 100)}층`;
+        rawFloor = `${Math.floor(num / 100)}층`;
       } else if (num >= 1 && num <= 99) {
-        floor = `${num}층`;
+        rawFloor = `${num}층`;
       }
-    } else if (!floor && (rawHo.toLowerCase().includes('b') || text.includes('지하'))) {
-      floor = '지하 1층';
+    } else if (!rawFloor && (rawHo.toLowerCase().includes('b') || text.includes('지하'))) {
+      rawFloor = '지하 1층';
     }
   }
 
   const unitSummary = [dong, ho].filter(Boolean).join(' ');
-  return { dong, ho, floor, unitSummary };
+  return { dong, ho, rawFloor, unitSummary };
 }
 
 module.exports = async (req, res) => {
@@ -209,7 +232,6 @@ module.exports = async (req, res) => {
 
   const unitInfo = extractUnitDetails(fullText);
 
-  // Location hierarchy
   let sido = '경남';
   let sigungu = '진주시';
   let dong = '충무공동';
@@ -218,7 +240,6 @@ module.exports = async (req, res) => {
   if (mDong) dong = mDong[1];
   const publicLocation = `${sido} ${sigungu} ${dong}`.trim();
 
-  // Match preset
   const normAddr = rawAddr.toLowerCase().replace(/\s+/g, '');
   let matched = null;
   for (const [key, info] of Object.entries(KNOWN_COMPLEXES)) {
@@ -237,7 +258,7 @@ module.exports = async (req, res) => {
     let usageDistrict = '제2종일반주거지역, 지구단위계획구역';
     let mainPurpose = '공동주택(아파트)';
     let totalFloor = '지상 15층 / 지하 1층';
-    let defaultFloor = '8층';
+    let defaultFloor = '중층';
     let approvalDate = '2018-05-12';
     let exclusiveArea = 84.85;
     let supplyArea = 112.40;
@@ -261,7 +282,7 @@ module.exports = async (req, res) => {
       cat = '상가';
       mainPurpose = '제1·2종근린생활시설 및 일반업무시설';
       totalFloor = '지상 7층 / 지하 2층';
-      defaultFloor = '1층';
+      defaultFloor = '저층';
       approvalDate = '2017-06-20';
       exclusiveArea = 45.50;
       supplyArea = 88.20;
@@ -272,7 +293,7 @@ module.exports = async (req, res) => {
       cat = lower.includes('오피스텔') ? '오피스텔' : '원룸/투룸';
       mainPurpose = cat === '오피스텔' ? '업무시설(오피스텔)' : '단독주택(다가구주택)';
       totalFloor = '지상 10층 / 지하 2층';
-      defaultFloor = '3층';
+      defaultFloor = '중층';
       approvalDate = '2019-03-15';
       exclusiveArea = 29.80;
       supplyArea = 55.40;
@@ -307,7 +328,10 @@ module.exports = async (req, res) => {
     };
   }
 
-  const targetFloor = unitInfo.floor || matched.default_floor || '로열층';
+  // 대표님 요청: 저층/중층/고층 자동 변환
+  const totalFloorStr = matched.total_floor || '20층';
+  const targetFloor = unitInfo.rawFloor ? classifyFloorTier(unitInfo.rawFloor, totalFloorStr) : (matched.default_floor || '중층');
+
   const exArea = matched.exclusive_area || 84.85;
   const pyeong = Math.round((exArea / 3.305785) * 10) / 10;
   const suggestedTitle = `${matched.building_name} ${pyeong}평형 (${targetFloor})`;
@@ -353,6 +377,6 @@ module.exports = async (req, res) => {
       road_condition: matched.road_condition,
       permission_zone: matched.permission_zone
     },
-    notice: '동·호수 입력에 따라 전유부 해당층수가 자동 산출되었습니다. 상세 지번과 동·호수는 [적요란]에만 안전하게 기록됩니다.'
+    notice: `해당층수가 공인중개사법 권장 표기인 [${targetFloor}]으로 자동 입력되었습니다. 모든 항목은 마우스 클릭으로 언제든 수정하실 수 있습니다.`
   });
 };

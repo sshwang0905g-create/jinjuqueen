@@ -7,13 +7,47 @@ from typing import Dict, Any, Optional
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("GovPropertyClient")
 
+def classify_floor_tier(floor_str_or_num: Any, total_floor_str: str) -> str:
+    """
+    공인중개사법 권장: 해당 층수를 '저층', '중층', '고층'으로 자동 변환
+    총 층수 대비 3분할(1/3 기준) 자동 분류
+    """
+    try:
+        # 총 층수 파싱 (예: '지상 25층 / 지하 1층' -> 25)
+        m_tot = re.search(r"지상\s*(\d+)", str(total_floor_str)) or re.search(r"(\d+)\s*층", str(total_floor_str))
+        total_fl = int(m_tot.group(1)) if m_tot else 20
+
+        # 해당 층수 파싱 (예: '14층' -> 14, 14 -> 14)
+        m_cur = re.search(r"(\d+)", str(floor_str_or_num))
+        if not m_cur:
+            return "중층"
+        cur_fl = int(m_cur.group(1))
+
+        if "지하" in str(floor_str_or_num):
+            return "지하층"
+
+        if total_fl <= 3:
+            return f"{cur_fl}층"
+
+        t1 = total_fl / 3.0
+        t2 = total_fl * (2.0 / 3.0)
+
+        if cur_fl <= t1:
+            return "저층"
+        elif cur_fl <= t2:
+            return "중층"
+        else:
+            return "고층"
+    except Exception:
+        return "중층"
+
+
 class GovPropertyClient:
     """
     공인중개사법 제18조의2(중개대상물의 표시·광고) 법정 필수 고지사항 자동화 클라이언트
-    - 기본 주소(지번/도로명/단지명) + 상세 주소(동·호수)를 정밀 분석
-    - 표제부(건물전체, 사용승인일, 총층수, 주차대수, 주구조, 대지면적)
-    - 전유부(동·호수 기반 해당층수, 호별 전용면적, 방향, 관리비)
-    - 토지이음(지목, 용도지역, 도로접면, 규제사항)
+    - 기본 주소(지번/도로명/단지명) + 상세 주소(동·호수) 정밀 분석
+    - 해당 층수: '저층', '중층', '고층' 자동 변환 및 자유 수정 지원
+    - 표제부/전유부 공공데이터 자동 채움 (모든 항목 자유 수정 가능)
     - 상세주소(동·호수, 지번)는 관리자 적요란에만 기록하고 일반 화면에는 100% 비공개 마스킹 처리
     """
 
@@ -25,7 +59,7 @@ class GovPropertyClient:
             "main_purpose": "업무시설(오피스텔) 및 제1·2종근린생활시설",
             "structure": "철근콘크리트구조",
             "total_floor": "지상 20층 / 지하 4층",
-            "default_floor": "10층",
+            "default_floor": "중층",
             "approval_date": "2017-02-23",
             "exclusive_area": 38.65,
             "supply_area": 84.12,
@@ -50,7 +84,7 @@ class GovPropertyClient:
             "main_purpose": "공동주택(아파트) 및 부대복리시설",
             "structure": "철근콘크리트구조",
             "total_floor": "지상 25층 / 지하 1층",
-            "default_floor": "15층",
+            "default_floor": "중층",
             "approval_date": "2018-09-28",
             "exclusive_area": 84.95,
             "supply_area": 114.72,
@@ -75,7 +109,7 @@ class GovPropertyClient:
             "main_purpose": "공동주택(아파트)",
             "structure": "철근콘크리트구조",
             "total_floor": "지상 24층 / 지하 2층",
-            "default_floor": "12층",
+            "default_floor": "중층",
             "approval_date": "2020-08-31",
             "exclusive_area": 84.98,
             "supply_area": 112.56,
@@ -100,7 +134,7 @@ class GovPropertyClient:
             "main_purpose": "공동주택(아파트)",
             "structure": "철근콘크리트구조",
             "total_floor": "지상 25층 / 지하 1층",
-            "default_floor": "16층",
+            "default_floor": "중층",
             "approval_date": "2015-10-29",
             "exclusive_area": 84.88,
             "supply_area": 111.45,
@@ -125,7 +159,7 @@ class GovPropertyClient:
             "main_purpose": "지식산업센터 및 제1·2종근린생활시설",
             "structure": "철골철근콘크리트구조",
             "total_floor": "지상 19층 / 지하 3층",
-            "default_floor": "2층",
+            "default_floor": "저층",
             "approval_date": "2017-11-15",
             "exclusive_area": 68.42,
             "supply_area": 142.15,
@@ -176,68 +210,51 @@ class GovPropertyClient:
     def extract_unit_details(self, text: str) -> Dict[str, Any]:
         """
         상세주소(동/호수, 층)에서 전유부 층수 및 동·호수 정보 정밀 추출
-        예: '105동 1402호' -> dong='105동', ho='1402호', floor='14층'
-        예: '201호' -> floor='2층', ho='201호'
-        예: '3층 305호' -> floor='3층', ho='305호'
         """
         dong = ""
         ho = ""
-        floor = ""
+        raw_floor = ""
 
-        # 1. 동(棟) 추출
         m_dong = re.search(r"(\d+)\s*동", text)
         if m_dong:
             dong = f"{m_dong.group(1)}동"
 
-        # 2. 층 직접 표기 추출 (예: 5층, 지하1층)
         m_floor_direct = re.search(r"((?:지하\s*)?\d+)\s*층", text)
         if m_floor_direct:
-            floor = f"{m_floor_direct.group(1).replace(' ', '')}층"
+            raw_floor = f"{m_floor_direct.group(1).replace(' ', '')}층"
 
-        # 3. 호(號) 추출 및 호수로부터 전유부 층수 자동 계산
         m_ho = re.search(r"([A-Za-z0-9\-]+)\s*호", text)
         if m_ho:
             ho = f"{m_ho.group(1)}호"
             raw_ho = m_ho.group(1)
-            # 만약 층이 명시되지 않았다면 호수 번호에서 층수 계산
-            if not floor and raw_ho.isdigit():
+            if not raw_floor and raw_ho.isdigit():
                 num = int(raw_ho)
                 if num >= 100:
-                    # 1402 -> 14층, 809 -> 8층, 205 -> 2층, 101 -> 1층, 2401 -> 24층
-                    calc_fl = num // 100
-                    floor = f"{calc_fl}층"
+                    raw_floor = f"{num // 100}층"
                 elif 1 <= num <= 99:
-                    floor = f"{num}층"
-            elif not floor and ("b" in raw_ho.lower() or "지하" in text):
-                floor = "지하 1층"
+                    raw_floor = f"{num}층"
+            elif not raw_floor and ("b" in raw_ho.lower() or "지하" in text):
+                raw_floor = "지하 1층"
 
         unit_summary = f"{dong} {ho}".strip() if (dong or ho) else ""
         return {
             "dong": dong,
             "ho": ho,
-            "floor": floor,
+            "raw_floor": raw_floor,
             "unit_summary": unit_summary
         }
 
     def lookup_address_property(self, input_address: str, detail_input: str = "") -> Dict[str, Any]:
-        """
-        주소(지번/도로명/단지명)와 상세주소(동·호수)를 종합 분석하여
-        표제부 + 전유부 데이터를 완벽 매핑합니다.
-        """
         full_raw = f"{input_address} {detail_input}".strip()
         if not full_raw:
             return {"success": False, "message": "주소를 입력해 주세요."}
 
         logger.info(f"[GovPropertyClient] 상세 공공데이터 분석 요청: '{full_raw}'")
 
-        # 1. 상세주소(동/호수/층) 정밀 파싱
         unit_info = self.extract_unit_details(full_raw)
-        
-        # 2. 시도, 시군구, 읍면동 추출 (일반 공개용 주소)
         parsed_loc = self._extract_location_hierarchy(input_address)
         public_loc = parsed_loc["public_location"]
 
-        # 3. 단지/건물 프리셋 매칭
         matched = self._match_complex_preset(input_address)
         if matched:
             data = dict(matched)
@@ -246,13 +263,16 @@ class GovPropertyClient:
             data = self._generate_intelligent_gov_data(input_address, parsed_loc)
             base_addr = input_address
 
-        # 4. 전유부(동/호수) 정보 주입
-        if unit_info["floor"]:
-            data["target_floor"] = unit_info["floor"]
-        elif "default_floor" in data:
-            data["target_floor"] = data["default_floor"]
+        # 층수를 '저층', '중층', '고층'으로 자동 변환 (대표님 요청사항)
+        total_fl_str = data.get("total_floor", "20층")
+        if unit_info["raw_floor"]:
+            tier_floor = classify_floor_tier(unit_info["raw_floor"], total_fl_str)
+        else:
+            tier_floor = data.get("default_floor", "중층")
 
-        # 비공개 상세주소 생성 (동/호수가 포함된 실제 주소)
+        data["target_floor"] = tier_floor
+        data["raw_floor_num"] = unit_info["raw_floor"]
+
         actual_detail_address = f"{base_addr} {unit_info['unit_summary']}".strip() if unit_info['unit_summary'] else full_raw
 
         data["detail_address"] = actual_detail_address
@@ -307,7 +327,7 @@ class GovPropertyClient:
         main_purpose = "공동주택(아파트)"
         structure = "철근콘크리트구조"
         total_floor = "지상 15층 / 지하 1층"
-        default_floor = "8층"
+        default_floor = "중층"
         approval_date = "2018-05-12"
         exclusive_area = 84.85
         supply_area = 112.40
@@ -345,7 +365,7 @@ class GovPropertyClient:
             main_purpose = "제1·2종근린생활시설 및 일반업무시설"
             structure = "철근콘크리트구조"
             total_floor = "지상 7층 / 지하 2층"
-            default_floor = "1층"
+            default_floor = "저층"
             approval_date = "2017-06-20"
             exclusive_area = 45.50
             supply_area = 88.20
@@ -365,7 +385,7 @@ class GovPropertyClient:
             main_purpose = "업무시설(오피스텔)" if category == "오피스텔" else "단독주택(다가구주택)"
             structure = "철근콘크리트구조"
             total_floor = "지상 10층 / 지하 2층" if category == "오피스텔" else "지상 4층"
-            default_floor = "3층"
+            default_floor = "중층"
             approval_date = "2019-03-15"
             exclusive_area = 29.80
             supply_area = 55.40
@@ -411,16 +431,9 @@ class GovPropertyClient:
         ex_area = data.get("exclusive_area", 84.85)
         pyeong = round(ex_area / 3.305785, 1)
 
-        target_fl = data.get("target_floor", "로열층")
-        unit_str = unit_info.get("unit_summary", "")
+        target_fl = data.get("target_floor", "중층")
+        suggested_title = f"{bname} {pyeong}평형 ({target_fl})"
 
-        # 매물명 추천 (예: 대방노블랜드 34.7평형 14층)
-        if unit_str:
-            suggested_title = f"{bname} {pyeong}평형 ({target_fl})"
-        else:
-            suggested_title = f"{bname} {pyeong}평형 ({target_fl})"
-
-        # 비공개 적요란 메모 생성 (동·호수 및 지번이 완벽 보존됨)
         detail_addr = data.get("detail_address", raw_address)
         admin_memo = f"[상세주소] {detail_addr} / 건축물대장 및 토지이음 대조완료"
 
@@ -428,9 +441,7 @@ class GovPropertyClient:
             "success": True,
             "source": "gov_registry",
             "raw_address": raw_address,
-            # [보안 핵심] 일반 화면(방문자) 공개 주소: 지번/동호수 절대 제외!
             "public_location": data.get("public_location", "경남 진주시 충무공동"),
-            # [보안 핵심] 관리자 전용 적요란 (동·호수 및 지번 영구 보존)
             "detail_address": detail_addr,
             "admin_memo": admin_memo,
             "unit_info": unit_info,
@@ -442,7 +453,9 @@ class GovPropertyClient:
                 "main_purpose": data.get("main_purpose"),
                 "structure": data.get("structure"),
                 "total_floor": data.get("total_floor"),
+                # 대표님 요청: 저층/중층/고층 표기
                 "target_floor": target_fl,
+                "raw_floor_num": data.get("raw_floor_num", ""),
                 "approval_date": data.get("approval_date"),
                 "exclusive_area": data.get("exclusive_area"),
                 "supply_area": data.get("supply_area"),
@@ -463,7 +476,7 @@ class GovPropertyClient:
                 "road_condition": data.get("road_condition", "소로접함"),
                 "permission_zone": data.get("permission_zone", "해당없음 (자유거래 가능)")
             },
-            "notice": "동·호수 기반으로 전유부 층수가 자동 계산되었습니다. 실제 상세지번과 동·호수는 [적요란]에만 기록되며 일반 방문자 화면에는 100% 비공개 마스킹됩니다."
+            "notice": f"해당층수가 공인중개사법 권장 표기인 [{target_fl}]으로 자동 입력되었습니다. 필요 시 마우스 클릭으로 언제든 수정하실 수 있습니다."
         }
 
 

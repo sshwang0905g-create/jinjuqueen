@@ -319,6 +319,14 @@
       <!-- Detail Form -->
       <form id="propRegisterForm" onsubmit="handleSaveProperty(event)" class="space-y-4 text-xs sm:text-sm">
         <input type="hidden" id="editPropId" value="">
+        <!-- 자유 수정 가능 안내 배너 -->
+        <div class="px-3.5 py-2 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between text-[11px] text-slate-700 font-medium">
+          <span class="flex items-center gap-1.5 font-bold text-slate-800">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>자동 완성된 모든 항목(면적·층수·가격·설명 등)은 직접 클릭하여 자유롭게 수정 가능합니다.</span>
+          </span>
+          <span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-extrabold">✏️ 자유 수정</span>
+        </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="newPropCategory">매물 유형 (카테고리)</label>
@@ -483,12 +491,31 @@
               </div>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">해당층 / 총층 *</label>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
+                <!-- 저/중/고 원클릭 퀵 버튼 -->
+                <div class="inline-flex rounded-lg border border-blue-200 p-0.5 bg-blue-50/80 gap-0.5">
+                  <button type="button" onclick="setFloorTier('저층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setFloorTier('중층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setFloorTier('고층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                </div>
+              </div>
               <div class="flex items-center gap-1">
-                <input type="text" id="newPropTargetFloor" placeholder="15층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
-                <span class="text-slate-400">/</span>
+                <input type="text" id="newPropTargetFloor" list="floorTierList" placeholder="중층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-black text-blue-900 focus:ring-2 focus:ring-blue-500">
+                <span class="text-slate-400 font-bold">/</span>
                 <input type="text" id="newPropTotalFloor" placeholder="25층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
               </div>
+              <datalist id="floorTierList">
+                <option value="저층">
+                <option value="중층">
+                <option value="고층">
+                <option value="로열층">
+                <option value="탑층">
+                <option value="1층">
+                <option value="2층">
+                <option value="3층">
+                <option value="지하층">
+              </datalist>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">방 수 / 욕실 수</label>
@@ -544,10 +571,18 @@
               </div>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">해당층 / 총층 *</label>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
+                <!-- 상가 저/중/고 퀵 버튼 -->
+                <div class="inline-flex rounded-lg border border-amber-200 p-0.5 bg-amber-50/80 gap-0.5">
+                  <button type="button" onclick="setCommFloorTier('저층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setCommFloorTier('중층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setCommFloorTier('고층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                </div>
+              </div>
               <div class="flex items-center gap-1">
-                <input type="text" id="newPropCommTargetFloor" placeholder="5층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
-                <span class="text-slate-400">/</span>
+                <input type="text" id="newPropCommTargetFloor" list="floorTierList" placeholder="1층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-black text-amber-900 focus:ring-2 focus:ring-amber-500">
+                <span class="text-slate-400 font-bold">/</span>
                 <input type="text" id="newPropCommTotalFloor" placeholder="6층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
               </div>
             </div>
@@ -1958,6 +1993,16 @@ let fetchedNaverPhotos = [];
       }
     }
 
+    function setFloorTier(tier) {
+      const el = document.getElementById('newPropTargetFloor');
+      if (el) el.value = tier;
+    }
+
+    function setCommFloorTier(tier) {
+      const el = document.getElementById('newPropCommTargetFloor');
+      if (el) el.value = tier;
+    }
+
     function switchPropInputMode(mode) {
       const tabAddr = document.getElementById('tabModeAddress');
       const tabNaver = document.getElementById('tabModeNaver');
@@ -2129,9 +2174,9 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropCommExArea')) document.getElementById('newPropCommExArea').value = b.exclusive_area || 45.5;
             if (document.getElementById('newPropCommSpArea')) document.getElementById('newPropCommSpArea').value = b.supply_area || 88.2;
             calcCommPyeong();
-            const tf = (b.target_floor || '1층').replace(/층/g, '');
+            const commTf = (b.target_floor || '1층').endsWith('층') ? b.target_floor : (b.target_floor + '층');
             const tot = (b.total_floor || '7층').split('/')[0].replace(/지상|층|\s/g, '');
-            if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = tf + '층';
+            if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = commTf;
             if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = (tot || '7') + '층';
             if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = b.direction || '남향(주출입구기준)';
             if (document.getElementById('newPropCommMaintenance')) document.getElementById('newPropCommMaintenance').value = b.maintenance_fee || '약 10~15만원 (부가세 별도)';
@@ -2141,9 +2186,9 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropExArea')) document.getElementById('newPropExArea').value = b.exclusive_area || 84.85;
             if (document.getElementById('newPropSpArea')) document.getElementById('newPropSpArea').value = b.supply_area || 112.4;
             calcResPyeong();
-            const tf = (b.target_floor || '15층').replace(/층/g, '');
+            const tf = (b.target_floor || '중층').endsWith('층') ? b.target_floor : (b.target_floor + '층');
             const tot = (b.total_floor || '25층').split('/')[0].replace(/지상|층|\s/g, '');
-            if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = tf + '층';
+            if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = tf;
             if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = (tot || '25') + '층';
             if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = b.rooms !== undefined ? b.rooms : 3;
             if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = b.bathrooms !== undefined ? b.bathrooms : 2;
@@ -2166,8 +2211,9 @@ let fetchedNaverPhotos = [];
                 <span>건축물대장 및 토지이음 공공데이터 조회 성공!</span>
               </div>
               <div class="text-[11px] text-emerald-900 leading-relaxed pl-5.5">
-                • <strong>공인중개사법 법정 필수항목 자동 완성</strong>: 면적, 층수, 사용승인일, 주차, 지목, 용도지역이 모두 입력되었습니다.<br>
-                • <strong>상세주소 비공개 보안 준수</strong>: 실제 지번/도로명은 [적요란]에만 기록되며, 일반 방문자에게는 [${data.public_location}]으로만 노출됩니다.
+                • <strong>층수 표기</strong>: 공인중개사법 권장에 따라 해당층이 [<strong>${(b.target_floor || '중층')}</strong>]으로 자동 표기되었습니다. (상단 [저/중/고] 퀵 버튼 또는 마우스 클릭으로 언제든 수정 가능)<br>
+                • <strong>자유 수정 가능</strong>: 자동 완성된 모든 입력값(면적, 층수, 가격, 설명 등)은 마우스로 클릭하여 원하시는 대로 직접 수정하실 수 있습니다.<br>
+                • <strong>상세주소 비공개 준수</strong>: 실제 상세 동·호수 및 지번은 [적요란]에만 기록되며, 일반 방문객에게는 [${data.public_location}]으로만 노출됩니다.
               </div>
             `;
             if (window.lucide) lucide.createIcons();
