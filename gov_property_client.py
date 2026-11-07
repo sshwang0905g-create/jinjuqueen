@@ -10,11 +10,14 @@ logger = logging.getLogger("GovPropertyClient")
 def classify_floor_tier(floor_str_or_num: Any, total_floor_str: str) -> str:
     """
     공인중개사법 권장: 해당 층수를 '저층', '중층', '고층'으로 자동 변환
-    총 층수 대비 3분할(1/3 기준) 자동 분류
+    실무 기준 적용:
+    - 20~25층 이상 아파트: 1~5층(저층), 6~19층(중층 - 예: 7층은 중층), 20층 이상(고층)
+    - 10~19층 건물: 1~3층(저층), 4~13층(중층), 14층 이상(고층)
+    - 6~9층 건물: 1~2층(저층), 3~6층(중층), 7층 이상(고층)
     """
     try:
         m_tot = re.search(r"지상\s*(\d+)", str(total_floor_str)) or re.search(r"(\d+)\s*층", str(total_floor_str))
-        total_fl = int(m_tot.group(1)) if m_tot else 20
+        total_fl = int(m_tot.group(1)) if m_tot else 25
 
         m_cur = re.search(r"(\d+)", str(floor_str_or_num))
         if not m_cur:
@@ -27,15 +30,34 @@ def classify_floor_tier(floor_str_or_num: Any, total_floor_str: str) -> str:
         if total_fl <= 3:
             return f"{cur_fl}층"
 
-        t1 = total_fl / 3.0
-        t2 = total_fl * (2.0 / 3.0)
-
-        if cur_fl <= t1:
-            return "저층"
-        elif cur_fl <= t2:
-            return "중층"
+        if total_fl >= 20:
+            if cur_fl <= 5:
+                return "저층"
+            elif cur_fl >= total_fl - 5:
+                return "고층"
+            else:
+                return "중층"
+        elif total_fl >= 10:
+            if cur_fl <= 3:
+                return "저층"
+            elif cur_fl >= total_fl - 3:
+                return "고층"
+            else:
+                return "중층"
+        elif total_fl >= 6:
+            if cur_fl <= 2:
+                return "저층"
+            elif cur_fl >= total_fl - 1:
+                return "고층"
+            else:
+                return "중층"
         else:
-            return "고층"
+            if cur_fl == 1:
+                return "저층"
+            elif cur_fl == total_fl:
+                return "고층"
+            else:
+                return "중층"
     except Exception:
         return "중층"
 

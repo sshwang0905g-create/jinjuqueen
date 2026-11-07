@@ -272,7 +272,7 @@ const KNOWN_COMPLEXES = {
 function classifyFloorTier(floorInput, totalFloorStr) {
   try {
     const mTot = String(totalFloorStr).match(/지상\s*(\d+)/) || String(totalFloorStr).match(/(\d+)\s*층/);
-    const totalFl = mTot ? parseInt(mTot[1], 10) : 20;
+    const totalFl = mTot ? parseInt(mTot[1], 10) : 25;
 
     const mCur = String(floorInput).match(/(\d+)/);
     if (!mCur) return '중층';
@@ -281,12 +281,23 @@ function classifyFloorTier(floorInput, totalFloorStr) {
     if (String(floorInput).includes('지하')) return '지하층';
     if (totalFl <= 3) return `${curFl}층`;
 
-    const t1 = totalFl / 3.0;
-    const t2 = totalFl * (2.0 / 3.0);
-
-    if (curFl <= t1) return '저층';
-    if (curFl <= t2) return '중층';
-    return '고층';
+    if (totalFl >= 20) {
+      if (curFl <= 5) return '저층';
+      if (curFl >= totalFl - 5) return '고층';
+      return '중층';
+    } else if (totalFl >= 10) {
+      if (curFl <= 3) return '저층';
+      if (curFl >= totalFl - 3) return '고층';
+      return '중층';
+    } else if (totalFl >= 6) {
+      if (curFl <= 2) return '저층';
+      if (curFl >= totalFl - 1) return '고층';
+      return '중층';
+    } else {
+      if (curFl === 1) return '저층';
+      if (curFl === totalFl) return '고층';
+      return '중층';
+    }
   } catch (e) {
     return '중층';
   }

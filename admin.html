@@ -348,20 +348,23 @@
           </div>
         </div>
 
-        <!-- 네이버 매물번호 입력창 (수정 시에도 확인/변경 가능, 네이버 종료 시 자동 비공개 연동) -->
-        <div class="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200">
+        <!-- 네이버 매물번호 입력창 (타 부동산 동일매물 모니터링 / 거래종료 시 자동 비공개 연동) -->
+        <div class="p-3.5 bg-emerald-50/70 rounded-2xl border-2 border-emerald-300">
           <div class="flex items-center justify-between mb-1.5">
             <label class="block font-bold text-emerald-950 text-xs flex items-center gap-1.5" for="newPropNaverNo">
               <i data-lucide="hash" class="w-4 h-4 text-emerald-600"></i>
-              <span>네이버 매물번호 (등록 관리번호)</span>
+              <span>네이버 매물번호 (동일매물 모니터링 / 거래종료 연동)</span>
             </label>
             <span class="text-[10px] font-bold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-emerald-300 shadow-2xs">
-              ⚡ 네이버에서 내려가면 자동 비공개
+              ⚡ 거래종료 시 홈페이지 자동비공개/완료
             </span>
           </div>
+          <p class="text-[11px] text-emerald-900/90 mb-2 leading-tight">
+            💡 <strong>타 부동산 동일매물 연동</strong>: 대표님께서 직접 네이버에 매물을 올리지 않으셨더라도, <strong>다른 부동산에서 네이버에 올린 동일 매물번호</strong>를 여기에 입력해 두시면 네이버에서 거래 완료(종료) 시 우리 홈페이지 매물도 자동으로 [비공개] 또는 [거래완료]로 안전하게 내릴 수 있습니다.
+          </p>
           <div class="flex gap-2">
             <input type="text" id="newPropNaverNo" placeholder="예: 2659608022 (숫자 8~10자리 입력)" 
-                   class="flex-1 border border-emerald-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-xs font-bold text-slate-800 bg-white">
+                   class="flex-1 border border-emerald-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-xs font-bold text-slate-800 bg-white placeholder:text-slate-400">
             <button type="button" onclick="checkCurrentPropNaverStatus()" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5 shrink-0 cursor-pointer" title="이 매물번호가 네이버에 현재 정상 게시 중인지 즉시 점검">
               <i data-lucide="activity" class="w-3.5 h-3.5"></i>
               <span>게시상태 확인</span>
@@ -495,15 +498,15 @@
                 <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
                 <!-- 저/중/고 원클릭 퀵 버튼 -->
                 <div class="inline-flex rounded-lg border border-blue-200 p-0.5 bg-blue-50/80 gap-0.5">
-                  <button type="button" onclick="setFloorTier('저층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
-                  <button type="button" onclick="setFloorTier('중층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
-                  <button type="button" onclick="setFloorTier('고층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                  <button type="button" onclick="setFloorTier('저층')" id="btnFloorLow" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setFloorTier('중층')" id="btnFloorMid" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setFloorTier('고층')" id="btnFloorHigh" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
                 </div>
               </div>
               <div class="flex items-center gap-1">
                 <input type="text" id="newPropTargetFloor" list="floorTierList" placeholder="중층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-black text-blue-900 focus:ring-2 focus:ring-blue-500">
                 <span class="text-slate-400 font-bold">/</span>
-                <input type="text" id="newPropTotalFloor" placeholder="25층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <input type="text" id="newPropTotalFloor" placeholder="25" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
               </div>
               <datalist id="floorTierList">
                 <option value="저층">
@@ -583,7 +586,7 @@
               <div class="flex items-center gap-1">
                 <input type="text" id="newPropCommTargetFloor" list="floorTierList" placeholder="1층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-black text-amber-900 focus:ring-2 focus:ring-amber-500">
                 <span class="text-slate-400 font-bold">/</span>
-                <input type="text" id="newPropCommTotalFloor" placeholder="6층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+                <input type="text" id="newPropCommTotalFloor" placeholder="6" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
               </div>
             </div>
             <div>
@@ -1930,10 +1933,14 @@ let fetchedNaverPhotos = [];
         if (document.getElementById('newPropCommExArea')) document.getElementById('newPropCommExArea').value = prop.exclusiveArea || '';
         if (document.getElementById('newPropCommSpArea')) document.getElementById('newPropCommSpArea').value = prop.supplyArea || '';
         calcCommPyeong();
-        const tf = (prop.floor || '').split('/')[0].replace('층', '').trim();
-        const tot = (prop.floor || '').split('/')[1] ? prop.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
-        if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = prop.targetFloor || tf || '1층';
-        if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = prop.totalFloor || tot || '5층';
+        const rawParts = (prop.floor || '').split('/');
+        const rawTarget = rawParts[0] ? rawParts[0].trim() : '';
+        const rawTotal = rawParts[1] ? rawParts[1].trim() : '6';
+        const targetTier = prop.targetFloor || classifyFloorTierClient(rawTarget, rawTotal) || '1층';
+        const totalClean = prop.totalFloor ? cleanTotalFloorClient(prop.totalFloor) : cleanTotalFloorClient(rawTotal);
+
+        if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = targetTier;
+        if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = totalClean || '6';
         if (document.getElementById('newPropCommRecommendedBiz')) document.getElementById('newPropCommRecommendedBiz').value = prop.recommendedUsage || prop.recommendedBiz || '일반상가/사무실';
         if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = prop.direction || '남향(주출입구기준)';
         if (document.getElementById('newPropCommMaintenance')) document.getElementById('newPropCommMaintenance').value = prop.maintenanceFee || '약 8~9만원 (부가세 별도)';
@@ -1943,10 +1950,14 @@ let fetchedNaverPhotos = [];
         if (document.getElementById('newPropExArea')) document.getElementById('newPropExArea').value = prop.exclusiveArea || 84.89;
         if (document.getElementById('newPropSpArea')) document.getElementById('newPropSpArea').value = prop.supplyArea || 114.7;
         calcResPyeong();
-        const tf = (prop.floor || '').split('/')[0].replace('층', '').trim();
-        const tot = (prop.floor || '').split('/')[1] ? prop.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
-        if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = prop.targetFloor || tf || '15층';
-        if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = prop.totalFloor || tot || '25층';
+        const rawParts = (prop.floor || '').split('/');
+        const rawTarget = rawParts[0] ? rawParts[0].trim() : '';
+        const rawTotal = rawParts[1] ? rawParts[1].trim() : '25';
+        const targetTier = prop.targetFloor || classifyFloorTierClient(rawTarget, rawTotal) || '중층';
+        const totalClean = prop.totalFloor ? cleanTotalFloorClient(prop.totalFloor) : cleanTotalFloorClient(rawTotal);
+
+        if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = targetTier;
+        if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = totalClean || '25';
         if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = prop.rooms !== undefined ? prop.rooms : 3;
         if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = prop.bathrooms !== undefined ? prop.bathrooms : 2;
         if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = prop.direction || '남향(거실기준)';
@@ -1979,6 +1990,82 @@ let fetchedNaverPhotos = [];
       document.getElementById('propRegisterModal').classList.add('hidden');
     }
 
+    // 실무 기준 층수 등급 분류 (저층, 중층, 고층)
+    function classifyFloorTierClient(curFloor, totFloor) {
+      try {
+        const curStr = String(curFloor || '').trim();
+        if (['저층', '중층', '고층', '로열층', '탑층', '지하층'].includes(curStr)) {
+          return curStr;
+        }
+        if (curStr.includes('지하')) return '지하층';
+
+        const mTot = String(totFloor || '').replace(/\(.*?\)/g, '').match(/(\d+)/);
+        const totalFl = mTot ? parseInt(mTot[1], 10) : 25;
+
+        const mCur = curStr.match(/(\d+)/);
+        if (!mCur) return '중층';
+        const curFl = parseInt(mCur[1], 10);
+
+        if (totalFl <= 3) return `${curFl}층`;
+
+        // 20~25층 이상 아파트: 1~5층 저층, 6~19층 중층(7층은 중층!), 20층 이상 고층
+        if (totalFl >= 20) {
+          if (curFl <= 5) return '저층';
+          if (curFl >= totalFl - 5) return '고층';
+          return '중층';
+        } else if (totalFl >= 10) {
+          if (curFl <= 3) return '저층';
+          if (curFl >= totalFl - 3) return '고층';
+          return '중층';
+        } else if (totalFl >= 6) {
+          if (curFl <= 2) return '저층';
+          if (curFl >= totalFl - 1) return '고층';
+          return '중층';
+        } else {
+          if (curFl === 1) return '저층';
+          if (curFl === totalFl) return '고층';
+          return '중층';
+        }
+      } catch (e) {
+        return '중층';
+      }
+    }
+
+    // 총층수 순수 숫자만 추출 (예: '지상 25층 / 지하 1층 (중층)' -> '25')
+    function cleanTotalFloorClient(totFloor) {
+      if (!totFloor) return '25';
+      const clean = String(totFloor).replace(/\(.*?\)/g, '');
+      const m = clean.match(/지상\s*(\d+)/) || clean.match(/(\d+)\s*층/) || clean.match(/(\d+)/);
+      return m ? m[1] : '25';
+    }
+
+    function setFloorTier(tier) {
+      const el = document.getElementById('newPropTargetFloor');
+      if (el) el.value = tier;
+      ['btnFloorLow', 'btnFloorMid', 'btnFloorHigh'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      if (tier === '저층' && document.getElementById('btnFloorLow')) {
+        document.getElementById('btnFloorLow').classList.add('bg-blue-600', 'text-white');
+        document.getElementById('btnFloorLow').classList.remove('bg-white', 'text-slate-700');
+      } else if (tier === '중층' && document.getElementById('btnFloorMid')) {
+        document.getElementById('btnFloorMid').classList.add('bg-blue-600', 'text-white');
+        document.getElementById('btnFloorMid').classList.remove('bg-white', 'text-slate-700');
+      } else if (tier === '고층' && document.getElementById('btnFloorHigh')) {
+        document.getElementById('btnFloorHigh').classList.add('bg-blue-600', 'text-white');
+        document.getElementById('btnFloorHigh').classList.remove('bg-white', 'text-slate-700');
+      }
+    }
+
+    function setCommFloorTier(tier) {
+      const el = document.getElementById('newPropCommTargetFloor');
+      if (el) el.value = tier;
+    }
+
     async function checkCurrentPropNaverStatus() {
       const inputEl = document.getElementById('newPropNaverNo');
       const noticeEl = document.getElementById('naverLiveStatusNotice');
@@ -2003,11 +2090,37 @@ let fetchedNaverPhotos = [];
         if (res.ok) {
           const data = await res.json();
           if (data.is_live) {
-            noticeEl.className = 'text-[11px] font-bold mt-2 p-2.5 rounded-xl border flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border-emerald-300';
-            noticeEl.innerHTML = `✅ <strong>네이버 정상 게시 중</strong> (매물번호: ${data.article_no || no}) - 실시간 정상 매물입니다.`;
+            noticeEl.className = 'text-[11px] font-bold mt-2 p-3 rounded-xl border bg-emerald-50 text-emerald-950 border-emerald-300';
+            noticeEl.innerHTML = `
+              <div class="flex items-center gap-1.5 text-emerald-800 font-extrabold text-xs">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                <span>네이버 정상 게시 확인 (매물번호: ${data.article_no || no})</span>
+              </div>
+              <div class="mt-1 text-[11px] text-emerald-800 leading-normal">
+                현재 네이버에 정상 노출 중인 매물입니다. 이 매물번호를 저장해 두시면 네이버에서 거래 완료(종료) 시 우리 홈페이지 매물도 자동으로 비공개 처리할 수 있습니다.
+              </div>
+            `;
           } else {
-            noticeEl.className = 'text-[11px] font-bold mt-2 p-2.5 rounded-xl border flex items-center gap-1.5 bg-purple-50 text-purple-900 border-purple-300';
-            noticeEl.innerHTML = `⚠️ <strong>네이버에서 내려간 매물</strong> (거래종료 또는 삭제) - 등록 시 홈페이지에 <strong>[비공개]</strong>로 자동 전환됩니다.`;
+            noticeEl.className = 'text-[11px] font-bold mt-2 p-3 rounded-xl border bg-purple-50 text-purple-950 border-purple-300';
+            noticeEl.innerHTML = `
+              <div class="flex items-center gap-1.5 text-purple-900 font-extrabold text-xs">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-purple-600"></i>
+                <span>네이버 거래종료 감지 (매물번호: ${data.article_no || no})</span>
+              </div>
+              <div class="mt-1 text-[11px] text-purple-800 leading-normal">
+                네이버에서 거래 완료 또는 삭제된 매물입니다. 대표님 매물을 즉시 비공개하거나 거래완료로 내리실 수 있습니다:
+              </div>
+              <div class="mt-2.5 flex items-center gap-2">
+                <button type="button" onclick="setPropExpiredAction('PRIVATE')" class="px-2.5 py-1.5 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                  <span>🔒 비공개 전환</span>
+                </button>
+                <button type="button" onclick="setPropExpiredAction('COMPLETED')" class="px-2.5 py-1.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
+                  <span>🏁 거래완료 처리</span>
+                </button>
+              </div>
+            `;
             const privCheck = document.getElementById('newPropIsPrivate');
             if (privCheck) privCheck.checked = true;
           }
@@ -2019,6 +2132,22 @@ let fetchedNaverPhotos = [];
       }
       noticeEl.className = 'text-[11px] font-bold mt-2 p-2.5 rounded-xl border flex items-center gap-1.5 bg-amber-50 text-amber-900 border-amber-300';
       noticeEl.innerHTML = `ℹ️ 네이버 서버 확인 일시 지연 - 등록 후 상단 [네이버 종료매물 자동비공개 점검] 버튼으로 전수 검증 가능합니다.`;
+    }
+
+    function setPropExpiredAction(action) {
+      if (action === 'PRIVATE') {
+        const privCheck = document.getElementById('newPropIsPrivate');
+        if (privCheck) privCheck.checked = true;
+        showAdminToast('🔒 [비공개] 상태로 전환되었습니다. 저장 시 일반 방문객에게 노출되지 않습니다.');
+      } else if (action === 'COMPLETED') {
+        const privCheck = document.getElementById('newPropIsPrivate');
+        if (privCheck) privCheck.checked = true;
+        const memo = document.getElementById('newPropAdminMemo');
+        if (memo && !memo.value.includes('거래완료')) {
+          memo.value = `[거래완료] ${memo.value}`.trim();
+        }
+        showAdminToast('🏁 [거래완료]로 처리되었습니다.');
+      }
     }
 
     async function handleSyncNaverStatus() {
@@ -2048,7 +2177,7 @@ let fetchedNaverPhotos = [];
 
           if (data.auto_privated_count > 0) {
             const names = data.auto_privated.map(p => `[${p.title}]`).join(', ');
-            alert(`📢 네이버에서 내려간 매물 ${data.auto_privated_count}건을 감지하여 홈페이지에서 자동으로 [비공개] 처리했습니다.\n\n대상 매물: ${names}`);
+            alert(`📢 네이버에서 거래종료(내려간) 매물 ${data.auto_privated_count}건을 감지하여 홈페이지에서 자동으로 [비공개] 처리했습니다.\n\n대상 매물: ${names}`);
           } else {
             showAdminToast(`네이버 전수 점검 완료: 현재 등록된 모든 네이버 매물이 정상 게시 중입니다.`);
           }
@@ -2060,16 +2189,6 @@ let fetchedNaverPhotos = [];
         if (syncBtn) syncBtn.disabled = false;
         if (icon) icon.classList.remove('animate-spin');
       }
-    }
-
-    function setFloorTier(tier) {
-      const el = document.getElementById('newPropTargetFloor');
-      if (el) el.value = tier;
-    }
-
-    function setCommFloorTier(tier) {
-      const el = document.getElementById('newPropCommTargetFloor');
-      if (el) el.value = tier;
     }
 
     function switchPropInputMode(mode) {
@@ -2250,10 +2369,10 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropCommExArea')) document.getElementById('newPropCommExArea').value = b.exclusive_area || 45.5;
             if (document.getElementById('newPropCommSpArea')) document.getElementById('newPropCommSpArea').value = b.supply_area || 88.2;
             calcCommPyeong();
-            const commTf = (b.target_floor || '1층').endsWith('층') ? b.target_floor : (b.target_floor + '층');
-            const tot = (b.total_floor || '7층').split('/')[0].replace(/지상|층|\s/g, '');
+            const commTf = classifyFloorTierClient(b.target_floor || '1층', b.total_floor || '6');
+            const tot = cleanTotalFloorClient(b.total_floor || '6');
             if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = commTf;
-            if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = (tot || '7') + '층';
+            if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = tot;
             if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = b.direction || '남향(주출입구기준)';
             if (document.getElementById('newPropCommMaintenance')) document.getElementById('newPropCommMaintenance').value = b.maintenance_fee || '약 10~15만원 (부가세 별도)';
             if (document.getElementById('newPropCommParking')) document.getElementById('newPropCommParking').value = b.parking || '총 65대 주차가능';
@@ -2262,10 +2381,13 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropExArea')) document.getElementById('newPropExArea').value = b.exclusive_area || 84.85;
             if (document.getElementById('newPropSpArea')) document.getElementById('newPropSpArea').value = b.supply_area || 112.4;
             calcResPyeong();
-            const tf = (b.target_floor || '중층').endsWith('층') ? b.target_floor : (b.target_floor + '층');
-            const tot = (b.total_floor || '25층').split('/')[0].replace(/지상|층|\s/g, '');
-            if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = tf;
-            if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = (tot || '25') + '층';
+            const tf = classifyFloorTierClient(b.target_floor || '중층', b.total_floor || '25');
+            const tot = cleanTotalFloorClient(b.total_floor || '25');
+            if (document.getElementById('newPropTargetFloor')) {
+              document.getElementById('newPropTargetFloor').value = tf;
+              setFloorTier(tf);
+            }
+            if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = tot;
             if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = b.rooms !== undefined ? b.rooms : 3;
             if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = b.bathrooms !== undefined ? b.bathrooms : 2;
             if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = b.direction || '남향(거실기준)';
@@ -2422,10 +2544,13 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropCommExArea')) document.getElementById('newPropCommExArea').value = data.exclusiveArea || 26.53;
             if (document.getElementById('newPropCommSpArea')) document.getElementById('newPropCommSpArea').value = data.supplyArea || 57.0;
             calcCommPyeong();
-            const tf = (data.floor || '').split('/')[0].replace('층', '').trim();
-            const tot = (data.floor || '').split('/')[1] ? data.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
-            if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = tf || '5층';
-            if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = tot || '6층';
+            const rawParts = (data.floor || '').split('/');
+            const rawTarget = rawParts[0] ? rawParts[0].trim() : '';
+            const rawTotal = rawParts[1] ? rawParts[1].trim() : '6';
+            const commTf = classifyFloorTierClient(rawTarget, rawTotal) || '1층';
+            const commTot = cleanTotalFloorClient(rawTotal) || '6';
+            if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = commTf;
+            if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = commTot;
             if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = data.direction || '남향(출입구기준)';
             if (document.getElementById('newPropCommMaintenance')) document.getElementById('newPropCommMaintenance').value = data.maintenanceFee || '약 8~9만원 (부가세 별도)';
             if (document.getElementById('newPropCommParking')) document.getElementById('newPropCommParking').value = data.parking || '총 55대 주차가능';
@@ -2434,10 +2559,16 @@ let fetchedNaverPhotos = [];
             if (document.getElementById('newPropExArea')) document.getElementById('newPropExArea').value = data.exclusiveArea || 84.89;
             if (document.getElementById('newPropSpArea')) document.getElementById('newPropSpArea').value = data.supplyArea || 114.7;
             calcResPyeong();
-            const tf = (data.floor || '').split('/')[0].replace('층', '').trim();
-            const tot = (data.floor || '').split('/')[1] ? data.floor.split('/')[1].replace(/총|층/g, '').trim() : '';
-            if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = tf || '15층';
-            if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = tot || '25층';
+            const rawParts = (data.floor || '').split('/');
+            const rawTarget = rawParts[0] ? rawParts[0].trim() : '';
+            const rawTotal = rawParts[1] ? rawParts[1].trim() : '25';
+            const resTf = classifyFloorTierClient(rawTarget, rawTotal) || '중층';
+            const resTot = cleanTotalFloorClient(rawTotal) || '25';
+            if (document.getElementById('newPropTargetFloor')) {
+              document.getElementById('newPropTargetFloor').value = resTf;
+              setFloorTier(resTf);
+            }
+            if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = resTot;
             if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = data.rooms !== undefined ? data.rooms : 3;
             if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = data.bathrooms !== undefined ? data.bathrooms : 2;
             if (document.getElementById('newPropDirection')) document.getElementById('newPropDirection').value = data.direction || '남향(거실기준)';
@@ -2563,8 +2694,9 @@ let fetchedNaverPhotos = [];
         exPyeong = Number((exArea / 3.305785).toFixed(1));
         spPyeong = Number((spArea / 3.305785).toFixed(1));
         const tf = document.getElementById('newPropCommTargetFloor')?.value.trim() || '1층';
-        const tot = document.getElementById('newPropCommTotalFloor')?.value.trim() || '5층';
-        floorStr = `${tf} / 총 ${tot}`;
+        const rawTot = document.getElementById('newPropCommTotalFloor')?.value.trim() || '6';
+        const tot = cleanTotalFloorClient(rawTot);
+        floorStr = `${tf} / ${tot}`;
         dirStr = document.getElementById('newPropCommDirection')?.value.trim() || '남향(주출입구기준)';
         roomVal = 1;
         bathVal = 1;
@@ -2578,9 +2710,11 @@ let fetchedNaverPhotos = [];
         spArea = parseFloat(document.getElementById('newPropSpArea')?.value) || 114.7;
         exPyeong = Number((exArea / 3.305785).toFixed(1));
         spPyeong = Number((spArea / 3.305785).toFixed(1));
-        const tf = document.getElementById('newPropTargetFloor')?.value.trim() || '15층';
-        const tot = document.getElementById('newPropTotalFloor')?.value.trim() || '25층';
-        floorStr = `${tf} / 총 ${tot}`;
+        const rawTf = document.getElementById('newPropTargetFloor')?.value.trim() || '중층';
+        const rawTot = document.getElementById('newPropTotalFloor')?.value.trim() || '25';
+        const tf = classifyFloorTierClient(rawTf, rawTot);
+        const tot = cleanTotalFloorClient(rawTot);
+        floorStr = `${tf} / ${tot}`;
         roomVal = parseInt(document.getElementById('newPropRooms')?.value) || 3;
         bathVal = parseInt(document.getElementById('newPropBathrooms')?.value) || 2;
         dirStr = document.getElementById('newPropDirection')?.value.trim() || '남향(거실기준)';
