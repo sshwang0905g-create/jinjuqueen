@@ -144,7 +144,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
         content_length = int(self.headers.get('Content-Length', 0))
-        body = self.rfile.read(content_length).decode('utf-8')
+        body = self.rfile.read(content_length).decode('utf-8', errors='replace')
         try:
             payload = json.loads(body)
         except Exception:
