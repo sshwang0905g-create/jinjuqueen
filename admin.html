@@ -498,15 +498,27 @@
                 <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
                 <!-- 저/중/고 원클릭 퀵 버튼 -->
                 <div class="inline-flex rounded-lg border border-blue-200 p-0.5 bg-blue-50/80 gap-0.5">
-                  <button type="button" onclick="setFloorTier('저층')" id="btnFloorLow" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
-                  <button type="button" onclick="setFloorTier('중층')" id="btnFloorMid" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
-                  <button type="button" onclick="setFloorTier('고층')" id="btnFloorHigh" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                  <button type="button" onclick="setFloorTier('저층')" id="btnFloorLow" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setFloorTier('중층')" id="btnFloorMid" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setFloorTier('고층')" id="btnFloorHigh" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
                 </div>
               </div>
-              <div class="flex items-center gap-1">
-                <input type="text" id="newPropTargetFloor" list="floorTierList" placeholder="중층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-black text-blue-900 focus:ring-2 focus:ring-blue-500">
-                <span class="text-slate-400 font-bold">/</span>
-                <input type="text" id="newPropTotalFloor" placeholder="25" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+              <div class="flex items-center gap-1.5">
+                <div class="relative flex-1">
+                  <input type="text" id="newPropTargetFloor" list="floorTierList" placeholder="중층" 
+                         oninput="handleFloorTierManual(this.value)"
+                         onblur="onTargetFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-white text-xs outline-none text-center font-black text-blue-900 focus:ring-2 focus:ring-blue-500 shadow-2xs" 
+                         title="저층, 중층, 고층 등 표기할 층수 (퀵 버튼 클릭 또는 직접 수정 가능)">
+                </div>
+                <span class="text-slate-400 font-bold px-0.5">/</span>
+                <div class="relative flex-1">
+                  <input type="text" id="newPropTotalFloor" placeholder="25" 
+                         onblur="onTotalFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 pr-6 bg-white text-xs outline-none text-center font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 shadow-2xs" 
+                         title="건물 전체 최고층수 (숫자만 표기)">
+                  <span class="absolute right-2 top-2 text-[10px] text-slate-400 font-bold pointer-events-none">층</span>
+                </div>
               </div>
               <datalist id="floorTierList">
                 <option value="저층">
@@ -578,15 +590,27 @@
                 <label class="block text-xs font-bold text-slate-700">해당층 / 총층 *</label>
                 <!-- 상가 저/중/고 퀵 버튼 -->
                 <div class="inline-flex rounded-lg border border-amber-200 p-0.5 bg-amber-50/80 gap-0.5">
-                  <button type="button" onclick="setCommFloorTier('저층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
-                  <button type="button" onclick="setCommFloorTier('중층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
-                  <button type="button" onclick="setCommFloorTier('고층')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
+                  <button type="button" onclick="setCommFloorTier('저층')" id="btnCommFloorLow" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">저</button>
+                  <button type="button" onclick="setCommFloorTier('중층')" id="btnCommFloorMid" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">중</button>
+                  <button type="button" onclick="setCommFloorTier('고층')" id="btnCommFloorHigh" class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">고</button>
                 </div>
               </div>
-              <div class="flex items-center gap-1">
-                <input type="text" id="newPropCommTargetFloor" list="floorTierList" placeholder="1층" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-black text-amber-900 focus:ring-2 focus:ring-amber-500">
-                <span class="text-slate-400 font-bold">/</span>
-                <input type="text" id="newPropCommTotalFloor" placeholder="6" class="w-1/2 border border-slate-300 rounded-xl px-2 py-2 bg-white text-xs outline-none text-center font-bold">
+              <div class="flex items-center gap-1.5">
+                <div class="relative flex-1">
+                  <input type="text" id="newPropCommTargetFloor" list="floorTierList" placeholder="1층" 
+                         oninput="handleCommFloorTierManual(this.value)"
+                         onblur="onCommTargetFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 bg-white text-xs outline-none text-center font-black text-amber-900 focus:ring-2 focus:ring-amber-500 shadow-2xs" 
+                         title="상가 해당층 (예: 1층, 저층, 2층)">
+                </div>
+                <span class="text-slate-400 font-bold px-0.5">/</span>
+                <div class="relative flex-1">
+                  <input type="text" id="newPropCommTotalFloor" placeholder="6" 
+                         onblur="onTotalFloorBlur(this)"
+                         class="w-full border border-slate-300 rounded-xl px-2.5 py-2 pr-6 bg-white text-xs outline-none text-center font-bold text-slate-800 focus:ring-2 focus:ring-amber-500 shadow-2xs" 
+                         title="상가 건물 전체 층수">
+                  <span class="absolute right-2 top-2 text-[10px] text-slate-400 font-bold pointer-events-none">층</span>
+                </div>
               </div>
             </div>
             <div>
@@ -1939,7 +1963,10 @@ let fetchedNaverPhotos = [];
         const targetTier = prop.targetFloor || classifyFloorTierClient(rawTarget, rawTotal) || '1층';
         const totalClean = prop.totalFloor ? cleanTotalFloorClient(prop.totalFloor) : cleanTotalFloorClient(rawTotal);
 
-        if (document.getElementById('newPropCommTargetFloor')) document.getElementById('newPropCommTargetFloor').value = targetTier;
+        if (document.getElementById('newPropCommTargetFloor')) {
+          document.getElementById('newPropCommTargetFloor').value = targetTier;
+          setCommFloorTier(targetTier);
+        }
         if (document.getElementById('newPropCommTotalFloor')) document.getElementById('newPropCommTotalFloor').value = totalClean || '6';
         if (document.getElementById('newPropCommRecommendedBiz')) document.getElementById('newPropCommRecommendedBiz').value = prop.recommendedUsage || prop.recommendedBiz || '일반상가/사무실';
         if (document.getElementById('newPropCommDirection')) document.getElementById('newPropCommDirection').value = prop.direction || '남향(주출입구기준)';
@@ -1956,7 +1983,10 @@ let fetchedNaverPhotos = [];
         const targetTier = prop.targetFloor || classifyFloorTierClient(rawTarget, rawTotal) || '중층';
         const totalClean = prop.totalFloor ? cleanTotalFloorClient(prop.totalFloor) : cleanTotalFloorClient(rawTotal);
 
-        if (document.getElementById('newPropTargetFloor')) document.getElementById('newPropTargetFloor').value = targetTier;
+        if (document.getElementById('newPropTargetFloor')) {
+          document.getElementById('newPropTargetFloor').value = targetTier;
+          setFloorTier(targetTier);
+        }
         if (document.getElementById('newPropTotalFloor')) document.getElementById('newPropTotalFloor').value = totalClean || '25';
         if (document.getElementById('newPropRooms')) document.getElementById('newPropRooms').value = prop.rooms !== undefined ? prop.rooms : 3;
         if (document.getElementById('newPropBathrooms')) document.getElementById('newPropBathrooms').value = prop.bathrooms !== undefined ? prop.bathrooms : 2;
@@ -2045,25 +2075,106 @@ let fetchedNaverPhotos = [];
       ['btnFloorLow', 'btnFloorMid', 'btnFloorHigh'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
-          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.remove('bg-blue-600', 'text-white', 'shadow-xs');
           btn.classList.add('bg-white', 'text-slate-700');
         }
       });
-      if (tier === '저층' && document.getElementById('btnFloorLow')) {
-        document.getElementById('btnFloorLow').classList.add('bg-blue-600', 'text-white');
+      if (tier && tier.startsWith('저') && document.getElementById('btnFloorLow')) {
+        document.getElementById('btnFloorLow').classList.add('bg-blue-600', 'text-white', 'shadow-xs');
         document.getElementById('btnFloorLow').classList.remove('bg-white', 'text-slate-700');
-      } else if (tier === '중층' && document.getElementById('btnFloorMid')) {
-        document.getElementById('btnFloorMid').classList.add('bg-blue-600', 'text-white');
+      } else if (tier && tier.startsWith('중') && document.getElementById('btnFloorMid')) {
+        document.getElementById('btnFloorMid').classList.add('bg-blue-600', 'text-white', 'shadow-xs');
         document.getElementById('btnFloorMid').classList.remove('bg-white', 'text-slate-700');
-      } else if (tier === '고층' && document.getElementById('btnFloorHigh')) {
-        document.getElementById('btnFloorHigh').classList.add('bg-blue-600', 'text-white');
+      } else if (tier && tier.startsWith('고') && document.getElementById('btnFloorHigh')) {
+        document.getElementById('btnFloorHigh').classList.add('bg-blue-600', 'text-white', 'shadow-xs');
         document.getElementById('btnFloorHigh').classList.remove('bg-white', 'text-slate-700');
       }
+    }
+
+    function handleFloorTierManual(val) {
+      const v = String(val || '').trim();
+      ['btnFloorLow', 'btnFloorMid', 'btnFloorHigh'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.remove('bg-blue-600', 'text-white', 'shadow-xs');
+          btn.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      if (v.startsWith('저') && document.getElementById('btnFloorLow')) {
+        document.getElementById('btnFloorLow').classList.add('bg-blue-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnFloorLow').classList.remove('bg-white', 'text-slate-700');
+      } else if (v.startsWith('중') && document.getElementById('btnFloorMid')) {
+        document.getElementById('btnFloorMid').classList.add('bg-blue-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnFloorMid').classList.remove('bg-white', 'text-slate-700');
+      } else if (v.startsWith('고') && document.getElementById('btnFloorHigh')) {
+        document.getElementById('btnFloorHigh').classList.add('bg-blue-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnFloorHigh').classList.remove('bg-white', 'text-slate-700');
+      }
+    }
+
+    function onTargetFloorBlur(inputEl) {
+      if (!inputEl) return;
+      const val = inputEl.value.trim();
+      if (!val) return;
+      const tot = document.getElementById('newPropTotalFloor')?.value || '25';
+      const classified = classifyFloorTierClient(val, tot);
+      inputEl.value = classified;
+      setFloorTier(classified);
     }
 
     function setCommFloorTier(tier) {
       const el = document.getElementById('newPropCommTargetFloor');
       if (el) el.value = tier;
+      ['btnCommFloorLow', 'btnCommFloorMid', 'btnCommFloorHigh'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.remove('bg-amber-600', 'text-white', 'shadow-xs');
+          btn.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      if (tier && tier.startsWith('저') && document.getElementById('btnCommFloorLow')) {
+        document.getElementById('btnCommFloorLow').classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnCommFloorLow').classList.remove('bg-white', 'text-slate-700');
+      } else if (tier && tier.startsWith('중') && document.getElementById('btnCommFloorMid')) {
+        document.getElementById('btnCommFloorMid').classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnCommFloorMid').classList.remove('bg-white', 'text-slate-700');
+      } else if (tier && tier.startsWith('고') && document.getElementById('btnCommFloorHigh')) {
+        document.getElementById('btnCommFloorHigh').classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnCommFloorHigh').classList.remove('bg-white', 'text-slate-700');
+      }
+    }
+
+    function handleCommFloorTierManual(val) {
+      const v = String(val || '').trim();
+      ['btnCommFloorLow', 'btnCommFloorMid', 'btnCommFloorHigh'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.remove('bg-amber-600', 'text-white', 'shadow-xs');
+          btn.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      if (v.startsWith('저') && document.getElementById('btnCommFloorLow')) {
+        document.getElementById('btnCommFloorLow').classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnCommFloorLow').classList.remove('bg-white', 'text-slate-700');
+      } else if (v.startsWith('중') && document.getElementById('btnCommFloorMid')) {
+        document.getElementById('btnCommFloorMid').classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnCommFloorMid').classList.remove('bg-white', 'text-slate-700');
+      } else if (v.startsWith('고') && document.getElementById('btnCommFloorHigh')) {
+        document.getElementById('btnCommFloorHigh').classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+        document.getElementById('btnCommFloorHigh').classList.remove('bg-white', 'text-slate-700');
+      }
+    }
+
+    function onCommTargetFloorBlur(inputEl) {
+      if (!inputEl) return;
+      const val = inputEl.value.trim();
+      if (!val) return;
+      handleCommFloorTierManual(val);
+    }
+
+    function onTotalFloorBlur(inputEl) {
+      if (!inputEl) return;
+      inputEl.value = cleanTotalFloorClient(inputEl.value);
     }
 
     async function checkCurrentPropNaverStatus() {

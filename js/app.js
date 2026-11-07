@@ -474,6 +474,34 @@ function updateFilterDisplay() {
 // ----------------------------------------------------
 // PROPERTY RENDERING (Editorial Cards)
 // ----------------------------------------------------
+function formatPropertyFloor(prop) {
+  if (!prop || !prop.floor) return '';
+  const f = String(prop.floor).trim();
+  if (['아파트', '오피스텔'].includes(prop.category)) {
+    if (f.includes('/')) {
+      const parts = f.split('/');
+      let target = parts[0].trim();
+      let total = parts[1].trim();
+      const mTot = total.replace(/\(.*?\)/g, '').match(/(\d+)/);
+      const totNum = mTot ? parseInt(mTot[1], 10) : 25;
+      const mCur = target.match(/^(\d+)층?$/);
+      if (mCur) {
+        const curNum = parseInt(mCur[1], 10);
+        if (totNum >= 20) {
+          target = curNum <= 5 ? '저층' : (curNum >= totNum - 5 ? '고층' : '중층');
+        } else if (totNum >= 10) {
+          target = curNum <= 3 ? '저층' : (curNum >= totNum - 3 ? '고층' : '중층');
+        } else {
+          target = curNum <= 2 ? '저층' : (curNum >= totNum - 1 ? '고층' : '중층');
+        }
+      }
+      const cleanTot = mTot ? mTot[1] : total;
+      return `${target} / ${cleanTot}`;
+    }
+  }
+  return f;
+}
+
 function renderProperties() {
   const container = document.getElementById('propertyCardsContainer');
   const countEl = document.getElementById('propertyCount');
@@ -565,7 +593,7 @@ function renderProperties() {
             <!-- Location & Direction -->
             <div class="flex items-center justify-between text-xs text-slate-500 mb-1 gap-2">
               <span class="font-medium text-slate-600 shrink-0">${prop.location}</span>
-              <span class="text-right">${[prop.floor, prop.direction].filter(Boolean).join(' ')}</span>
+              <span class="text-right">${[formatPropertyFloor(prop), prop.direction].filter(Boolean).join(' ')}</span>
             </div>
 
             <!-- Title -->
@@ -781,7 +809,7 @@ function openPropertyModal(propId) {
     document.getElementById('detailAreaVal').textContent = `전용 ${prop.exclusiveArea}㎡ (${prop.exclusiveAreaPyeong}평) / 계약 ${prop.supplyArea}㎡ (${prop.supplyAreaPyeong}평)`;
 
     if (floorLabel) floorLabel.textContent = '해당층 / 총 층수';
-    document.getElementById('detailFloorVal').textContent = prop.floor;
+    document.getElementById('detailFloorVal').textContent = formatPropertyFloor(prop);
 
     if (roomsLabel) roomsLabel.textContent = '추천업종';
     document.getElementById('detailRoomsVal').textContent = prop.recommendedUsage || '일반음식점, 카페, 학원, 소형사무실';
@@ -808,7 +836,7 @@ function openPropertyModal(propId) {
     document.getElementById('detailAreaVal').textContent = `전용 ${prop.exclusiveArea}㎡ (${prop.exclusiveAreaPyeong}평) / 공급 ${prop.supplyArea}㎡ (${prop.supplyAreaPyeong}평)`;
 
     if (floorLabel) floorLabel.textContent = '해당층 / 총 층수';
-    document.getElementById('detailFloorVal').textContent = prop.floor;
+    document.getElementById('detailFloorVal').textContent = formatPropertyFloor(prop);
 
     if (roomsLabel) roomsLabel.textContent = '방 수 / 욕실 수';
     document.getElementById('detailRoomsVal').textContent = `방 ${prop.rooms}개 / 욕실 ${prop.bathrooms}개`;
@@ -910,7 +938,7 @@ function openFavoritesModal() {
         <div class="flex-1 min-w-0">
           <div class="text-xs font-bold text-slate-900 truncate">${prop.title}</div>
           <div class="text-xs font-extrabold text-amber-600 mt-0.5">${prop.priceFormatted}</div>
-          <div class="text-[11px] text-slate-400">${prop.floor} · 전용 ${prop.exclusiveArea}㎡</div>
+          <div class="text-[11px] text-slate-400">${formatPropertyFloor(prop)} · 전용 ${prop.exclusiveArea}㎡</div>
         </div>
         <button onclick="openPropertyModal('${prop.id}'); closeFavoritesModal();" class="px-3 py-1.5 bg-brand-navy text-white text-xs font-bold rounded-lg shrink-0">
           보기
