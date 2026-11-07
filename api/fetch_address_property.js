@@ -239,6 +239,39 @@ const KNOWN_COMPLEXES = {
       floor_range: "최저 16층 ~ 최고 25층"
     }
   },
+  "코오롱하늘채": {
+    category: "아파트",
+    aliases: ["코오롱하늘채", "진주혁신코오롱하늘채", "혁신코오롱하늘채", "하늘채", "충무공동 230", "충무공동230", "사들로 126", "사들로126", "4단지", "lh4단지"],
+    building_name: "진주혁신 코오롱하늘채",
+    main_purpose: "공동주택(아파트)",
+    structure: "철근콘크리트구조",
+    total_floor: "지상 20층 / 지하 1층",
+    default_floor: "중층",
+    approval_date: "2014년 02월",
+    exclusive_area: 84.89,
+    supply_area: 112.5,
+    parking_total: "총 1,200대 (세대당 1.16대)",
+    elevators: "동별 승강기 완비",
+    direction: "남동향(거실기준)",
+    maintenance_fee: "약 14~17만원 (실비정산)",
+    rooms: 3,
+    bathrooms: 2,
+    jimok: "대",
+    usage_district: "제3종일반주거지역, 지구단위계획구역",
+    land_area: 58900.0,
+    road_condition: "중로1류(폭 20m~25m) 접함",
+    permission_zone: "해당없음 (자유거래 가능)",
+    public_location: "경남 진주시 충무공동",
+    base_address: "경남 진주시 충무공동 230 (코오롱하늘채, 사들로 126)",
+    naver_complex: {
+      complex_name: "진주혁신코오롱하늘채",
+      total_household: "1,037세대 (총 12개동)",
+      construction_company: "코오롱글로벌(주)",
+      heating: "지역난방, 열병합",
+      parking_per_household: "1.16대 (총 1,200대)",
+      floor_range: "최저 15층 ~ 최고 20층"
+    }
+  },
   "라온프라이빗시티": {
     category: "오피스텔",
     aliases: ["라온프라이빗시티오피스텔", "라온프라이빗시티", "라온시티오피스텔", "라온시티", "충무공동 280-1", "충무공동280-1", "에나로 146", "에나로146"],

@@ -401,9 +401,26 @@
           <input type="text" id="newPropTitle" placeholder="예: 진주혁신 대방노블랜드 34평 로열동 판상형" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-medium">
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1" for="newPropPrice">거래 가격 표시 *</label>
-          <input type="text" id="newPropPrice" placeholder="예: 매매 4억 8,000만원 / 보증금 500만원 / 월세 50만원" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-bold text-amber-900 bg-amber-50/30">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1" for="newPropPrice">거래 가격 표시 *</label>
+            <input type="text" id="newPropPrice" placeholder="예: 매매 7.2억원 / 매매 5.8억원 / 보증금 3,000만" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-bold text-amber-900 bg-amber-50/30">
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block font-bold text-slate-700 text-xs sm:text-sm" for="newPropMoveInDate">
+                입주시기 (입주가능일) *
+              </label>
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="setMoveInQuick('즉시입주')" class="px-2 py-0.5 text-[11px] font-bold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition cursor-pointer">즉시입주</button>
+                <button type="button" onclick="setMoveInQuick('입주시기 협의')" class="px-2 py-0.5 text-[11px] font-bold rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition cursor-pointer">입주협의</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="text" id="newPropMoveInDate" value="입주시기 협의" placeholder="예: 입주시기 협의 / 2026-12-30 / 즉시입주" class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold font-bold text-slate-800 bg-white">
+              <input type="date" id="newPropMoveInDatePicker" onchange="onMoveInDatePick(this.value)" class="border border-slate-300 rounded-xl px-2 py-2.5 outline-none focus:ring-2 focus:ring-brand-gold bg-slate-50 cursor-pointer text-xs font-semibold text-slate-600" title="달력 날짜 선택">
+            </div>
+          </div>
         </div>
 
         <!-- ========================================================
@@ -1904,6 +1921,7 @@ let fetchedNaverPhotos = [];
       document.getElementById('newPropCategory').value = '아파트';
       handleCategoryChange();
       document.getElementById('newPropLocation').value = '경남 진주시 충무공동';
+      if (document.getElementById('newPropMoveInDate')) document.getElementById('newPropMoveInDate').value = '입주시기 협의';
       if (document.getElementById('addrQuickInput')) document.getElementById('addrQuickInput').value = '';
       if (document.getElementById('addrDetailInput')) document.getElementById('addrDetailInput').value = '';
       const addrNotice = document.getElementById('addrGovStatusNotice');
@@ -1985,6 +2003,9 @@ let fetchedNaverPhotos = [];
         }
       }
       document.getElementById('newPropPrice').value = prop.priceFormatted || '';
+      if (document.getElementById('newPropMoveInDate')) {
+        document.getElementById('newPropMoveInDate').value = prop.moveInDate || '입주시기 협의';
+      }
       document.getElementById('newPropLocation').value = prop.location || '';
       document.getElementById('newPropDesc').value = prop.description || '';
       if (document.getElementById('newPropAdminMemo')) {
@@ -2119,6 +2140,19 @@ let fetchedNaverPhotos = [];
       const clean = String(totFloor).replace(/\(.*?\)/g, '');
       const m = clean.match(/지상\s*(\d+)/) || clean.match(/(\d+)\s*층/) || clean.match(/(\d+)/);
       return m ? m[1] : '25';
+    }
+
+    function setMoveInQuick(val) {
+      const el = document.getElementById('newPropMoveInDate');
+      if (el) el.value = val;
+    }
+
+    function onMoveInDatePick(dateVal) {
+      if (!dateVal) return;
+      const el = document.getElementById('newPropMoveInDate');
+      if (el) {
+        el.value = `${dateVal} 이후 협의`;
+      }
     }
 
     function setFloorTier(tier) {
@@ -2640,6 +2674,34 @@ let fetchedNaverPhotos = [];
             construction_company: '한림건설(주)',
             heating: '지역난방, 열병합',
             parking_per_household: '1.22대 (총 1,745대)'
+          }
+        };
+      } else if (normText.includes('하늘채') || normText.includes('코오롱') || normText.includes('사들로126') || normText.includes('충무공동230')) {
+        matched = {
+          category: '아파트',
+          building_name: '진주혁신 코오롱하늘채',
+          main_purpose: '공동주택(아파트)',
+          structure: '철근콘크리트구조',
+          total_floor: '지상 20층 / 지하 1층',
+          default_floor: '중층',
+          approval_date: '2014년 02월',
+          exclusive_area: 84.89,
+          supply_area: 112.5,
+          parking_total: '총 1,200대 (세대당 1.16대)',
+          direction: '남동향(거실기준)',
+          maintenance_fee: '약 14~17만원 (실비정산)',
+          rooms: 3, bathrooms: 2,
+          jimok: '대',
+          usage_district: '제3종일반주거지역, 지구단위계획구역',
+          land_area: 58900.0,
+          road_condition: '중로1류(폭 20m~25m) 접함',
+          public_location: '경남 진주시 충무공동',
+          naver_complex: {
+            complex_name: '진주혁신코오롱하늘채',
+            total_household: '1,037세대 (총 12개동)',
+            construction_company: '코오롱글로벌(주)',
+            heating: '지역난방, 열병합',
+            parking_per_household: '1.16대 (총 1,200대)'
           }
         };
       } else {
@@ -3182,6 +3244,12 @@ let fetchedNaverPhotos = [];
         const pm = document.getElementById('newPropParkingMove')?.value.trim() || '';
         parkingVal = pm.includes('/') ? pm.split('/')[0].trim() : (pm || '지하 주차장 완비');
         moveVal = pm.includes('/') ? pm.split('/')[1].trim() : '즉시입주 가능 (협의)';
+      }
+
+      // 상단 전용 입주시기 입력값이 있으면 우선 적용
+      const customMoveIn = (document.getElementById('newPropMoveInDate')?.value || '').trim();
+      if (customMoveIn) {
+        moveVal = customMoveIn;
       }
 
       saveBtn.disabled = true;
