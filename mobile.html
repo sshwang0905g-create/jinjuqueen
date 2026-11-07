@@ -110,14 +110,18 @@
         </div>
       </a>
 
-      <!-- Quick Action Right Group: 매물의뢰 & PC (화면 안으로 여유 있게 완전 배치) -->
+      <!-- Quick Action Right Group: 매물의뢰 & 관리자 & PC (화면 안으로 여유 있게 완전 배치) -->
       <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
         <button onclick="openListingModal()" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-black text-xs flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap cursor-pointer">
           <i data-lucide="home" class="w-3.5 h-3.5"></i>
           <span>매물의뢰</span>
         </button>
-        <a href="index.html?mode=pc" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-amber-300 font-black text-xs border border-slate-700 flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap" title="PC버전으로 보기">
-          <i data-lucide="monitor" class="w-3.5 h-3.5 text-amber-300"></i>
+        <a href="admin.html" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 active:bg-amber-950 text-amber-300 font-black text-xs border border-amber-600/60 flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap" title="관리자 센터">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>관리자</span>
+        </a>
+        <a href="index.html?mode=pc" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-slate-300 font-bold text-xs border border-slate-700 flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap" title="PC버전으로 보기">
+          <i data-lucide="monitor" class="w-3.5 h-3.5 text-slate-400"></i>
           <span>PC</span>
         </a>
       </div>
