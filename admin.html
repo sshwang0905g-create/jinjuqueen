@@ -268,21 +268,30 @@
             🔒 상세지번 홈페이지 자동 비공개
           </span>
         </div>
-        <div class="flex gap-2">
-          <input type="text" id="addrQuickInput" placeholder="예: 충무공동 280-1, 에나로 146 또는 대방노블랜드" 
-                 class="flex-1 px-3.5 py-2.5 rounded-xl border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs bg-white font-bold text-slate-900"
-                 onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchAddressProperty();}">
-          <button type="button" onclick="openAddressSearchPopup()" class="px-3.5 py-2.5 bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 flex items-center gap-1 cursor-pointer" title="카카오 우편번호/주소 검색 팝업 열기">
-            <i data-lucide="search" class="w-3.5 h-3.5"></i>
-            <span>주소검색</span>
-          </button>
-          <button type="button" id="btnFetchAddress" onclick="autoFetchAddressProperty()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition shadow shrink-0 flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>건축물대장·토지이음 조회</span>
-          </button>
+        <div class="space-y-2">
+          <!-- 기본 주소 입력창 + 카카오 주소검색 -->
+          <div class="flex gap-2">
+            <input type="text" id="addrQuickInput" placeholder="기본 주소 (예: 충무공동 285, 에나로 190 또는 대방노블랜드)" 
+                   class="flex-1 px-3.5 py-2.5 rounded-xl border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs bg-white font-bold text-slate-900"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); document.getElementById('addrDetailInput').focus();}">
+            <button type="button" onclick="openAddressSearchPopup()" class="px-3.5 py-2.5 bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 flex items-center gap-1 cursor-pointer" title="카카오 우편번호/주소 검색 팝업 열기">
+              <i data-lucide="search" class="w-3.5 h-3.5"></i>
+              <span>주소검색</span>
+            </button>
+          </div>
+          <!-- 상세 주소 (동·호수) 입력창 + 조회 버튼 -->
+          <div class="flex gap-2">
+            <input type="text" id="addrDetailInput" placeholder="상세 동·호수 (예: 105동 1402호, 809호) ➜ 전유부 층수 자동분석" 
+                   class="flex-1 px-3.5 py-2.5 rounded-xl border border-amber-300 bg-amber-50/40 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-bold text-slate-900 placeholder:text-slate-400"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchAddressProperty();}">
+            <button type="button" id="btnFetchAddress" onclick="autoFetchAddressProperty()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-black rounded-xl transition shadow shrink-0 flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>건축물대장·토지이음 조회</span>
+            </button>
+          </div>
         </div>
         <p class="text-[11px] text-blue-900 leading-relaxed">
-          💡 주소를 입력하시면 건축물대장(용도·층수·면적·준공일·주차) 및 토지이음(지목·용도지역)이 자동 입력되며, <strong>실제 지번은 보안 비공개</strong> 처리되어 일반 화면에는 동/리까지만 표시됩니다.
+          💡 <strong>동·호수(예: 1402호)</strong>를 넣으시면 <strong>전유부 층수(14층)</strong>가 자동 계산되며, <strong>실제 동·호수는 [적요란]에만 보관</strong>되어 일반 화면에는 절대 노출되지 않습니다.
         </p>
         <div id="addrGovStatusNotice" class="text-[11px] font-bold mt-1.5 hidden"></div>
       </div>
@@ -1721,6 +1730,7 @@ let fetchedNaverPhotos = [];
       handleCategoryChange();
       document.getElementById('newPropLocation').value = '경남 진주시 충무공동';
       if (document.getElementById('addrQuickInput')) document.getElementById('addrQuickInput').value = '';
+      if (document.getElementById('addrDetailInput')) document.getElementById('addrDetailInput').value = '';
       const addrNotice = document.getElementById('addrGovStatusNotice');
       if (addrNotice) { addrNotice.classList.add('hidden'); addrNotice.innerHTML = ''; }
       if (document.getElementById('naverQuickInput')) document.getElementById('naverQuickInput').value = '';
@@ -2001,7 +2011,13 @@ let fetchedNaverPhotos = [];
             const inputEl = document.getElementById('addrQuickInput');
             if (inputEl) {
               inputEl.value = finalAddr;
-              autoFetchAddressProperty();
+              const detailEl = document.getElementById('addrDetailInput');
+              if (detailEl) {
+                detailEl.focus();
+                showAdminToast(`기본 주소가 입력되었습니다. 상세 동·호수(예: 105동 1402호)를 입력 후 조회해 주세요!`);
+              } else {
+                autoFetchAddressProperty();
+              }
             }
           }
         }).open();
@@ -2012,12 +2028,17 @@ let fetchedNaverPhotos = [];
 
     async function autoFetchAddressProperty() {
       const inputEl = document.getElementById('addrQuickInput');
+      const detailEl = document.getElementById('addrDetailInput');
       const address = inputEl ? inputEl.value.trim() : '';
-      if (!address) {
-        alert('조회하실 부동산 주소(지번 또는 도로명, 건물명)를 입력해 주세요.\n예: 충무공동 280-1 또는 에나로 146 또는 대방노블랜드');
+      const detail = detailEl ? detailEl.value.trim() : '';
+
+      if (!address && !detail) {
+        alert('조회하실 부동산 주소(지번 또는 도로명, 건물명)를 입력해 주세요.\n예: 에나로 190 대방노블랜드 105동 1402호');
         if (inputEl) inputEl.focus();
         return;
       }
+
+      const fullCombined = `${address} ${detail}`.trim();
 
       const btn = document.getElementById('btnFetchAddress');
       const originalHtml = btn ? btn.innerHTML : '';
@@ -2030,7 +2051,7 @@ let fetchedNaverPhotos = [];
       if (noticeEl) {
         noticeEl.classList.remove('hidden');
         noticeEl.className = 'text-[11px] font-bold mt-2 p-2.5 rounded-xl border flex items-center gap-1.5 bg-blue-50 text-blue-900 border-blue-200';
-        noticeEl.innerHTML = `<span class="inline-block animate-spin mr-1 text-blue-600">↻</span> <strong>'${address}'</strong> 건축물대장(표제부) 및 토지이음(토지이용계획) 데이터를 분석 중입니다...`;
+        noticeEl.innerHTML = `<span class="inline-block animate-spin mr-1 text-blue-600">↻</span> <strong>'${fullCombined}'</strong> 건축물대장 및 토지이음 데이터를 분석 중입니다...`;
       }
 
       try {
@@ -2039,7 +2060,7 @@ let fetchedNaverPhotos = [];
           res = await fetch('/api/fetch_address_property', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address: address })
+            body: JSON.stringify({ address: address, detail: detail })
           });
         } catch (err) {
           if (location.hostname !== 'localhost') {
@@ -2047,7 +2068,7 @@ let fetchedNaverPhotos = [];
               res = await fetch('http://localhost:8080/api/fetch_address_property', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ address: address })
+                body: JSON.stringify({ address: address, detail: detail })
               });
             } catch (localErr) {}
           }

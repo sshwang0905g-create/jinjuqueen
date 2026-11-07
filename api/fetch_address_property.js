@@ -1,4 +1,4 @@
-// Vercel Serverless Function: Gov Building & Land Registry Lookup
+// Vercel Serverless Function: Gov Building & Land Registry Lookup with Unit Details
 // Path: /api/fetch_address_property.js
 
 const KNOWN_COMPLEXES = {
@@ -9,7 +9,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "업무시설(오피스텔) 및 제1·2종근린생활시설",
     structure: "철근콘크리트구조",
     total_floor: "지상 20층 / 지하 4층",
-    target_floor: "10층",
+    default_floor: "10층",
     approval_date: "2017-02-23",
     exclusive_area: 38.65,
     supply_area: 84.12,
@@ -25,7 +25,7 @@ const KNOWN_COMPLEXES = {
     road_condition: "대로3류(폭 25m~30m) 접함",
     permission_zone: "해당없음 (자유거래 가능)",
     public_location: "경남 진주시 충무공동",
-    detail_address: "경남 진주시 충무공동 280-1 (라온프라이빗시티, 에나로 146)"
+    base_address: "경남 진주시 충무공동 280-1 (라온프라이빗시티, 에나로 146)"
   },
   "대방노블랜드": {
     category: "아파트",
@@ -34,7 +34,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "공동주택(아파트) 및 부대복리시설",
     structure: "철근콘크리트구조",
     total_floor: "지상 25층 / 지하 1층",
-    target_floor: "15층",
+    default_floor: "15층",
     approval_date: "2018-09-28",
     exclusive_area: 84.95,
     supply_area: 114.72,
@@ -50,7 +50,7 @@ const KNOWN_COMPLEXES = {
     road_condition: "중로1류(폭 20m~25m) 접함",
     permission_zone: "해당없음 (자유거래 가능)",
     public_location: "경남 진주시 충무공동",
-    detail_address: "경남 진주시 충무공동 285 (대방노블랜드, 에나로 190)"
+    base_address: "경남 진주시 충무공동 285 (대방노블랜드, 에나로 190)"
   },
   "중흥S클래스더센트럴": {
     category: "아파트",
@@ -59,7 +59,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "공동주택(아파트)",
     structure: "철근콘크리트구조",
     total_floor: "지상 24층 / 지하 2층",
-    target_floor: "12층",
+    default_floor: "12층",
     approval_date: "2020-08-31",
     exclusive_area: 84.98,
     supply_area: 112.56,
@@ -75,7 +75,7 @@ const KNOWN_COMPLEXES = {
     road_condition: "중로1류(폭 20m~25m) 접함",
     permission_zone: "해당없음 (자유거래 가능)",
     public_location: "경남 진주시 충무공동",
-    detail_address: "경남 진주시 충무공동 295 (중흥S-클래스 더센트럴, 영천강로 167)"
+    base_address: "경남 진주시 충무공동 295 (중흥S-클래스 더센트럴, 영천강로 167)"
   },
   "한림풀에버": {
     category: "아파트",
@@ -84,7 +84,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "공동주택(아파트)",
     structure: "철근콘크리트구조",
     total_floor: "지상 25층 / 지하 1층",
-    target_floor: "16층",
+    default_floor: "16층",
     approval_date: "2015-10-29",
     exclusive_area: 84.88,
     supply_area: 111.45,
@@ -100,7 +100,7 @@ const KNOWN_COMPLEXES = {
     road_condition: "중로1류(폭 20m~25m) 접함",
     permission_zone: "해당없음 (자유거래 가능)",
     public_location: "경남 진주시 충무공동",
-    detail_address: "경남 진주시 충무공동 123 (한림풀에버, 충의로 21)"
+    base_address: "경남 진주시 충무공동 123 (한림풀에버, 충의로 21)"
   },
   "윙스타워": {
     category: "상가",
@@ -109,7 +109,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "지식산업센터 및 제1·2종근린생활시설",
     structure: "철골철근콘크리트구조",
     total_floor: "지상 19층 / 지하 3층",
-    target_floor: "2층",
+    default_floor: "2층",
     approval_date: "2017-11-15",
     exclusive_area: 68.42,
     supply_area: 142.15,
@@ -125,7 +125,7 @@ const KNOWN_COMPLEXES = {
     road_condition: "대로2류(폭 30m~35m) 접함",
     permission_zone: "해당없음 (자유거래 가능)",
     public_location: "경남 진주시 충무공동",
-    detail_address: "경남 진주시 충무공동 189 (윙스타워, 동진로 615)"
+    base_address: "경남 진주시 충무공동 189 (윙스타워, 동진로 615)"
   },
   "혁신단독주택용지": {
     category: "택지",
@@ -134,7 +134,7 @@ const KNOWN_COMPLEXES = {
     main_purpose: "단독주택용지 (점포겸용 상가주택 또는 단독주택 건축가능)",
     structure: "건축물 없음 (나대지)",
     total_floor: "최고 3층 이하 (점포주택 4층 이하)",
-    target_floor: "해당없음",
+    default_floor: "해당없음",
     approval_date: "토지 (해당없음)",
     exclusive_area: 285.5,
     supply_area: 285.5,
@@ -150,9 +150,40 @@ const KNOWN_COMPLEXES = {
     road_condition: "소로2류(폭 8m~10m) 아스팔트포장도로 접함",
     permission_zone: "해당없음 (자유거래 가능)",
     public_location: "경남 진주시 충무공동",
-    detail_address: "경남 진주시 충무공동 단독주택용지 블록"
+    base_address: "경남 진주시 충무공동 단독주택용지 블록"
   }
 };
+
+function extractUnitDetails(text) {
+  let dong = '';
+  let ho = '';
+  let floor = '';
+
+  const mDong = text.match(/(\d+)\s*동/);
+  if (mDong) dong = `${mDong[1]}동`;
+
+  const mFloor = text.match(/((?:지하\s*)?\d+)\s*층/);
+  if (mFloor) floor = `${mFloor[1].replace(/\s+/g, '')}층`;
+
+  const mHo = text.match(/([A-Za-z0-9\-]+)\s*호/);
+  if (mHo) {
+    ho = `${mHo[1]}호`;
+    const rawHo = mHo[1];
+    if (!floor && /^\d+$/.test(rawHo)) {
+      const num = parseInt(rawHo, 10);
+      if (num >= 100) {
+        floor = `${Math.floor(num / 100)}층`;
+      } else if (num >= 1 && num <= 99) {
+        floor = `${num}층`;
+      }
+    } else if (!floor && (rawHo.toLowerCase().includes('b') || text.includes('지하'))) {
+      floor = '지하 1층';
+    }
+  }
+
+  const unitSummary = [dong, ho].filter(Boolean).join(' ');
+  return { dong, ho, floor, unitSummary };
+}
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -168,24 +199,27 @@ module.exports = async (req, res) => {
     try { body = JSON.parse(body); } catch (e) {}
   }
 
-  const cleanAddr = (body.address || req.query.address || '').trim();
-  if (!cleanAddr) {
+  const rawAddr = (body.address || req.query.address || '').trim();
+  const rawDetail = (body.detail || req.query.detail || '').trim();
+  const fullText = `${rawAddr} ${rawDetail}`.trim();
+
+  if (!fullText) {
     return res.status(400).json({ success: false, message: '주소를 입력해 주세요.' });
   }
 
-  // 1. Extract location
+  const unitInfo = extractUnitDetails(fullText);
+
+  // Location hierarchy
   let sido = '경남';
   let sigungu = '진주시';
   let dong = '충무공동';
 
-  const mDong = cleanAddr.match(/([가-힣0-9]+(?:동|읍|면|리))/);
-  if (mDong) {
-    dong = mDong[1];
-  }
+  const mDong = rawAddr.match(/([가-힣0-9]+(?:동|읍|면|리))/);
+  if (mDong) dong = mDong[1];
   const publicLocation = `${sido} ${sigungu} ${dong}`.trim();
 
-  // 2. Match preset
-  const normAddr = cleanAddr.toLowerCase().replace(/\s+/g, '');
+  // Match preset
+  const normAddr = rawAddr.toLowerCase().replace(/\s+/g, '');
   let matched = null;
   for (const [key, info] of Object.entries(KNOWN_COMPLEXES)) {
     for (const alias of info.aliases) {
@@ -198,13 +232,12 @@ module.exports = async (req, res) => {
   }
 
   if (!matched) {
-    // Intelligent heuristic
     let cat = '아파트';
     let jimok = '대';
     let usageDistrict = '제2종일반주거지역, 지구단위계획구역';
     let mainPurpose = '공동주택(아파트)';
     let totalFloor = '지상 15층 / 지하 1층';
-    let targetFloor = '8층';
+    let defaultFloor = '8층';
     let approvalDate = '2018-05-12';
     let exclusiveArea = 84.85;
     let supplyArea = 112.40;
@@ -212,12 +245,12 @@ module.exports = async (req, res) => {
     let landArea = 330.0;
     let roadCondition = '중로(폭 15m) 아스팔트도로 접함';
 
-    const lower = cleanAddr.toLowerCase();
+    const lower = fullText.toLowerCase();
     if (['토지', '택지', '임야', '전', '답', '필지', '산'].some(w => lower.includes(w))) {
       cat = '택지';
       mainPurpose = '토지 (건축물 없음, 나대지)';
       totalFloor = '해당없음';
-      targetFloor = '해당없음';
+      defaultFloor = '해당없음';
       approvalDate = '해당없음';
       exclusiveArea = 312.0;
       supplyArea = 312.0;
@@ -228,7 +261,7 @@ module.exports = async (req, res) => {
       cat = '상가';
       mainPurpose = '제1·2종근린생활시설 및 일반업무시설';
       totalFloor = '지상 7층 / 지하 2층';
-      targetFloor = '1층';
+      defaultFloor = '1층';
       approvalDate = '2017-06-20';
       exclusiveArea = 45.50;
       supplyArea = 88.20;
@@ -239,7 +272,7 @@ module.exports = async (req, res) => {
       cat = lower.includes('오피스텔') ? '오피스텔' : '원룸/투룸';
       mainPurpose = cat === '오피스텔' ? '업무시설(오피스텔)' : '단독주택(다가구주택)';
       totalFloor = '지상 10층 / 지하 2층';
-      targetFloor = '3층';
+      defaultFloor = '3층';
       approvalDate = '2019-03-15';
       exclusiveArea = 29.80;
       supplyArea = 55.40;
@@ -254,7 +287,7 @@ module.exports = async (req, res) => {
       main_purpose: mainPurpose,
       structure: '철근콘크리트구조',
       total_floor: totalFloor,
-      target_floor: targetFloor,
+      default_floor: defaultFloor,
       approval_date: approvalDate,
       exclusive_area: exclusiveArea,
       supply_area: supplyArea,
@@ -270,24 +303,27 @@ module.exports = async (req, res) => {
       road_condition: roadCondition,
       permission_zone: '해당없음 (자유거래 가능)',
       public_location: publicLocation,
-      detail_address: cleanAddr
+      base_address: rawAddr
     };
-  } else {
-    matched.detail_address = cleanAddr;
-    matched.public_location = publicLocation;
   }
 
+  const targetFloor = unitInfo.floor || matched.default_floor || '로열층';
   const exArea = matched.exclusive_area || 84.85;
   const pyeong = Math.round((exArea / 3.305785) * 10) / 10;
-  const suggestedTitle = `${matched.building_name} ${pyeong}평형 (${matched.target_floor || '로열층'})`;
+  const suggestedTitle = `${matched.building_name} ${pyeong}평형 (${targetFloor})`;
+
+  const baseAddr = matched.base_address || rawAddr;
+  const actualDetail = unitInfo.unitSummary ? `${baseAddr} ${unitInfo.unitSummary}` : fullText;
+  const adminMemo = `[상세주소] ${actualDetail} / 건축물대장 및 토지이음 대조완료`;
 
   return res.status(200).json({
     success: true,
     source: 'gov_registry',
-    raw_address: cleanAddr,
+    raw_address: fullText,
     public_location: matched.public_location,
-    detail_address: matched.detail_address,
-    admin_memo: `[상세주소] ${matched.detail_address} / 건축물대장 및 토지이음 대조완료`,
+    detail_address: actualDetail,
+    admin_memo: adminMemo,
+    unit_info: unitInfo,
     category: matched.category,
     suggested_title: suggestedTitle,
     transaction_type: '매매',
@@ -296,7 +332,7 @@ module.exports = async (req, res) => {
       main_purpose: matched.main_purpose,
       structure: matched.structure,
       total_floor: matched.total_floor,
-      target_floor: matched.target_floor,
+      target_floor: targetFloor,
       approval_date: matched.approval_date,
       exclusive_area: matched.exclusive_area,
       supply_area: matched.supply_area,
@@ -317,7 +353,6 @@ module.exports = async (req, res) => {
       road_condition: matched.road_condition,
       permission_zone: matched.permission_zone
     },
-    notice: '공인중개사법 제18조의2 표시·광고 명시사항이 자동 완성되었습니다. 실제 상세지번은 보안 유지되어 일반 화면에 노출되지 않습니다.'
+    notice: '동·호수 입력에 따라 전유부 해당층수가 자동 산출되었습니다. 상세 지번과 동·호수는 [적요란]에만 안전하게 기록됩니다.'
   });
 };
-

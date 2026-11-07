@@ -175,8 +175,9 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         
         if parsed.path == '/api/fetch_address_property':
             address_input = payload.get('address', '')
+            detail_input = payload.get('detail', '')
             try:
-                res = gov_client.lookup_address_property(address_input)
+                res = gov_client.lookup_address_property(address_input, detail_input)
             except Exception as e:
                 res = {"success": False, "message": str(e)}
 
