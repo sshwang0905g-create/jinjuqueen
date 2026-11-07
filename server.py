@@ -1,4 +1,5 @@
 from naver_client import client
+from gov_property_client import gov_client
 # Local Development Server supporting /api/board and /api/auth
 # Run with: python server.py
 
@@ -172,6 +173,20 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             payload = {}
 
         
+        if parsed.path == '/api/fetch_address_property':
+            address_input = payload.get('address', '')
+            try:
+                res = gov_client.lookup_address_property(address_input)
+            except Exception as e:
+                res = {"success": False, "message": str(e)}
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
+            return
+
         if parsed.path == '/api/fetch_naver':
             article_input = payload.get('articleInput', '')
             try:
