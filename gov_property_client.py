@@ -67,36 +67,42 @@ def classify_floor_tier(floor_str_or_num: Any, total_floor_str: str) -> str:
     """
     공인중개사법 권장: 해당 층수를 '저층', '중층', '고층'으로 자동 변환
     실무 기준 적용:
-    - 20~25층 이상 아파트: 1~5층(저층), 6~19층(중층 - 예: 7층은 중층), 20층 이상(고층)
-    - 10~19층 건물: 1~3층(저층), 4~13층(중층), 14층 이상(고층)
+    - 20~25층 이상 아파트: 1~6층(저층), 7~15층(중층 - 703호는 중층!), 16층 이상(고층 - 1801호는 고층!)
+    - 10~19층 건물: 하위 30%(저층), 상위 35%(고층)
     - 6~9층 건물: 1~2층(저층), 3~6층(중층), 7층 이상(고층)
     """
     try:
+        cur_str = str(floor_str_or_num or "").strip()
+        if cur_str in ["저층", "중층", "고층", "로열층", "탑층", "지하층"]:
+            return cur_str
+        if "지하" in cur_str:
+            return "지하층"
+
         m_tot = re.search(r"지상\s*(\d+)", str(total_floor_str)) or re.search(r"(\d+)\s*층", str(total_floor_str))
         total_fl = int(m_tot.group(1)) if m_tot else 25
 
-        m_cur = re.search(r"(\d+)", str(floor_str_or_num))
+        m_cur = re.search(r"(\d+)", cur_str)
         if not m_cur:
             return "중층"
         cur_fl = int(m_cur.group(1))
 
-        if "지하" in str(floor_str_or_num):
-            return "지하층"
-
         if total_fl <= 3:
             return f"{cur_fl}층"
 
+        # 20층 이상 고층 아파트: 1~6층 저층, 7~15층 중층, 16층 이상 고층
         if total_fl >= 20:
-            if cur_fl <= 5:
+            if cur_fl <= 6:
                 return "저층"
-            elif cur_fl >= total_fl - 5:
+            elif cur_fl >= 16:
                 return "고층"
             else:
                 return "중층"
         elif total_fl >= 10:
-            if cur_fl <= 3:
+            low_cut = max(2, int(total_fl * 0.3))
+            high_cut = int(total_fl * 0.65)
+            if cur_fl <= low_cut:
                 return "저층"
-            elif cur_fl >= total_fl - 3:
+            elif cur_fl >= high_cut:
                 return "고층"
             else:
                 return "중층"
@@ -954,16 +960,16 @@ class GovPropertyClient:
         if cat == "상가":
             ho_text = f" ({unit_info.get('ho')})" if unit_info.get('ho') else ""
             fl_text = unit_info.get('raw_floor') or "1층"
-            suggested_title = f"{bname} {fl_text} 상가 임대{ho_text}"
+            suggested_title = f"{bname} {fl_text} 전용 {ex_area}㎡ 상가 임대{ho_text}"
             trans_type = "월세"
         elif cat == "택지":
-            suggested_title = f"{bname} {pyeong}평형 (나대지)"
+            suggested_title = f"{bname} 대지면적 {ex_area}㎡ (나대지)"
             trans_type = "매매"
         elif cat == "오피스텔":
-            suggested_title = f"{bname}{dong_part} {pyeong}평형 ({target_fl})"
+            suggested_title = f"{bname}{dong_part} 전용 {ex_area}㎡ ({target_fl})"
             trans_type = "월세"
         else:
-            suggested_title = f"{bname}{dong_part} {pyeong}평형 ({target_fl})"
+            suggested_title = f"{bname}{dong_part} 전용 {ex_area}㎡ ({target_fl})"
             trans_type = "매매"
 
         detail_addr = data.get("detail_address", raw_address)

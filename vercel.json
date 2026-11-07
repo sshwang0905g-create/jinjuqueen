@@ -14,6 +14,10 @@
       "destination": "/api/fetch_naver.js"
     },
     {
+      "source": "/api/fetch_address_property",
+      "destination": "/api/fetch_address_property.js"
+    },
+    {
       "source": "/api/board",
       "destination": "/api/board.js"
     },

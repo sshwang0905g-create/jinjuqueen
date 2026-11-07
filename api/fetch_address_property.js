@@ -472,23 +472,31 @@ const KNOWN_COMPLEXES = {
 
 function classifyFloorTier(floorInput, totalFloorStr) {
   try {
-    const mTot = String(totalFloorStr).match(/지상\s*(\d+)/) || String(totalFloorStr).match(/(\d+)\s*층/);
+    const curStr = String(floorInput || '').trim();
+    if (['저층', '중층', '고층', '로열층', '탑층', '지하층'].includes(curStr)) {
+      return curStr;
+    }
+    if (curStr.includes('지하')) return '지하층';
+
+    const mTot = String(totalFloorStr || '').replace(/\(.*?\)/g, '').match(/(\d+)/);
     const totalFl = mTot ? parseInt(mTot[1], 10) : 25;
 
-    const mCur = String(floorInput).match(/(\d+)/);
+    const mCur = curStr.match(/(\d+)/);
     if (!mCur) return '중층';
     const curFl = parseInt(mCur[1], 10);
 
-    if (String(floorInput).includes('지하')) return '지하층';
     if (totalFl <= 3) return `${curFl}층`;
 
+    // 실무 기준 3분할: 20~25층 이상 아파트 -> 1~6층 저층, 7~15층 중층(703호는 중층!), 16층 이상 고층(1801호는 고층!)
     if (totalFl >= 20) {
-      if (curFl <= 5) return '저층';
-      if (curFl >= totalFl - 5) return '고층';
+      if (curFl <= 6) return '저층';
+      if (curFl >= 16) return '고층';
       return '중층';
     } else if (totalFl >= 10) {
-      if (curFl <= 3) return '저층';
-      if (curFl >= totalFl - 3) return '고층';
+      const lowCut = Math.max(2, Math.floor(totalFl * 0.3));
+      const highCut = Math.ceil(totalFl * 0.65);
+      if (curFl <= lowCut) return '저층';
+      if (curFl >= highCut) return '고층';
       return '중층';
     } else if (totalFl >= 6) {
       if (curFl <= 2) return '저층';
@@ -717,16 +725,16 @@ module.exports = async (req, res) => {
   if (matched.category === '상가') {
     const hoText = unitInfo.ho ? ` (${unitInfo.ho})` : '';
     const flText = unitInfo.rawFloor || '1층';
-    suggestedTitle = `${matched.building_name} ${flText} 상가 임대${hoText}`;
+    suggestedTitle = `${matched.building_name} ${flText} 전용 ${exArea}㎡ 상가 임대${hoText}`;
     transType = '월세';
   } else if (matched.category === '택지') {
-    suggestedTitle = `${matched.building_name} ${pyeong}평형 (나대지)`;
+    suggestedTitle = `${matched.building_name} 대지면적 ${exArea}㎡ (나대지)`;
     transType = '매매';
   } else if (matched.category === '오피스텔') {
-    suggestedTitle = `${matched.building_name}${dongPart} ${pyeong}평형 (${targetFloor})`;
+    suggestedTitle = `${matched.building_name}${dongPart} 전용 ${exArea}㎡ (${targetFloor})`;
     transType = '월세';
   } else {
-    suggestedTitle = `${matched.building_name}${dongPart} ${pyeong}평형 (${targetFloor})`;
+    suggestedTitle = `${matched.building_name}${dongPart} 전용 ${exArea}㎡ (${targetFloor})`;
     transType = '매매';
   }
 
