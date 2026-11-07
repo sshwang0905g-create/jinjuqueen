@@ -568,8 +568,30 @@
               </div>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">방향 (거실 기준)</label>
-              <input type="text" id="newPropDirection" placeholder="남향(거실기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-bold text-slate-700" for="newPropDirection">방향 (거실 기준)</label>
+                <!-- 방향 원클릭 퀵 버튼 -->
+                <div class="inline-flex rounded-lg border border-blue-200 p-0.5 bg-blue-50/80 gap-0.5">
+                  <button type="button" onclick="setDirectionQuick('남향(거실기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">남</button>
+                  <button type="button" onclick="setDirectionQuick('남동향(거실기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">남동</button>
+                  <button type="button" onclick="setDirectionQuick('남서향(거실기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">남서</button>
+                  <button type="button" onclick="setDirectionQuick('동향(거실기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">동</button>
+                  <button type="button" onclick="setDirectionQuick('서향(거실기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-blue-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">서</button>
+                </div>
+              </div>
+              <div class="relative">
+                <input type="text" id="newPropDirection" list="resDirectionList" value="남향(거실기준)" placeholder="남향(거실기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-800">
+                <datalist id="resDirectionList">
+                  <option value="남향(거실기준)">
+                  <option value="남동향(거실기준)">
+                  <option value="남서향(거실기준)">
+                  <option value="동향(거실기준)">
+                  <option value="서향(거실기준)">
+                  <option value="북향(거실기준)">
+                  <option value="북동향(거실기준)">
+                  <option value="북서향(거실기준)">
+                </datalist>
+              </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">월 관리비</label>
@@ -645,8 +667,28 @@
               <input type="text" id="newPropCommRecommendedBiz" placeholder="예: 소형사무실, 카페, 미용실" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">방향 (주출입구)</label>
-              <input type="text" id="newPropCommDirection" placeholder="남향(주출입구기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none">
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-bold text-slate-700" for="newPropCommDirection">방향 (주출입구)</label>
+                <!-- 상가 방향 원클릭 퀵 버튼 -->
+                <div class="inline-flex rounded-lg border border-amber-200 p-0.5 bg-amber-50/80 gap-0.5">
+                  <button type="button" onclick="setCommDirectionQuick('남향(주출입구기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">남</button>
+                  <button type="button" onclick="setCommDirectionQuick('남동향(주출입구기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">남동</button>
+                  <button type="button" onclick="setCommDirectionQuick('남서향(주출입구기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">남서</button>
+                  <button type="button" onclick="setCommDirectionQuick('동향(주출입구기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">동</button>
+                  <button type="button" onclick="setCommDirectionQuick('북향(주출입구기준)')" class="px-1.5 py-0.5 text-[10px] font-extrabold rounded bg-white hover:bg-amber-600 hover:text-white transition text-slate-700 cursor-pointer shadow-2xs">북</button>
+                </div>
+              </div>
+              <div class="relative">
+                <input type="text" id="newPropCommDirection" list="commDirectionList" value="남향(주출입구기준)" placeholder="남향(주출입구기준)" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs outline-none focus:ring-2 focus:ring-amber-500 font-bold text-slate-800">
+                <datalist id="commDirectionList">
+                  <option value="남향(주출입구기준)">
+                  <option value="남동향(주출입구기준)">
+                  <option value="남서향(주출입구기준)">
+                  <option value="동향(주출입구기준)">
+                  <option value="서향(주출입구기준)">
+                  <option value="북향(주출입구기준)">
+                </datalist>
+              </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">월 관리비</label>
@@ -2175,6 +2217,16 @@ let fetchedNaverPhotos = [];
       if (el) {
         el.value = dateVal;
       }
+    }
+
+    function setDirectionQuick(val) {
+      const el = document.getElementById('newPropDirection');
+      if (el) el.value = val;
+    }
+
+    function setCommDirectionQuick(val) {
+      const el = document.getElementById('newPropCommDirection');
+      if (el) el.value = val;
     }
 
     function setFloorTier(tier) {
