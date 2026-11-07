@@ -110,18 +110,14 @@
         </div>
       </a>
 
-      <!-- Quick Action Right Group: 매물의뢰 & 관리자 & PC (화면 안으로 여유 있게 완전 배치) -->
+      <!-- Quick Action Right Group: 매물의뢰 & PC (화면 안으로 여유 있게 완전 배치) -->
       <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
         <button onclick="openListingModal()" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-black text-xs flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap cursor-pointer">
           <i data-lucide="home" class="w-3.5 h-3.5"></i>
           <span>매물의뢰</span>
         </button>
-        <a href="admin.html" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 active:bg-amber-950 text-amber-300 font-black text-xs border border-amber-600/60 flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap" title="관리자 센터">
-          <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>관리자</span>
-        </a>
-        <a href="index.html?mode=pc" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-slate-300 font-bold text-xs border border-slate-700 flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap" title="PC버전으로 보기">
-          <i data-lucide="monitor" class="w-3.5 h-3.5 text-slate-400"></i>
+        <a href="index.html?mode=pc" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-amber-300 font-black text-xs border border-slate-700 flex items-center gap-1 shadow-xs active:scale-95 transition whitespace-nowrap" title="PC버전으로 보기">
+          <i data-lucide="monitor" class="w-3.5 h-3.5 text-amber-300"></i>
           <span>PC</span>
         </a>
       </div>
@@ -943,11 +939,7 @@
         </div>
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <button onclick="shareCurrentNewsToNaverBlog()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5" title="네이버 블로그(property70)로 원클릭 복사 및 글쓰기 창 열기">
-          <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
-          <span>🟢 네이버 블로그에 포스팅하기</span>
-        </button>
+      <div class="mt-6 flex justify-end">
         <button onclick="closeNewsModal()" class="px-5 py-2.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl hover:bg-slate-300 transition">
           닫기
         </button>
@@ -1136,8 +1128,8 @@
   <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/marked.min.js"></script>
-  <script src="js/data.js?v=20261106_7"></script>
-  <script src="js/app.js?v=20261106_7"></script>
+  <script src="js/data.js?v=20261106_6"></script>
+  <script src="js/app.js?v=20261106_6"></script>
 
   <!-- Sold Property Alert Modal (거래완료 안내 모달) -->
   <div id="soldNoticeModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 hidden">

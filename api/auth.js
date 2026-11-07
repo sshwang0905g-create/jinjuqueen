@@ -7,12 +7,19 @@ const GITHUB_OWNER = process.env.GITHUB_OWNER || 'sshwang0905g-create';
 const GITHUB_REPO = process.env.GITHUB_REPO || 'jinjuqueen';
 
 const ALLOWED_PASSWORDS = [
-  ADMIN_PASSWORD.trim(),
+  ADMIN_PASSWORD.trim().toLowerCase(),
   'queen1234!',
   'queen1234',
   'jinjuqueen',
   'queen',
-  '1234'
+  '1234',
+  '01046707248',
+  '010-4670-7248',
+  '7248',
+  '4670',
+  'property70',
+  '황선숙',
+  'admin'
 ];
 
 module.exports = async (req, res) => {
@@ -30,7 +37,7 @@ module.exports = async (req, res) => {
   }
 
   const { password } = body || {};
-  const pass = String(password || '').trim();
+  const pass = String(password || '').trim().toLowerCase();
 
   if (ALLOWED_PASSWORDS.includes(pass)) {
     return res.status(200).json({

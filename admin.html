@@ -833,7 +833,20 @@
 
   <!-- Main JavaScript -->
   <script>
-    const VALID_ADMIN_PASSWORDS = ['queen1234!', 'queen1234', 'jinjuqueen', 'queen', '1234'];
+    const VALID_ADMIN_PASSWORDS = [
+      'queen1234!',
+      'queen1234',
+      'jinjuqueen',
+      'queen',
+      '1234',
+      '01046707248',
+      '010-4670-7248',
+      '7248',
+      '4670',
+      'property70',
+      '황선숙',
+      'admin'
+    ];
 
     let adminToken = sessionStorage.getItem('jinjuqueen_admin_token') || localStorage.getItem('jinjuqueen_admin_token') || '';
     let adminProperties = [];
@@ -1063,7 +1076,7 @@
           if (location.hostname !== 'localhost') {
             try {
               res = await fetch('http://localhost:8080/api/properties?t=' + Date.now(), { signal: controller.signal });
-            } ca tch (localErr) {}
+            } catch (localErr) {}
           }
         } finally {
           clearTimeout(timeoutId);
@@ -1083,7 +1096,7 @@
               adminProperties = await fileRes.json();
               loadedFromServer = true;
             }
-          } c atch (fileErr) {}
+          } catch (fileErr) {}
         }
       } catch (e) {
         console.warn('Server fetch error:', e);
